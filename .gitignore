@@ -4,3 +4,11 @@
 *.jar
 *.war
 *.ear
+
+# Latex Files #
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
