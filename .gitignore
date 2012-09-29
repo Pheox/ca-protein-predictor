@@ -5,6 +5,10 @@
 *.war
 *.ear
 
+# Javadoc Files #
+*.css
+*.html
+
 # Latex Files #
 *.aux
 *.bbl
