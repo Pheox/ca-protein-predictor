@@ -1,0 +1,73 @@
+<project>
+ <!-- Delete old files -->
+
+   <target name="clean">
+     <delete dir="build"/>
+     <delete file="dest\*.jar"/>
+     <delete dir="doc"/>
+     <mkdir dir="doc"/>
+   </target>
+
+<!-- Source files compiling, jar file creating + help generating -->
+
+   <target name="compile">
+     <delete dir="build"/>
+     <delete dir="dest"/>
+     <delete dir="doc"/>
+     <mkdir dir="doc"/>
+     <mkdir dir="build"/>
+     <mkdir dir="dest"/>
+     <!-- Help -->
+         <javadoc
+           access="public"
+           destdir="doc"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="this is windowtitle"
+        >
+         <fileset dir="src" defaultexcludes="yes">
+             <include name="**/*.java"/>
+         </fileset>
+     </javadoc>
+
+         <!-- Compiling -->
+         <javac srcdir="src" destdir="build"/>
+     <!-- Vytvorenie jar suboru -->
+         <jar destfile="dest/predictor.jar" basedir="build">
+       <manifest>
+         <attribute name="Main-Class" value="predictor.Main"/>
+       </manifest>
+     </jar>
+   </target>
+
+
+
+<!-- generovanie napovedy do dest/ zlozky -->
+
+   <target name = "doc">
+     <delete dir="doc"/>
+     <mkdir dir="doc"/>
+     <javadoc
+           access="public"
+           destdir="doc"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="this is window title"
+        >
+         <fileset dir="src" defaultexcludes="yes">
+             <include name="**/*.java"/>
+         </fileset>
+     </javadoc>
+   </target>
+
+
+
+<!-- Executing jar file -->
+
+   <target name="run">
+     <java jar="dest/predictor.jar" fork="true"/>
+   </target>
+
+</project>
