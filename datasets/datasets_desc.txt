@@ -1,0 +1,20 @@
+Evolved cellular automata for protein secondary structure prediction imitate
+the determinants for folding observed in nature.
+----------------------------------------------------------------------------
+CB513:
+- RES - residue - aa letters
+- DSSP - secondary structure element
+    H, I, G => H
+    E, B => E
+    _ coils
+- DSSPACC
+- STRIDE
+- RsNo
+- DEFINE
+- align1..n
+
+Used in project:
+- RES - residue - aa letters
+- DSSP - secondary structure element
+- SOLVENT ACCESSIBILITY - kind of probability/measure to interact with water
+    - set to 0 in project framework
