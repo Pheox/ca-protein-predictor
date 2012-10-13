@@ -32,7 +32,7 @@
      </javadoc>
 
          <!-- Compiling -->
-         <javac srcdir="src" destdir="build"/>
+         <javac srcdir="src" destdir="build" classpath="jgap.jar"/>
      <!-- Vytvorenie jar suboru -->
          <jar destfile="dest/predictor.jar" basedir="build">
        <manifest>
