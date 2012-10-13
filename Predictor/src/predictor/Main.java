@@ -7,7 +7,6 @@
 
 package predictor;
 
-import predictor.ga.*;
 
 /**
  * Just for testing, use UnitTesting instead!
@@ -15,6 +14,6 @@ import predictor.ga.*;
 public class Main {
     public static void main(String[] args) {
 
-        System.out.println("Hello world");
+
     }
 }
