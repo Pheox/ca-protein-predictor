@@ -1,0 +1,277 @@
+\chapter{Celulárne automaty}\label{ca}
+% Doporucena literatura: Sipper: Parallel Cellular Machines
+% Wolfram - definovat tie 4 triedy ??
+% dobra kniha: http://goo.gl/yAsN1
+% asi je dobré vychádza» tak z 1,2 èlánkov, do aplikácii hodi» ïal¹ie
+
+Modelovanie zlo¾itých fyzikálnych javov pomocou poèítaèových simulácii
+sa stalo základným nástrojom pri~odkrývaní tajov na¹ej Zeme.
+V~prírode sa stretávame s~rôznymi príkladmi chovania,
+ktoré vykazujuje emergenciu, teda vznik vlastností
+systému na~globálnej úrovni na~základe lokálnych interakcií
+a~bez ich explicitnej definície v~rámci jednotlivých elementoch systému
+alebo ich prepojeniach.
+Ide napríklad o~kolónie hmyzu, sietnicu alebo imunitný systém \cite{sipper_book}.
+Jedným z~cieµov umelej inteligencie je odhali» princíp emergentného
+chovania ako takého. Medzi základné prístupy sna¾iace sa priblí¾i»
+k~cieµovej páske patria agentné systémy, teória chaosu, èi teória
+celulárnych automatov.
+
+% iteracne polia? are u sure?
+Koncept celulárneho automatu bol vynájdený u¾ mnohokrát pod~rôznymi názvami.
+V~matematike je to oblas» topologickej dynamiky,
+v~elektrotechnike iteraèné polia,
+deti ich mô¾u pozna» ako druh poèítaèovej hry \cite{toffoli_margolus_87}.
+Modelovanie pomocou celulárnych automatov je principiálne jednoduché,
+na~základe lokálneho pôsobenia ich elementov je mo¾né vykazova»
+globálne chovanie. V~tejto kapitole bude model celulárneho
+automatu (CA) priblí¾ený, naèrtnuté historické pozadie a~krátke
+pojednanie o~jeho aplikáèných doménach.
+
+
+
+
+% HISTORICKE POZADIE
+%%%%%%%%%%%%%%%%%%%%
+\section{Historické pozadie}
+Koncept CA uzrel svetlo sveta v~40-tych rokoch 20. storoèia
+vïaka dvojici amerických imigrantov maïarského, resp. poµského pôvodu,
+John von Neumannovi a~Stanislawovi Ula\-mo\-vi, ktorí
+tento koncept pou¾ívali najmä pre~výskum logiky ¾ivota \cite{neumann_logic_of_life}.
+Von Neumann sa in¹piroval prácami W. McCullocha a~W.Pittsa -- otcov neurónových sietí \cite{delorme_ca_parallel_model}.
+% pouzivam stavy, bunky..etc, ktore som este nikde nedefinoval !?
+Pou¾íval 2\,D CA, bunky sa mohli nachádza» v~1 z~29 stavov, okolie bolo 5-bunkové
+(neskôr nazývané ako {\it von Neumannovo okolie}).
+Tento mu¾, ktorý pracoval aj na projekte Manhattan\footnote{
+Krycí názov pre~utajený americký vývoj atómovej bomby poèas 2. svetovej vojny.},
+dokázal existenciu konfigurácie zlo¾enú z~pribli¾ne 200\,000 buniek, ktorá
+sa doká¾e samoreprodukova» tzn. takýto CA mô¾e simulova» Turingov stroj \cite{gardner_wheels_life_1983}.
+Po~von Neumannovej smrti v~roku 1957 bol jeho dôkaz zjednodu¹ovaný,
+Za~zmienku stojí Coddov celulárny automat s~8~stavmi \cite{codd_ca_1968}.
+najelegantnej¹í dôkaz pomocou 4 stavov v¹ak priniesol v~roku 1971 vo~svojej dizertaènej
+práci Edwin Roger Banks \cite{banks_ca_proof}.
+Následovníkmi von Neumanna v~¹túdii celulárnych automatov boli hlavne
+A. Burks a~jeho ¹tudent J. Holland, ktorý je v¹ak známej¹í z~oblasti
+evoluèných algoritmov.
+%Neumann dokázal spoji» matematickú teória, ktorá sa skýva za automatmi, s biológiou.
+
+
+V~60-tych rokoch, popri dobových,
+málo výkonných výpoèetných zariadeniach záujem o~CA ustal.
+O~znaèné spopularizovanie CA sa postaral Martin Gardner, keï v~roku 1970
+v~magazíne {\it Scientific American} venoval svoj ståpèek celulárnemu
+automatu Johna Hortona Conwaya s~názvom \uvoz{Game of Life} \cite{gardner_1970}.
+I¹lo o~2\,D CA, ktorý je pomocou veµmi jednoduchých pravidiel schopný vykazova»,
+prenesene povedané, známky ¾ivota.
+% Martinom Gardner: http://www.ibiblio.org/lifepatterns/october1970.html
+
+% clanku: 1977, 1983
+Zaèiatkom 80-tych rokov sa zaèala skúma» otázka,
+èi sú CA schopné modelova» okrem globálnych aspektov ná¹ho sveta
+aj~zákony fyziky ako také. Priekopníkmi v~tomto výskume boli Tomasso Toffoli
+a~Edward Fredkin.
+% citacia na ich spolocne dielo? alebo len Toffoliho?
+Hlavnou tézou ich výskumu bola definícia takých fyzikálnych výpoèetných modelov,
+ktoré obsahujú jednu z~najzákladnej¹ích vlastností mik\-ro\-sko\-pic\-kej fyziky --
+reverzibilitu.
+Vytvorili veµmi jednoduché modely obyèajných diferenciálnych rovníc,
+akými sú napríklad rovnice prúdenia
+tepla, vån, èi Navier-Stokesove rovnice prúdenia tekutín \cite{fredkin_toffoli}.
+
+Koncept CA sa postupne zaèal pou¾íva» v~rôznych oblastiach ¾ivota --
+výpoèetné úlohy, fyzikálne, chemické, biologické procesy,
+sociologické procesy (segregácia) atï.
+Obrovským prínosom pre~výskum CA bola publikácia Stephena Wolframa z~roku 2002
+s~názvom {\it New Kind of~Science}, ktorá na~1197 stranách vyèerpávajúco
+analyzuje potenciál celulárnych automatov.
+% musi byt spomenute CAM
+Súèasný výpoèet buniek CA dal vznik mnohým hardwarovým rie¹eniam ako
+napríklad CAM (Cellular Automata Machines) vyvinutý na MIT (Massachusetts Institute
+of~Technology), za~ktorej vývojom stoja Norman H. Margolus a Tomasso Toffoli.
+
+
+
+% MODEL CA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Model CA}\label{sec:model_ca}
+
+V¹etky poèítaèové programy mo¾no pova¾ova» v~princípe za CA,
+preto¾e poèítaè pracuje s~obmedzenou aritmetikou aj~pamä»ou.
+Väè¹ina CA v¹ak pou¾íva na~pár stavov redukovaný stavový priestor
+ (èasto len 2 stavy -- 0/1) \cite{ca_approaches_bio_modeling}.
+
+CA je dynamický systém, v ktorom je èas aj~priestor diskrétny.
+Skladá sa z~mrie¾ky jednoduchých funkèných jednotiek -- buniek, ktoré
+mô¾u nadobúda» jeden z~viacerých, vopred definovaných stavov.
+Stavy buniek sú synchrónne aktualizované v~ka¾dom kroku vý\-poè\-tu CA na~základe
+prechodovej funkcie. Formálne \cite{ca_def}:
+
+\begin{eqnarray}
+s^{(t+1)} = f(s^{(t)}, s_{N}^{(t)}), \forall i,j,
+\end{eqnarray}
+
+kde $s^{(t+1)}$ reprezentuje stav bunky danej pozíciami $i$ a~$j$ v~èase $t+1$, $s^{(t)}$ vyjadruje stav bunky v~èase $t$, $f$ je prechodová funkcia CA
+a~$s_{N}^{(t)}$ znaèí stavy okolitých buniek.
+
+% okolia
+Okolie buniek CA mô¾e by» ¹pecifikované rôzne, obrázok \ref{obr:okolia} zobrazuje najèastej¹ie
+pou¾ívané.
+V¹etky vizualizované okolia sú intuitívne jasné, a¾ na~Margolusove okolie (\ref{obr:okolia:5}).
+Tento typ okolia je ¹pecifický tým, ¾e plochu s~bunkami je nutné rozdeli» na~¹tvorce
+o~veµkosti $2\times 2$ a~stav v¹etkých
+buniek v~¹tvorci závisí len na~4~bunkách ohranièených daným ¹tvorcom.
+Navy¹e, v¹etky bunky v~jednotlivých ¹tvorcových
+plochách majú rovnaký stav.
+Aby sa v¹ak nebránilo propagácii stavov buniek,
+celá sie» $2\times 2$ plôch sa posunie v~ka¾dom párnom kroku evolúcie automatu
+o~jednu bunku v~ose $x$ aj $y$ a~v~ka¾dom
+nepárnom kroku zase spä». Popísaný, pomerne
+zvlá¹tny typ okolia sa úspe¹ne vyu¾íva napríklad pri~pribli¾nom rie¹ení,
+u¾ skôr spomínaných, Navier--Stokesových rovníc \cite{margolus_neigh}.
+
+
+
+\begin{figure}[h]
+  \centering
+  \subfloat[Von Neumannovo okolie]{\label{obr:okolia:1}\includegraphics[width=35mm]{pics/neumann}} \ \ \ \ \ \
+  \subfloat[Roz¹írené Von Neumannovo okolie]{\label{obr:okolia:2}\includegraphics[width=35mm]{pics/neumann_e}} \ \ \ \ \ \
+  \subfloat[Moorovo okolie]{\label{obr:okolia:3}\includegraphics[width=35mm]{pics/moore}}
+  \\
+  \subfloat[Roz¹írené Moorovo okolie]{\label{obr:okolia:4}\includegraphics[width=35mm]{pics/moore_e}} \ \ \ \ \ \
+  \subfloat[Margolusovo okolie]{\label{obr:okolia:5}\includegraphics[width=35mm]{pics/margolus}}
+  \caption{Rôzne typy okolia CA}
+  \label{obr:okolia}
+\end{figure}
+
+
+Stephen Wolfram, o ktorom Terry Sejnowski, odborník na neurónove siete,
+hovorí ako o jednom za najinteligentnej¹ích vedcov planéty \cite{sw_novy_druh_vedy},
+definoval 4 triedy \cite{wolfram02}, do~ktorých mo¾no rozdeli»
+celulárne automaty a~niektoré ïal¹ie výpoèetné modely.
+Pomocou týchto tried popísal vz»ah celulárnych automatov
+k~dynamickým systémom (uvedený v~zátvorkých):
+
+%Andrew Ilachinski definíciu tried formuloval nasledovne \cite{ilachinski_2001}:
+% pridat aj analogiu s dynamickymi systemami ??
+% http://en.wikipedia.org/wiki/Cellular_automaton#ilachinski
+
+% spravit tabulku
+\begin{itemize}
+    \item {\bf Trieda I}\,--\,poèiatoèné konfigurácie evolvujú do~stabilného,
+    homogénneho stavu. Aká\-koµ\-vek náhodnos» poèiatoènej konfigurácie mizne (limitné body).
+    \item {\bf Trieda II}\,--\,poèiatoèné konfigurácie konvergujú do~jednoducho
+    separovateµných pe\-rio\-dic\-kých ¹truktúr (limitné cykly).
+    \item {\bf Trieda III}\,--\,vykazuje chaotické neperiodické vzory (chaotické chovanie podobné podivným atraktorom).
+    \item {\bf Trieda IV}\,--\,vykazuje komplexné vzory (veµmi dlhé prechodné úseky, ktoré nemajú jasnú analógiu v~spojitých dynamických systémoch).
+\end{itemize}
+
+
+% hlavne crty - do 1, 2 viet, nie do itemize
+%Hlavné èrty modelu celulárneho
+
+% pridat vyhody/nevyhody z bakalarky
+
+
+
+
+% VYZNAMNE CA
+%%%%%%%%%%%%%%%%%%%%%
+\section{Významné CA}
+
+% intro k prikladom CA
+%Medzi tie najznámej¹ie patrí Game of Life, Coddov automat,
+%Langtonove Q-sluèky a CAM.
+
+
+% spisat na zaklade google books knih ? dvoch tusim
+%\subsection{Game of Life}
+Je spomenutý v~ka¾dej spisbe týkajúcej sa CA, pripomína vývoj spoloèenstva
+¾ivých organizmov. Ide o u¾ spomínaný celulárny automat Johna Conwaya,
+\uvoz{Game of Life}.
+Existuje veµké mno¾stvo implementácii\footnote{
+Interaktívnu implementáciu v~podobe appletu mo¾no nájs» na adrese:
+\url{http://www.bitstorm.org/gameoflife/}.}.
+Ka¾dá bun\-ka sa nachádza v~1 z~2 stavov -- mrtvá alebo ¾ivá.
+Okolie je 5-bunkové, von Neumannove.
+Pravidlá hry resp. prechodová funkcia je veµmi jednoduchá:
+\begin{itemize}
+  \item bunky s~menej ne¾ 2 ¾ivými susedmi zomrú
+  \item ¾ivé bunky s~2 alebo 3 ¾ivými susedmi pre¾ívajú
+  \item ¾ivé bunky s~viac ne¾ 3 ¾ivými bunkami zomrú
+  \item mrtvé bunky s~práve 3 ¾ivými susedmi o¾ijú
+\end{itemize}
+
+Medzi ïal¹ie významné CA patrí napríklad Coddov automat,
+hardwarový CAM, èi CA vykazujúci Langtonove Q-sluèky.
+
+%\subsection{Coddov automat}
+
+%\subsection{Langtonove Q-sluèky}
+%- neporovnateµne jednoduch¹ia verzia na báze Coddovho automatu
+
+%\subsection{CAM}
+%Cellular Automata Machine
+
+
+
+
+% MODIFIKACIE CA
+%%%%%%%%%%%%%%%%
+%\section{Modifikácie modelu CA}
+% zatial pouzit obrazok z bp, neskor spravit iny?
+
+% rozny sposob vypoctu noveho stavu! - typy prechodovych funkcii?
+
+
+
+% APLIKACIE MODELU CA
+%%%%%%%%%%%%%%%%%%%%%
+\section{Aplikácie modelu CA}
+% asi viac rozpisat, je to to najpodstatnejsie pre predstavu vyznamu CA
+% nespravit tabulku zakladnych aplikacii a ake modifikacie sa tam pouzivaju
+
+Pomerne úzka aplikaèná doména celulárnych automatov sa postupom èasu
+rozrástla a¾ do~ta\-kej miery, ¾e sa CA zaèali pou¾íva» v~ka¾dej oblasti,
+kde je potrebné simulova» nejaké dynamické priestorové deje,
+ktoré sú charakteristické svojou komplexnos»ou.
+V~prak\-tic\-kých experimentoch sa CA vyu¾ívajú v~rôznych modifikáciach,
+málokedy sa pou¾ije model klasického celulárneho
+automatu. Príklady modifikácii CA sú znázornené na~obrázku \ref{obr:ca_modifs}.
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.5}{\includegraphics{pics/changes}}
+  \caption{Klasický vs. modifikovaný CA, upravené a prevzaté z \cite{rinaldi_multi_cellular}.}
+  \label{obr:ca_modifs}
+\end{center}
+\end{figure}
+
+
+Významné postavenie má CA v~modelovaní biochemických javov,
+príkladom je predikcia mies\-ta pôsobenia proteínov v~bunke.
+Cieµom je vytvori» automatizovanú metódu spoµahli\-vé\-ho urèovania polohy
+skúmaných proteínov. Informácia o~polohe proteínu doká¾e výrazne
+urýchli» proces urèovania jeho biologickej funkcie.
+CA sa v~tomto prípade pou¾íva na~tvorbu \uvoz{obrázkov},
+na~ktoré sa aplikujú metódy rozpoznávania vzorov v~obraze \cite{ca_subcellular_location}.
+% ake metody napr., ake okolie, ake pravidlo sa pouziva
+
+
+Model \uvoz{bunkového} automatu mo¾no pou¾i» aj na~modelovanie biologických dráh,
+kon\-krét\-ne na~modelovanie signálnych dráh mitogénom aktivovaných
+proteínkynáz \cite{ca_pathways}.
+Ide o~signálnu dráhu, po~ktorej sú signály vysielané z~cytoplazmatickej membrány
+do~cytoplazmy a~jadra.
+Pou¾itý CA modeluje 3 substráty a~4 enzýmy. Koncentrácie jednotlivých substrátov
+a~enzýmov sú definované ako poèet buniek CA.
+% blizsi popis ??
+%- model CA - 3 substraty, 4 enzymy maju pociatocne koncentracie ako parametre buniek CA
+%Ermentrout a~Edelstein-Keshet spísali prehµadový èlánok aplikácii modelu CA
+%v~modelovaní biologických procesov \cite{ca_approaches_bio_modeling}.
+%v~ktorom popísali mo¾nos» pou¾itia modelu CA v ...
+
+
+%CAs also provide a useful model for a branch
+%of dynamical systems theory which studies the emergence of well-characterized
+%collective phenomena, such as ordering, turbulence, chaos, symmetry-breaking,
+%and fractality \cite{bennett_grinstein} \cite{vichniac_ca_physics}.

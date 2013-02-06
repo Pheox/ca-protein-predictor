@@ -35,5 +35,11 @@ clean:
 	rm -f $(CO).pdf
 	rm -f *~
 
+show:
+	acroread $(CO).pdf
+
 pack:
 	tar czvf bp-xjmeno.tar.gz *.tex *.bib *.bst ./fig/* ./cls/* Makefile Changelog
+
+chars:
+	cat ca_dp.tex ea.tex experimenty.tex implementacia.tex navrh.tex predikcia.tex proteiny.tex uvod.tex zaver.tex | wc -c

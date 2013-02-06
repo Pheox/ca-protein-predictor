@@ -13,21 +13,26 @@
 %\documentclass[cover,print]{fitthesis} % pro tisk - na odkazy se neda klikat
 %\documentclass[english,print]{fitthesis} % pro tisk - na odkazy se neda klikat
 %      \documentclass[english]{fitthesis}
-% * Je-li prace psana v anglickem jazyce, je zapotrebi u tridy pouzit 
+% * Je-li prace psana v anglickem jazyce, je zapotrebi u tridy pouzit
 %   parametr english nasledovne:
 %      \documentclass[english]{fitthesis}
-% * Neprejete-li si vysazet na prvni strane dokumentu desky, zruste 
+% * Neprejete-li si vysazet na prvni strane dokumentu desky, zruste
 %   parametr cover
 
 % zde zvolime kodovani, ve kterem je napsan text prace
 % "latin2" pro iso8859-2 nebo "cp1250" pro windows-1250, "utf8" pro "utf-8"
 %\usepackage{ucs}
-\usepackage[latin2]{inputenc}
-\usepackage[T1]{fontenc}
+%\usepackage[latin2]{inputenc}
+\usepackage[latin2]{inputenc} % files encoding
+\usepackage[T1]{fontenc} % output encoding
+% OT1 - default - only 128 characters
+% T1 - european languages
 \usepackage{url}
+\usepackage{subfig}
 \DeclareUrlCommand\url{\def\UrlLeft{<}\def\UrlRight{>} \urlstyle{tt}}
 %zde muzeme vlozit vlastni balicky
 
+\newcommand\uvoz[1]{\quotedblbase #1\textquotedblleft}
 
 % =======================================================================
 % balíèek "hyperref" vytváøí klikací odkazy v pdf, pokud tedy pou¾ijeme pdflatex
@@ -51,35 +56,56 @@
 %---------------------------------------------------------------------------
 \projectinfo{
   %Prace
-  project=BP,            %typ prace BP/SP/DP/DR
-  year=2008,             %rok
+  project=DP,            %typ prace BP/SP/DP/DR
+  year=2013,             %rok
   date=\today,           %datum odevzdani
   %Nazev prace
-  title.cs={Název práce},  %nazev prace v cestine
-  title.en={Thesis title}, %nazev prace v anglictine
+  title.cs={Predikce sekundární struktury proteinù pomocí celulárních automatù},  %nazev prace v cestine
+  title.en={Prediction of Secondary Structure of Proteins Using Cellular Automata}, %nazev prace v anglictine
   %Autor
-  author={Jméno Pøíjmení},   %jmeno prijmeni autora
-  %author.title.p=Bc., %titul pred jmenem (nepovinne)
+  author={Vladimír Brigant},   %jmeno prijmeni autora
+  author.title.p=Bc., %titul pred jmenem (nepovinne)
   %author.title.a=PhD, %titul za jmenem (nepovinne)
   %Ustav
-  department=UPSY, % doplnte prislusnou zkratku: UPSY/UIFS/UITS/UPGM
+  department=UIFS, % doplnte prislusnou zkratku: UPSY/UIFS/UITS/UPGM
   %Skolitel
-  supervisor= Jméno Pøíjmení, %jmeno prijmeni skolitele
+  supervisor= Jaroslav Bendl, %jmeno prijmeni skolitele
   supervisor.title.p=Ing.,   %titul pred jmenem (nepovinne)
-  supervisor.title.a={Ph.D.},    %titul za jmenem (nepovinne)
-  %Klicova slova, abstrakty, prohlaseni a podekovani je mozne definovat 
+  %supervisor.title.a={Ph.D.},    %titul za jmenem (nepovinne)
+  %Klicova slova, abstrakty, prohlaseni a podekovani je mozne definovat
   %bud pomoci nasledujicich parametru nebo pomoci vyhrazenych maker (viz dale)
   %===========================================================================
   %Klicova slova
-  keywords.cs={Klíèová slova v èeském jazyce.}, %klicova slova v ceskem jazyce
-  keywords.en={Klíèová slova v anglickém jazyce.}, %klicova slova v anglickem jazyce
+  keywords.cs={sekundární struktura proteínù, celulární automat,
+    proteinové predikce, genetický algoritmus}, %klicova slova v ceskem jazyce
+  keywords.en={secondary protein structure, cellular automata,
+    protein prediction, genetic algorithm}, %klicova slova v anglickem jazyce
   %Abstract
-  abstract.cs={Výtah (abstrakt) práce v èeském jazyce.}, % abstrakt v ceskem jazyce
-  abstract.en={Výtah (abstrakt) práce v anglickém jazyce.}, % abstrakt v anglickem jazyce
+  abstract.cs={
+  Tato práce popisuje návrh metody predikce sekundární struktury proteinù
+  zalo¾enou na~ce\-lu\-lár\-ních automatech (CA).
+  Prechodová funkce je získaná pomocí evoluèního algoritmu.
+  Predikèní model bude vyu¾ívat statistických i~experimentálních vlastností aminokyselin.
+  Cílem je vyvinout takovou metodu predikce, která je rychlá,
+  % selling point? viz zkouska PSIPREDu? - rychla + zakomponovat PSIPRED
+  vykazuje solidní úspì¹nost
+  a~mohla by být pou¾ita ako doplòkový nástroj ke~stávajícim metodám
+  predikce sekundární struktury proteínù.
+  %Výsledky ukazují, ¾e ... \\
+  }, % abstrakt v ceskem jazyce
+  abstract.en={
+  This work describes a~method of~the~secondary structure prediction of~proteins based
+  on~cellular automaton (CA) model.
+  Transition rules are acquired by evolutionary algorithm.
+  Prediction model will use both statistical and experimental characteristics of~amino acids.
+  The goal is to~create such a~prediction method that is fast, reasonably accurate
+  and could be used as an~additional tool hand in~hand with~today's used
+  protein secondary structure prediction methods.
+  }, % abstrakt v anglickem jazyce
   %Prohlaseni
-  declaration={Prohla¹uji, ¾e jsem tuto bakaláøskou práci vypracoval samostatnì pod vedením pana ...},
+  declaration={Prohla¹uji, ¾e jsem tuto diplomovou práci vypracoval samostatnì pod vedením pana Ing. Jaroslava Bendla.},
   %Podekovani (nepovinne)
-  acknowledgment={Zde je mo¾né uvést podìkování vedoucímu práce a tìm, kteøí poskytli odbornou pomoc.} % nepovinne
+  acknowledgment={Chcel by som poïakova» Ing. Jaroslavovi Bendlovi za cenné rady pri tvorbe tejto práce.} % nepovinne
 }
 
 %Abstrakt (cesky, anglicky)
@@ -106,27 +132,30 @@
   % Obsah
   % ----------------------------------------------
   \tableofcontents
-  
+
   % Seznam obrazku a tabulek (pokud prace obsahuje velke mnozstvi obrazku, tak se to hodi)
   % \listoffigures
-  % \listoftables 
+  % \listoftables
 
   % Text prace
   % ----------------------------------------------
   \input{obsah} % viz. obsah.tex
 
+
+
+
   % Pouzita literatura
   % ----------------------------------------------
 \ifczech
   \bibliographystyle{czechiso}
-\else 
+\else
   \bibliographystyle{plain}
 %  \bibliographystyle{alpha}
 \fi
   \begin{flushleft}
-  \bibliography{literatura} % viz. literatura.bib
+  \bibliography{xbriga00_dp} % viz. xbriga00.bib
   \end{flushleft}
   \appendix
-  
+
   \input{prilohy} % viz. prilohy.tex
 \end{document}

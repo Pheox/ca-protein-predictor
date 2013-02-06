@@ -9,7 +9,7 @@
 %% merlin.mbs  (with options: `tail,exlang,lang,vonx,nm-rev,jnrlst,aunm-semi,nmlm,x3,m3,atit-u,vnum-nr,volp-sp,jwdpg,pp-last,jwdvol,num-xser,ser-vol,ser-ed,pg-bk,add-pub,isbn,issn,doi,edpar,edby,blk-tit,au-col,èe¹tina,pp,and-xcom,xand,eprint,url,url-nl,nfss,,{}')
 %% ----------------------------------------
 %% *** Styl sna¾ící se být v souladu s normou ISO 690. Pomocí latex makebst vytvoøil David Martinek. ***
-%% 
+%%
 %% Copyright 1994-2004 Patrick W Daly
  % ===============================================================
  % IMPORTANT NOTICE:
@@ -272,6 +272,9 @@ FUNCTION {bbl.techrep}
 
 FUNCTION {bbl.mthesis}
 { "Diplomová práce" }
+
+FUNCTION {bbl.bthesis}
+{ "Bakaláøská práce" }
 
 FUNCTION {bbl.phdthesis}
 { "Dizertaèní práce" }
@@ -1184,7 +1187,7 @@ FUNCTION {inbook}
   format.eprint output
   fin.entry
   write.url
-}
+  }
 
 FUNCTION {incollection}
 { output.bibitem
@@ -1296,6 +1299,25 @@ FUNCTION {mastersthesis}
   fin.entry
   write.url
 }
+
+FUNCTION {bachelorsthesis}
+{ output.bibitem
+  format.authors "author" output.check
+  add.colon
+  format.btitle
+  "title" output.check
+  new.sentence
+  bbl.bthesis format.thesis.type output.nonnull
+  school "school" bibinfo.warn output
+  address "address" bibinfo.check output
+  format.date "year" output.check
+  format.doi output
+  format.note output
+  format.eprint output
+  fin.entry
+  write.url
+}
+
 
 FUNCTION {misc}
 { output.bibitem

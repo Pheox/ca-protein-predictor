@@ -1,0 +1,296 @@
+\chapter{Predikcia sekundárnej ¹truktúry proteínov}\label{predikcia}
+% zda sa byt celkom dobre zhrnutie:
+% http://course.wilkes.edu/bioinformatics/stories/storyReader$122
+% !! http://www.sbg.bio.ic.ac.uk/people/rob/CCP11BBS/secstrucpred.html
+
+Dr¾iteµ dvoch Nobelových cien (1954, 1962), Linus Pauling, bol prvý, kto predpovedal
+motívy sekundárnej ¹truktúry proteínov (SSP) \cite{rost_review}.
+Koncom 50-tych rokov bola po prvý krát experimentálne zistená ¹truktúra proteínu
+(pomocou röntgenovej kry¹talografie\footnote{Metóda zis»ovania polohy jednotlivých atómov molekúl
+za pomoci röntgenového ¾iarenia, ktoré nám dovoluje \uvoz{vidie»} rádovo v jednotkách nanometrov.
+}).
+Rozkvet experimentálneho zis»ovania ¹truktúry proteínov v¹ak nastal a¾ v 90-tych rokoch
+20. storoèia vïaka technickému pokroku.
+Obrázok \ref{obr:pdb_growth} ukazuje nárast poètu záznamov v súèasnosti naj\-väè\-¹ej databáze
+zavedenej? v \cite{pdb_paper}.
+%PDB\footnote{Protein Data Bank, domovská stránka: \url{http://www.rcsb.org/pdb/}.}.
+V súèasnosti je poèet experimentálne zistených záznamov
+¹truktúry proteínov pribli¾ne 80\,000, existuje teda databáza, na ktorú mô¾eme
+aplikova» rôzne techniky predikcie (¹tatistické, strojové uèenie).
+
+Experimentálne metódy klasifikujú jednotlivé aminokyseliny do~1 z~8 tried,
+pri~predikcii sa v~odbornej literatúre väè¹inou pou¾íva redukcia
+na~3 základné: H, I, G $\rightarrow$ H (Helix), E, B $\rightarrow$ B (Beta Sheet),
+T, S $\rightarrow$ C (Coil). Vyèerpávajúci popis jednotlivých tried priniesli
+Wolfgang Kabsch a~Christian Sander v~\cite{kabsch_dssp}.
+SSP problém znie: majme proteínovú sekvenciu s~aminokyselinami
+$\{S_1, S_2, \cdots, S_n \}$; urèi pre~ka¾dú $S_i$ motív sekundárnej
+¹truktúry -- $\alpha$-he\-lix (H), $\beta$-sheet (E) alebo Coil (C).
+Bolo aplikovaných veµa rôznych postupov, nasleduje klasifikácia
+a~popis tých najúspe¹nej¹ích a~najprelomovej¹ích.
+
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.70}{\includegraphics{pics/pdb.jpg}}
+  \caption{Graf vyjadrujúci nárast poètu záznamov v databáze PDB,
+  prevzaté z \cite{pdb_statistics}.}
+  \label{obr:pdb_growth}
+  \end{center}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Klasifikácia predikèných metód}\label{sec:klasif_pred}
+
+%Navrhnutých metód predikcie bolo veµa, menej èi viac úspe¹ných.
+%Pre~lep¹iu orientáciu má zmysel ich klasifikácia.
+
+% prva generacia
+Podµa chronológie mo¾no metódy predikcie SSP rozdeli»
+do~3~generácii \cite{rost_slajdy1} (viï tabuµka \ref{table:generations}).
+Úspe¹nos» metód 1. generácie nie je vysoká,
+èo je dané najmä neuva¾ovaním globálneho kontextu preteínu
+ani evoluènej informácie extrahovanej z~príslu¹nej rodiny
+homologických proteínových sekvencií.
+Motív sekundárnej ¹truktúry pre~urèitú aminokyselinu
+sa urèoval na~základe ¹tatistiky, ktorá uprednostòuje ten motív,
+ktorý je pre danú aminokyselinu naj\-be¾\-nej\-¹í.
+Tieto metódy trpeli nedostatkom dát.
+Medzi najvýznamnej¹ie metódy patrí Chou-Fasman \cite{chou_fasman_prediction}
+a~GOR.
+Chou-Fasman metóda predpovedá motív sekundárnej ¹truktúry aktuálnej aminokyseliny
+na~základe parametrov, ktoré vyjadrujú schopnos» predå¾i» alebo preru¹i»
+v~danom mieste motív sekundárnej ¹truktúry.
+GOR prediktor, pova¾ovaný za~jedného z~prvých realizovaných ako poèítaèový program,
+vyu¾íva poznatky teórie informácie, ktoré sú aplikované
+na~okno o~veµkosti 17 aminokyselín (8~vµavo, 8~vpravo).
+Pre~ka¾dú z~20 aminokyselín sa vypoèíta frekvencia na~danej pozícii v~okne,
+na~základe ktorých sa predikuje aminokyselina v~strede.
+Tento predikèný model v¹ak predpokladá, ¾e neexistuje ¾iadna korelácia
+medzi konkrétnymi motívami sekundárnej ¹truktúry aminokyselín v~okne 17 aminokyselín
+a~predikovaným motívom v~strede okna \cite{gor_1996}.
+GOR~II je základná metóda GOR pracujúca s~roz¹írenou databázou.
+Tieto metódy v~tej dobe vykazovali vy¹¹iu úspe¹nos» ne¾ bola v~skutoènosti
+kvôli zahrnutiu trénovacích sekvencií do~testovacích \cite{kabsch_how_good}.
+
+
+% podla \cite{gor_1996}:
+% GOR I - okno 17 - ale vyuzival len teoriu informacie
+% In fact, in this approximation one assumes that there is no correlation
+% between residues occurring at different positions in the window of 17 residues so defined.
+% GOR II - len vacsia DB
+% GOR III - v ramci okna sa uvazovali aj typy okolitych aminokyselin
+% GOR IV - ?
+
+% druha generacia
+Metódy vyvinuté v 80-tych rokoch 20. storoèia mo¾no pova¾ova» za 2. generáciu metód SSP.
+Vy¹¹í výpoèetný výkon dovoloval zlo¾itej¹ie algoritmy
+predikujúce motív príslu¹nej aminokyseliny na základe
+okolitých aminokyselín v definovanom okne o veµkosti 3--51 ami\-no\-kyse\-lín.
+Modelovala sa, na rozdiel od metódy GOR, závislos» motívu
+predikovanej aminokyseliny na motívoch susedných aminokyselín.
+Túto koreláciu si uvedomili aj tvorcovia metódy GOR, keï publikovali
+druhé roz¹írenie -- GOR III, ktoré sa pova¾uje za naj\-výz\-nam\-nej\-¹ieho predstaviteµa
+2. generácie metód predikcie SSP.
+Revolúciou v SSP bola dostupnos» roz\-siah\-lých rodín homologickych sekvencií.
+Kombinácia rozsiahlej databázy sekvencií a sofistikovaných poèítaèových techník
+viedla k prekonaniu úspe¹nosti 70 \%.
+%Okrem toho, limit 70--80 \% mô¾e by» funkciou variácie sekundárnej ¹truktúry
+%v rámci homologických proteínov.
+
+Na~prelom 2. a 3. generácie metód predikcie SSP
+mo¾no zaradi» algoritmy roz¹írené o~ïal¹ie informácie
+o~aminokyselinách, napr. tvar, veµkos» alebo
+fyzikálno-chemické vlastnosti.
+Patrí sem napríklad metóda najbli¾¹ích susedov, kde sekundárna ¹truktúra sa urèí
+na~základe ¹truktúry najpodobnej¹ích sekvenií \cite{pred_distance_2008},
+GOR~V, ZPRED, èi PREDATOR, ktorý pou¾íva metódu najbli¾¹ích susedov
+skombinovanú s~interakciou vzdialenej¹ích aminokyselín.
+% \cite{gor_v}
+
+
+%GOR V - pou¾íva PSI-BLAST pre zarovnanie sekvencií
+%PREDATOR - nearest neighbor + interakcia so vzdialenej¹ími aminokyselinami
+%ZPRED - zalo¾ený na GOR
+
+
+
+%kombinacia viacerych metod dava najlepsie vysledky, pretoze sa odstrania systematicke chyby
+% JPred - 3. generation method
+
+
+\begin{table}[h]
+ \begin{center}
+ \begin{tabular}{|c|c|c|}\hline
+      {\bf Generácia} & {\bf Obdobie} & {\bf Úspe¹nos» [\%]}\\\hline\hline
+      1. & 1960\,--\,1980 & 50--55 \\\hline
+      2. & 1980\,--\,1990 & 55--62 \\\hline
+      3. & 1990\,--\,? & 70--80 \\\hline
+ \end{tabular}
+ \caption{Generácie metód predikcie SSP.}
+ \label{table:generations}
+ \end{center}
+\end{table}
+
+
+
+%Vhodné je aj~rozdelenie podµa pou¾itej predikènej techniky
+%(viï tabuµka \ref{table: methods}).
+% \cite{bendl_slajdy}
+
+
+%\begin{table}[h]
+% \begin{center}
+% \begin{tabular}{|c|c|c|}\hline
+%    {\bf Metódy} & {\bf Generácia} & {\bf Zástupci} \\\hline
+%    ©tatistické & I.-II.  & Chou-Fasman \cite{chou_fasman_prediction}, GOR \\\hline
+%    Znalostné & II. & GOR V, PREDATOR, ZPRED \\\hline
+%    Strojové uèenie & II.-III. & PSIPRED \cite{psipred_server}, PHD, PROF \\\hline
+%    Konsenzuálne & III. & JPRED, NPS, CPM \cite{yang_cpm_2009}\\\hline
+% \end{tabular}
+% \caption{Metody predikcie}
+% \label{table: methods}
+% \end{center}
+%\end{table}
+
+% chou-fasman podrobnejsie
+%Vyu¾íva relatívnu frekvenciu výskytu jednotlivých AK
+%v~rôznych elementoch sekundárnej ¹truktúry.
+%Vy¾aduje referenènú mno¾inu, na~základe ktorej je mo¾né
+%vykona» ¹tatistickú analýzu.
+
+% algoritmus chou-fasman?
+
+%V roku 2008 Ashish Ghosh a Bijnan Parai publikovali prácu ,
+
+%- PSIPRED zahrnuje 2 dopredne NN, ktore analyzuju vystup z PSI-BLASTu
+%- pouzitie SVM \cite{pred_svm_2006}
+%- \cite{combining_models_2003} uvadza, ze kombinovanie modelov zvysuje uspesnot,
+%  ale prinasa zo sebou urcite problemy...presne ake!
+%- fusion of classifiers = meta-classifier \cite{meta_classifier}
+%- mixed model, cluster analysis - treba rucne spravit citaciu!
+
+%Zaujímavý je aj prístup pomocou chemických posunov,
+
+Zaèiatkom 90-tych rokov minulého storoèia zaèali vznika»
+metódy 3. generácie, ktoré sú zalo¾ené na strojovom uèení.
+Èasto sa pou¾ívajú umelé neurónové siete èi klasifikátor SVM
+(z angl. Support Vector Machine). Známymi predstaviteµmi sú
+PSIPRED, PHD a PROF.
+
+
+% snad trosku viac rozviest
+Súèasný trend vo~vývoji prediktorov SSP je vytvára» pomerne zlo¾ité modely
+zlo¾ené z~viacerých prediktorov, ide o~tzv. konsenzuálne metódy.
+Príkladom je hierarchický systém Bingru Yanga a~spol.,
+ktorý má 4 vrstvy a~vykazuje úspe¹nos»
+presahujúcu 80 \% \cite{yang_cpm_2009}.
+Nemo¾no nespomenú» metódu JPRED èi NPS.
+
+
+Podµa ¹túdie z~roku 2009 \cite{how_many_3d_2009}, analýzy úspe¹nosti
+algoritmov predikcie SSP, existujúce algoritmické techniky nemô¾u
+by» naïalej vylep¹ované iba pridávaním nehomologických sekvencií
+do~tréningovej dátovej sady, tzn. mali by sme zamera»
+na~pou¾ívanie nových techník pri~vývoji prediktorov SSP s~lep¹ou
+úspe¹nos»ou.
+
+
+
+% PRELOMOVE METODY
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Prelomové metódy}
+%\subsection{Metóda Chou-Fasman}
+
+
+
+% HODNOTIACE PRISTUPY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Hodnotiace prístupy}
+
+Dôle¾itým prvkom pri~vývoji metód predikcie SSP sú postupy merajúce
+úspe¹nos» hod\-note\-nej metódy.
+Medzi najpou¾ívanej¹ie patria úspe¹nostné miery $\text{Q}_3$ a~SOV.
+
+$\text{Q}_3$ udáva pomer správne klasifikovaných reziduí
+proteínovej sekvencie do 1 z~3~tried (H, E, C) k~v¹etkým reziduám \cite{q3_schulz}.
+Táto metodológia je jednoduchá a~má urèitú výpovednú hodnotu,
+presne v¹ak nezachytáva \uvoz{u¾itoènos»} predikcie elementov
+sekundárnej ¹truktúry pre~následné vyu¾itie pri~predikcii terciárnej ¹truktúry,
+preto¾e viac ne¾ správne urèenie konformaèného stavu jednotlivých reziduí
+je dôle¾itej¹ie urèenie
+typu a~lokalizácii elementov sekundárnej ¹truktúry \cite{rost_sov_redefinition_1999}.
+
+SOV (z~angl. segment overlap) je miera, ktorá sa zameriava na~správnu
+predikciu ele\-men\-tov sekundárnej ¹truktúry proteínov.
+Pôvodná SOV miera z~roku 1994 (SOV'94) \cite{redefining_goals_1994} nemala
+definovaný horný limit, èím ju nebolo mo¾né priamo porovnáva»
+s~inými mierami (napr. s~$\text{Q}_3$).
+V~tejto práci pou¾ívam upravenú verziu SOV
+eliminujúcu nedostatky definovanú v~roku 1999~\cite{rost_sov_redefinition_1999}.
+Vzhµadom k~tomu, ¾e túto mieru budem pou¾íva» pri~hodnotení úspe¹nosti SSP
+a~jej netriviálnosti, nasledujúca èas» sekcie ju popisuje.
+% nasledovne ?
+
+Nech $s_1$ a~$s_2$ znaèia porovnávané segmenty sekundárnej ¹truktúry v~konformaènom stave $i$~(H, E alebo C).
+$s_1$ je segment referenèný (typicky získaný experimentálne),
+$s_2$ je segment predikovaný.
+Nech $(s_1, s_2)$ je pár prekrývajúcich sa segmentov,
+$S(i)$ mno¾ina v¹etkých prekrývajúcich sa párov segmentov v~stave~$i$
+a~$S'(i)$ mno¾ina v¹etkých segmentov $s_1$ v~stave $i$, pre~ktoré neexistuje
+¾iaden prekrývajúci sa segment $s_2$ v~stave $i$, formálne:
+
+\begin{eqnarray}
+S(i) = \{(s_1, s_2): s_1 \cap s_2 \neq \varnothing\ \wedge\ s_1\  \text{a}\ s_2\  \text{s}\acute{\text{u}}\ \text{v konforma}\check{\text{c}}\text{nom stave}\ i \}\\
+S'(i) = \{s_1:\forall s_2, s_1 \cap s_2 = \varnothing\ \wedge\ s_1\  \text{a}\ s_2\  \text{s}\acute{\text{u}}\ \text{v konforma}\check{\text{c}}\text{nom stave}\ i \}
+\end{eqnarray}
+
+\noindent SOV miera pre~konformaèný stav $i$:
+
+\begin{eqnarray}
+SOV = \sum\limits_{i \epsilon \{H,E,C\}} SOV(i) = \frac{1}{N} \sum\limits_{i \epsilon \{H,E,C\}}  \sum\limits_{S(i)}\left[\frac{\text{minov}(s_1,s_2) + \delta(s_1,s_2)}{\text{maxov}(s_1,s_2)} \times len(s_1)\right] \times 100\label{eq:sov},
+\end{eqnarray}
+kde $N$ je normalizaèná hodnota:
+
+\begin{eqnarray}
+N = \sum\limits_{i \epsilon \{H,E,C\}}N(i) = \sum\limits_{i \epsilon \{H,E,C\}}\left[\sum\limits_{S(i)} len(s_1) + \sum\limits_{S(i)} len(s_1)\right]\label{eq:n},
+\end{eqnarray}
+
+kde $len(s_1)$ vyjadruje poèet reziduí v segmente $s_1$,
+$minov(s_1, s_2)$ då¾ku aktuálneho prekryvu segmentov $s_1$ a $s_2$,
+$maxov(s_1, s_2)$ rozsah \uvoz{zjednotenia} segmentov $s_1$ a $s_2$
+a $\delta(s_1, s_2)$ je definované nasledovne:
+
+\begin{eqnarray}
+\delta (s_1, s_2) = min\{maxov(s_1, s_2)-minov(s_1, s_2), minov(s_1,s_2),\\
+\lfloor len(s_1)/2\rfloor, \lfloor len(s_2)/2\rfloor \},
+\end{eqnarray}
+
+kde $min\{x_1;x_2;\ldots;x_n\}$ znaèí minimum z~$n$~celých èísel.
+Pre~predstavu, na~základe obrázku \ref{obr:sov} a~rovnice \ref{eq:sov} sa hodnota SOV(H) vypoèíta nasledovne:
+
+\begin{eqnarray}
+SOV(H) = \frac{1}{6+6+3}\times\left(\frac{1+1}{10} + \frac{2+1}{6} \right) \times 6 \times 100 = 28.0
+\end{eqnarray}
+
+% skontrolovat, v clanku riesia Sov^observed resp. Sov^predicted...
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.7}{\includegraphics{pics/sov_1.jpg}}
+  \caption{Ilustrácia výpoètu SOV(H). Èierne resp. biele obdå¾niky reprezentujú $minov$ resp. $maxov$ hodnoty prekrývajúcich sa segmentových párov z~experimentálne zistených (EXP)
+  a~predikovaných (PRED) ¹truktúr.}
+  \label{obr:sov}
+  \end{center}
+\end{figure}
+
+% zatial MCC asi do prace nedavat, resp. az ked najdem clanok
+% ktory uvdenie vyhody jeho pouzitia, zatial je best SOV
+% http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1479840/
+%MCC (Matthews Correlational Coefficient) -¹tatistická miera
+%pracujúca s maticou zámen (confussion matrix) pou¾ívaná hojne
+%v bioinformatike, pou¾i» v tejto práci ? (\cite{hsmm_matthews_2006})
+
+% zahrnut aj reliability index ?? + obrazok od Rosta napr?
