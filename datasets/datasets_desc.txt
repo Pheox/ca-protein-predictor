@@ -1,6 +1,10 @@
 =====
 RS126
 =====
+- ako taky popis sa nachadza na
+  http://link.springer.com/chapter/10.1007%2F978-3-540-79721-0_46
+
+
 seq_1acx: ??
 seq_MACM_STRMA: ??
 seq_KEDA_ACTSL: ??
@@ -16,9 +20,9 @@ zpred: prediction
 access: prediction
 PHD: phd prediction credibility numbers
 Pred: pred prediction credibility numbers
-dssp:
-define: ??
-stride: ??
+dssp: experimentalna predikcia
+define: experimentalna predikcia
+stride: experimentalna predikcia
 
 
 =====
