@@ -16,3 +16,6 @@
 *.log
 *.out
 *.toc
+
+# data
+./data/pdb_vyber/files/*

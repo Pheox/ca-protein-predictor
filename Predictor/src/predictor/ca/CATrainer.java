@@ -1,7 +1,7 @@
 /**
 *   CATrainer.java
 *
-*   Copyright (c) 2012 Vladimír Brigant
+*   Copyright (c) 2013 Vladimír Brigant
 *   This software is distributed under the terms of the GNU General Public License.
 */
 

@@ -1,0 +1,42 @@
+ Poznamky ku kniznici JGAP
+---------------------------
+- len GA? je JGAP dost komplexna?
+- the higher the number, the better the solution
+- dedenie z org.jgap.FitnessFunction
+- def. konstruktora + evaluate() metody
+
+
+
+
+
+
+
+
+Kontajnery
+----------
+- v Jave kontajner = kolekcia
+- pouzivat iteratory - efektivnejsie
+- porovnatelnost (compareTo) zarucena tym, ze trieda implementuje rozhranie
+  Comparable
+- ak chceme vlozit do kontajnera primitivny datovy typ, musime pouzit zapuzdrujuci
+  referencny typ, napr. Integer
+- normalne kolekcie - mnoziny (rozhranie Set), zoznamy (rozhranie List)
+- asociativne kolekcie - rozhranie SortedMap
+- HashSet - nezarucuje poradie prvkov !
+- TreeSet - pre pracu so zoradenymi prvkami - implementuje rozhranie SortedSet
+- HashMap - asociativny kontajner s hesovacou tabulkou
+
+    Map m = new HashMap();
+    m.put("txt",  "text/plain");
+
+
+Logging system
+--------------
+
+
+
+MISC
+----
+NoClassDefFoundError - JVM is not able to find a particular class at runtime which was available during compile time
+- System.getproperty("java.classpath")
+
