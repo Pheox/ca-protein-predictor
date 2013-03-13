@@ -4,16 +4,41 @@ ca-protein-predictor
 Secondary protein structure prediction based on cellular automata.
 
 
-TODO 6 - 10. 2. 2013
-====================
+
+TODO 04. - 10. 3. 2013
+======================
 - kapitola o EA (evolucnych strategiach ES)
-- implementacia prototypu
-- navrhnut zakladne experimenty - overenie uspesnosti predikcie na benchmarkoch
 - vybavit predlzenie uctu na Metacentre
+- SOV - OK
+- konf. classes - graficky spracovat porovnanie
 
-TODO program
-============
 
+
+
+TODO aplikacia
+==============
+- implementacia CA - iba 1D + prislusne API
+- prechodova funkcia
+- generovanie doc (javadoc), zatial vypnute
+- implementacia zakladneho EA
+- ujednotit pisanie premennych - asi camel
+- fitness funkcia !!!
+- BlackHole.java ?
+- poriadok na githube!
+
+
+( vo webovom rozhrani sekcia trenovanie)
+( javovsky vypocet Chou Fasmanovych keficientov)
+( rozne inicializacie atd)
+( vyhodnotenie vysledkov - Q_3, SOV)
+
+
+
+
+TODO data
+=========
+- cb_513 - pri 12. sekvencii nesedia dlzky proteinu a ssp! - v tychto sekvenciach
+  sa nachadza "?" v ssp - nahradene Coilom
 
 
 
@@ -26,7 +51,6 @@ TODO 13.1.
 - vyznamne CA vynechat
 - geneticke operatory spojit dokopy pre SEP
 - skontrolovat podrobne !!
-
 
 
 - diagram optimalizacnych technik - 50 %
@@ -90,51 +114,5 @@ TODO:
 - biologicky kontext
 - nakreslit mutaciu - nejak jednoducho a nie na celu stranu
 
-
-
-15.12.2012
-- 11 757 chars
-
-16.12.2012
-- 13 066 chars
-
-17.12.2012
-- 14 654 chars
-
-2.1.2013
-- 15 216 chars
-
-3.1.2013
-- 20 341 chars
-
-4.1.2013
-- 27 639 chars
-
-5.1.2013
-- 31 684 chars
-
-6.1.2013
-- /
-
-7.1.2013
-- 36 130
-
-8.1.2013
-- 41 874
-
-9.1.2013
-- 45 219
-
-10.1.2013
-- 45 359
-
-11.1.2013
-- 45 427
-
-12.1.2013
-- 48 481
-
-13.1.2013
-- 53 900
 
 bakalarka = 100 438 latex znakov = cca 50 normostran = cca 40 strán
