@@ -1,0 +1,316 @@
+<html xml:lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:mrs="http://mrs.cmbi.ru.nl/mrs-web/ml">
+<head>
+	<base href="http://mrs.cmbi.ru.nl/m6/"/>
+
+    <title>M6</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="author" content="Maarten L. Hekkelman"/>
+    <meta name="generator" content="Japi"/>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+	<link rel="stylesheet" type="text/css" href="css/mrs-style.css"/>
+
+	<script src="scripts/jquery.js" type="text/javascript">
+	</script>
+	<script src="scripts/mrs.js" type="text/javascript">
+	</script>
+	<script src="scripts/format.js" type="text/javascript">
+	</script>
+	
+	
+
+	<script type="text/javascript">
+		Format.db = 'dssp';
+		Format.id = '3QTE';
+	</script>
+
+</head>
+<body>
+	<div id="header">
+	
+<ul id="menu" xmlns:mrs="http://mrs.cmbi.ru.nl/mrs-web/ml">
+	<li><a href=".">Home</a></li>
+	<li><a href="blast">Blast</a></li>
+	<li><a href="align">Align</a></li>
+	<li><a id="status-menu" href="status">Status</a></li>
+	<li><a href="info?db=dssp">Databank: dssp</a></li>
+	<li class="help"><a href="admin">Admin</a></li>
+</ul>
+
+<form id="queryForm" class="blackbox" action="search" method="get" xmlns:mrs="http://mrs.cmbi.ru.nl/mrs-web/ml">
+	
+	<label>
+		Search
+		<select name="db" onchange="document.getElementById('queryForm').submit();" style="width:150px;">
+			<option value="all">All Databanks</option>
+			<option value="pdbfinder2">PDBFINDER2</option><option value="omim">OMIM - Online Mendelian Inheritance in Man™</option><option value="embl">EMBL</option><option value="enzyme">Enzyme</option><option value="sprot">SwissProt</option><option value="trembl">TrEMBL</option><option value="genbank">Genbank</option><option value="refseq">Refseq</option><option value="taxonomy">Taxonomy</option><option value="pdb">PDB</option><option value="dssp" selected="selected">DSSP</option><option value="hssp">HSSP</option><option value="gene">Entrez Gene</option><option value="go">GO</option><option value="interpro">Interpro</option><option value="oxford">Oxford Human Mouse grid</option><option value="mimmap">Mimmap, our view on genemap from OMIM</option><option value="pfama">Pfam-A</option><option value="pfamb">Pfam-B</option><option value="pfamseed">Pfam-Seed</option><option value="prints">PRINTS</option><option value="prosite">Prosite</option><option value="prosite_doc">Prosite Documentation</option><option value="rebase">REBASE</option><option value="unigene">Unigene</option><option value="pmc">PubMed Central</option><option value="ptt">PTT</option>
+		</select>
+	</label>
+	<label>
+		for
+		<input id="q" type="text" name="q" size="40" value="3QTE"/>
+	</label>
+	<input type="submit" value="Search" class="submit"/>
+	
+	
+	<input type="hidden" value="3" name="count"/>
+
+<!--
+<script src="scripts/jquery-ui.js" type="text/javascript">
+</script>
+
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+jQuery(function() {
+	try {
+		var q = document.getElementById('queryForm').q;
+		
+		q.focus();
+		q.select();
+		
+/*		$(q).autocomplete({
+			source: "suggest_terms?db=${db}",
+			minLength: 2,
+		});
+*/
+		
+	} catch (e) {}
+});
+// ]]>
+</script>
+-->
+
+</form>
+
+</div>
+
+	<div id="main">
+
+		
+			<div id="onlyone" class="redirect">Only one hit for query '<span class="highlight">3QTE</span>'</div>
+			<script language="JavaScript">
+			$(&quot;#onlyone&quot;).delay(2000).slideUp();
+			</script>
+		
+
+		<div class="nav">
+			<ul>
+				<li>
+					View
+					<form id="downloadForm" action="download">
+						<input type="hidden" name="db" value="dssp"/>
+						<input type="hidden" name="nr" value="72062"/>
+						<select id="formatSelector" name="format" disabled="disabled">
+							<option value="entry" disabled="disabled">Entry</option>
+							<option value="plain" selected="selected">Plain text</option>
+							<option value="fasta" disabled="disabled">FastA</option>
+						</select>
+					</form>
+				</li>
+				
+				<li>
+					<form id="similarForm" method="get" action="similar">
+						<input type="hidden" name="db" value="dssp"/>
+						<input type="hidden" name="nr" value="72062"/>
+						<input type="button" name="similar" value="Find Similar" onclick="document.getElementById('similarForm').submit();" class="submit"/>
+					</form>
+				</li>
+				<li>
+					<form id="blastForm" method="post" action="blast">
+						<input type="hidden" name="db" value="dssp"/>
+						<input type="hidden" name="nr" value="72062"/>
+						
+							<input type="submit" name="blast" value="Blast" class="submit" disabled="disabled"/>
+						
+					</form>
+				</li>
+				<li>
+					<input value="Download" type="button" class="submit" onclick="document.getElementById('downloadForm').submit();"/>
+				</li>
+				
+				<li class="linksource">
+					source: <a href="http://www.cmbi.ru.nl/dssp.html">dssp</a>
+				</li>
+				
+			
+				<li>
+					<span class="reference" style="padding-left:4px;">
+						<span class="reference-label">References:</span>
+						
+							<a href="linked?s=dssp&amp;d=pdb&amp;nr=72062">pdb</a>
+						
+					</span>
+				</li>
+			
+				
+			</ul>
+		</div>
+		
+		<div id="data">
+			<pre class="highlightwords entry" id="entrytext">==== Secondary Structure Definition by the program DSSP, CMBI version by M.L. Hekkelman/2010-10-21 ==== DATE=2012-09-14        .
+REFERENCE W. KABSCH AND C.SANDER, BIOPOLYMERS 22 (1983) 2577-2637                                                              .
+HEADER    ANTIMICROBIAL PROTEIN                   22-FEB-11   <span class="highlight">3QTE</span>                                                             .
+COMPND   2 MOLECULE: DEFENSIN-6;                                                                                               .
+SOURCE   2 SYNTHETIC: YES;                                                                                                     .
+AUTHOR    M.PAZGIER,W.LU                                                                                                       .
+  128  4 12 12  0 TOTAL NUMBER OF RESIDUES, NUMBER OF CHAINS, NUMBER OF SS-BRIDGES(TOTAL,INTRACHAIN,INTERCHAIN)                .
+  9034.1   ACCESSIBLE SURFACE OF PROTEIN (ANGSTROM**2)                                                                         .
+   87 68.0   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(J)  , SAME NUMBER PER 100 RESIDUES                              .
+    0  0.0   TOTAL NUMBER OF HYDROGEN BONDS IN     PARALLEL BRIDGES, SAME NUMBER PER 100 RESIDUES                              .
+   63 49.2   TOTAL NUMBER OF HYDROGEN BONDS IN ANTIPARALLEL BRIDGES, SAME NUMBER PER 100 RESIDUES                              .
+    0  0.0   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I-5), SAME NUMBER PER 100 RESIDUES                              .
+    0  0.0   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I-4), SAME NUMBER PER 100 RESIDUES                              .
+    4  3.1   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I-3), SAME NUMBER PER 100 RESIDUES                              .
+    0  0.0   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I-2), SAME NUMBER PER 100 RESIDUES                              .
+    0  0.0   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I-1), SAME NUMBER PER 100 RESIDUES                              .
+    0  0.0   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I+0), SAME NUMBER PER 100 RESIDUES                              .
+    0  0.0   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I+1), SAME NUMBER PER 100 RESIDUES                              .
+   18 14.1   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I+2), SAME NUMBER PER 100 RESIDUES                              .
+    8  6.2   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I+3), SAME NUMBER PER 100 RESIDUES                              .
+    0  0.0   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I+4), SAME NUMBER PER 100 RESIDUES                              .
+    0  0.0   TOTAL NUMBER OF HYDROGEN BONDS OF TYPE O(I)--&gt;H-N(I+5), SAME NUMBER PER 100 RESIDUES                              .
+  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30     *** HISTOGRAMS OF ***           .
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0    RESIDUES PER ALPHA HELIX         .
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0    PARALLEL BRIDGES PER LADDER      .
+  0  1  1  4  0  2  2  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0    ANTIPARALLEL BRIDGES PER LADDER  .
+  0  1  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0    LADDERS PER SHEET                .
+  #  RESIDUE AA STRUCTURE BP1 BP2  ACC     N-H--&gt;O    O--&gt;H-N    N-H--&gt;O    O--&gt;H-N    TCO  KAPPA ALPHA  PHI   PSI    X-CA   Y-CA   Z-CA 
+    1    1 A A              0   0  141      0, 0.0     2,-0.4     0, 0.0     0, 0.0   0.000 360.0 360.0 360.0 150.8   -7.1  -14.2  -17.2
+    2    2 A F        -     0   0  140     29,-0.0     2,-0.5     2,-0.0    29,-0.0  -0.883 360.0-152.0 -92.6 143.2   -8.2  -12.6  -13.9
+    3    3 A T        -     0   0   78     29,-2.0    29,-1.9    -2,-0.4     2,-0.3  -0.990  21.2-174.2-114.6 121.8  -11.9  -11.8  -13.9
+    4    4 A a  E     +A   31   0A  42     -2,-0.5     2,-0.3    27,-0.2    27,-0.3  -0.919  15.5 179.8-125.4 141.9  -12.6   -8.9  -11.5
+    5    5 A H  E     -A   30   0A  60     25,-2.6    25,-2.8    -2,-0.3     2,-0.6  -0.985  32.6-120.9-130.3 148.7  -15.7   -7.0  -10.2
+    6    6 A b  E     +A   29   0A  51     -2,-0.3     2,-0.3    23,-0.2    23,-0.2  -0.837  49.4 166.6 -82.2 121.0  -16.1   -4.1   -7.9
+    7    7 A R  E     -A   28   0A  26     21,-2.6    21,-4.0    -2,-0.6     3,-0.2  -0.934  51.6-127.5-134.0 159.0  -18.3   -5.5   -5.0
+    8    8 A R  S    S+     0   0  129      1,-0.3     2,-0.4    -2,-0.3    -1,-0.1   0.924 107.7  13.7 -63.6 -44.7  -19.4   -4.6   -1.4
+    9    9 A S  S    S-     0   0   83     19,-0.1    -1,-0.3    -3,-0.1    21,-0.1  -0.999  87.8-116.7-131.2 132.8  -18.1   -8.1   -0.5
+   10   10 A c        -     0   0   37     -2,-0.4     6,-0.1    -3,-0.2    19,-0.0  -0.360  36.5-111.2 -67.3 143.5  -16.0  -10.5   -2.5
+   11   11 A Y    &gt;   -     0   0   96      4,-0.1     3,-2.4     1,-0.1    -1,-0.1  -0.288  31.8-102.1 -69.3 161.3  -17.6  -13.8   -3.4
+   12   12 A S  T 3  S+     0   0  128      1,-0.3    -1,-0.1     3,-0.0    -2,-0.1   0.688 124.0  53.3 -62.6 -17.6  -16.4  -17.0   -1.8
+   13   13 A T  T 3  S+     0   0   87      2,-0.0    -1,-0.3    19,-0.0     2,-0.2   0.452 107.5  64.0 -92.7  -3.9  -14.4  -17.8   -5.0
+   14   14 A E    &lt;   -     0   0   13     -3,-2.4     2,-0.3    18,-0.1    18,-0.2  -0.661  62.8-148.9-117.6 169.2  -12.6  -14.4   -5.0
+   15   15 A Y  E     -B   31   0A 172     16,-1.7    16,-2.0    -2,-0.2     2,-0.5  -0.926  30.4-102.5-129.9 164.1  -10.2  -12.3   -3.0
+   16   16 A S  E     +B   30   0A  61     -2,-0.3    14,-0.2    14,-0.2     3,-0.1  -0.718  34.1 171.2 -85.6 127.3   -9.8   -8.6   -2.6
+   17   17 A Y  E     -     0   0A 119     12,-3.2     2,-0.3    -2,-0.5    13,-0.1   0.381  63.9 -51.1-112.8  -4.4   -7.0   -7.0   -4.5
+   18   18 A G  E     -     0   0A  24     11,-0.4    11,-2.6     2,-0.0     2,-0.3  -0.986  68.2 -63.4 161.6-159.3   -7.8   -3.4   -3.8
+   19   19 A T  E     -B   28   0A  72     -2,-0.3    37,-2.3     9,-0.3    38,-0.4  -0.929  20.9-158.1-127.1 154.6  -10.7   -0.9   -3.9
+   20   20 A b  E     -BC  27  55A   0      7,-2.5     7,-2.3    -2,-0.3     2,-0.5  -0.931  10.0-155.6-119.7 148.2  -13.0    0.9   -6.2
+   21   21 A T  E     +BC  26  54A  38     33,-3.0    33,-2.8    -2,-0.4     2,-0.3  -0.971  30.1 145.3-122.5 120.4  -14.7    4.1   -5.5
+   22   22 A V  E &gt;   +B   25   0A  14      3,-2.3     3,-1.5    -2,-0.5    31,-0.1  -0.988  64.0  18.0-147.5 147.5  -18.0    4.8   -7.3
+   23   23 A M  T 3  S-     0   0    6     29,-0.4     3,-0.1    -2,-0.3    74,-0.1   0.770 130.9 -65.0  59.5  23.6  -21.2    6.5   -6.3
+   24   24 A G  T 3  S+     0   0   57     28,-0.3     2,-0.3     1,-0.3    -1,-0.2   0.585 116.5  99.1  82.3   3.6  -19.2    8.1   -3.5
+   25   25 A I  E &lt;  S- B   0  22A  45     -3,-1.5    -3,-2.3    56,-0.0    -1,-0.3  -0.913  72.5-112.3-127.5 156.0  -18.6    4.8   -1.8
+   26   26 A N  E     + B   0  21A  99     -2,-0.3     2,-0.3    -5,-0.2    -5,-0.2  -0.525  29.6 177.3 -79.6 146.9  -15.9    2.2   -1.6
+   27   27 A W  E     - B   0  20A  40     -7,-2.3    -7,-2.5    -2,-0.2     2,-0.3  -0.894  32.2-107.7-136.2 164.5  -16.2   -1.2   -3.1
+   28   28 A R  E     -AB   7  19A 131    -21,-4.0   -21,-2.6    -2,-0.3     2,-1.0  -0.795  21.5-126.2 -96.7 145.6  -13.6   -4.0   -3.1
+   29   29 A F  E     -A    6   0A  41    -11,-2.6   -12,-3.2    -2,-0.3     2,-0.4  -0.783  37.9-171.2 -90.2  99.6  -11.8   -5.0   -6.3
+   30   30 A c  E     +AB   5  16A   0    -25,-2.8   -25,-2.6    -2,-1.0     2,-0.3  -0.803   7.8 174.7-104.5 128.3  -12.5   -8.7   -6.3
+   31   31 A a  E      AB   4  15A   3    -16,-2.0   -16,-1.7    -2,-0.4   -27,-0.2  -0.942 360.0 360.0-132.9 151.3  -10.9  -11.2   -8.7
+   32   32 A L              0   0  109    -29,-1.9   -29,-2.0    -2,-0.3   -18,-0.1  -0.837 360.0 360.0-128.4 360.0  -10.7  -14.8   -9.4
+   33        !*             0   0    0      0, 0.0     0, 0.0     0, 0.0     0, 0.0   0.000 360.0 360.0 360.0 360.0    0.0    0.0    0.0
+   34    1 B A              0   0   97      0, 0.0     2,-0.3     0, 0.0    37,-0.2   0.000 360.0 360.0 360.0 125.6  -33.6   10.7  -15.4
+   35    2 B F  E     -D   70   0A  74     35,-3.2    35,-2.6    29,-0.0     2,-0.5  -0.800 360.0-151.0-115.5 150.4  -29.9   10.8  -15.9
+   36    3 B T  E     -D   69   0A  55     29,-2.2    29,-1.3    -2,-0.3     2,-0.3  -0.993  19.9-173.3-128.0 121.4  -27.7    8.1  -17.3
+   37    4 B d  E     -DE  68  64A   0     31,-2.5    31,-3.2    -2,-0.5     2,-0.3  -0.877   9.8-176.6-122.6 147.2  -24.1    8.0  -16.2
+   38    5 B H  E     - E   0  63A  57     25,-1.7    25,-3.4    -2,-0.3     2,-0.6  -0.973  31.7-116.6-136.0 149.5  -20.9    6.0  -17.1
+   39    6 B e  E     + E   0  62A  37     -2,-0.3     2,-0.3    23,-0.2    23,-0.2  -0.796  48.6 163.8 -82.6 121.4  -17.3    5.9  -15.8
+   40    7 B R  E     - E   0  61A  49     21,-2.6    21,-3.8    -2,-0.6    13,-0.1  -0.982  50.7-126.2-137.3 150.9  -15.1    7.1  -18.7
+   41    8 B R  S    S+     0   0  192     -2,-0.3     2,-0.3    19,-0.2    -1,-0.1   0.905 106.1   6.6 -59.5 -42.8  -11.5    8.3  -18.9
+   42    9 B S  S    S-     0   0   86     19,-0.1    -1,-0.2    -3,-0.1     2,-0.2  -0.965  88.5-116.2-133.1 157.1  -13.0   11.4  -20.6
+   43   10 B f        -     0   0   38     -2,-0.3     2,-0.1    -3,-0.1     6,-0.1  -0.558  33.0-100.0 -90.2 155.0  -16.6   12.2  -21.1
+   44   11 B Y    &gt;   -     0   0  143     -2,-0.2     3,-2.7     1,-0.1    -1,-0.1  -0.429  38.2-110.9 -63.6 147.6  -18.4   12.5  -24.4
+   45   12 B S  T 3  S+     0   0  126      1,-0.3    -1,-0.1    -2,-0.1    -2,-0.1   0.764 121.5  55.8 -56.6 -24.6  -18.7   16.1  -25.5
+   46   13 B T  T 3  S+     0   0   97      2,-0.0    -1,-0.3    19,-0.0     2,-0.1   0.583 100.4  77.9 -82.2 -10.5  -22.4   15.7  -24.9
+   47   14 B E  S &lt;  S-     0   0   16     -3,-2.7     2,-0.4    18,-0.1    18,-0.2  -0.479  72.2-129.1-100.2 166.7  -21.9   14.6  -21.2
+   48   15 B Y  E     - F   0  64A 175     16,-2.6    16,-2.7    -2,-0.1     2,-0.5  -0.947  19.6-123.8-115.9 140.7  -21.1   16.4  -17.9
+   49   16 B S  E     + F   0  63A  75     -2,-0.4    14,-0.2    14,-0.2     2,-0.1  -0.692  32.8 173.0 -82.8 121.7  -18.3   15.4  -15.5
+   50   17 B Y  E     -     0   0A  77     12,-3.0     2,-0.2    -2,-0.5    -1,-0.1  -0.556  56.2 -59.0-131.0  68.0  -19.9   14.8  -12.2
+   51   18 B G  E    S-     0   0A  36     -2,-0.1    11,-2.3   -28,-0.0    -1,-0.3  -0.522  72.7 -68.7  89.0-159.4  -17.2   13.5   -9.9
+   52   19 B T  E     - F   0  61A  53      9,-0.3   -29,-0.4    -2,-0.2     2,-0.4  -0.771  14.2-145.2-134.6 165.7  -15.1   10.4  -10.3
+   53   20 B e  E     - F   0  60A   4      7,-1.5     7,-3.4    -2,-0.3     2,-0.4  -0.981  24.4-165.7-128.8 128.2  -14.9    6.6  -10.4
+   54   21 B T  E     -CF  21  59A  23    -33,-2.8   -33,-3.0    -2,-0.4     2,-0.4  -0.948  10.5-180.0-117.8 130.8  -11.6    5.1   -9.1
+   55   22 B V  E &gt;  S-CF  20  58A  54      3,-1.8     3,-1.9    -2,-0.4   -35,-0.2  -0.977  79.7 -20.8-129.7 115.5  -10.5    1.5   -9.6
+   56   23 B M  T 3  S-     0   0   80    -37,-2.3   -36,-0.1    -2,-0.4     3,-0.1   0.827 126.4 -55.8  59.3  33.7   -7.2    0.5   -8.1
+   57   24 B G  T 3  S+     0   0   65    -38,-0.4     2,-0.6     1,-0.2    -1,-0.3   0.551 105.9 125.2  70.6   9.6   -6.2    4.2   -8.0
+   58   25 B I  E &lt;   - F   0  55A 114     -3,-1.9    -3,-1.8     0, 0.0     2,-0.6  -0.927  56.6-141.5 -92.9 119.9   -6.7    5.0  -11.7
+   59   26 B N  E     + F   0  54A  79     -2,-0.6    -5,-0.2    -5,-0.2     2,-0.2  -0.722  25.3 175.4 -95.7 120.2   -9.1    7.8  -11.6
+   60   27 B W  E     - F   0  53A 113     -7,-3.4    -7,-1.5    -2,-0.6     2,-0.3  -0.606  30.5-100.9-113.6 174.8  -11.8    8.1  -14.2
+   61   28 B R  E     -EF  40  52A  95    -21,-3.8   -21,-2.6    -9,-0.2     2,-0.8  -0.742  16.6-134.8 -99.8 145.2  -14.7   10.5  -14.8
+   62   29 B F  E     -E   39   0A   0    -11,-2.3   -12,-3.0    -2,-0.3     2,-0.5  -0.901  32.4-163.4 -92.6 107.0  -18.4    9.9  -13.8
+   63   30 B f  E     -EF  38  49A   0    -25,-3.4   -25,-1.7    -2,-0.8     2,-0.3  -0.825   9.8-178.0-104.0 116.0  -20.1   11.2  -17.0
+   64   31 B d  E      EF  37  48A   7    -16,-2.7   -16,-2.6    -2,-0.5   -27,-0.2  -0.838 360.0 360.0-116.7 151.9  -23.8   12.0  -17.0
+   65   32 B L              0   0  110    -29,-1.3   -29,-2.2    -2,-0.3   -18,-0.1  -0.982 360.0 360.0-145.7 360.0  -26.4   13.2  -19.5
+   66        !*             0   0    0      0, 0.0     0, 0.0     0, 0.0     0, 0.0   0.000 360.0 360.0 360.0 360.0    0.0    0.0    0.0
+   67    1 C A              0   0   75      0, 0.0     2,-0.4     0, 0.0   -29,-0.2   0.000 360.0 360.0 360.0 142.6  -24.5    2.3  -17.0
+   68    2 C F  E     -D   37   0A  54    -31,-3.2   -31,-2.5    29,-0.0     2,-0.5  -0.862 360.0-147.5-105.8 139.5  -25.9    3.9  -13.9
+   69    3 C T  E     -D   36   0A  31     29,-3.2    29,-1.6    -2,-0.4     2,-0.3  -0.962  19.0-172.3-106.5 126.4  -29.4    5.4  -13.8
+   70    4 C g  E     -DG  35  97A   0    -35,-2.6   -35,-3.2    -2,-0.5     2,-0.3  -0.913   9.3-178.5-124.4 144.3  -29.9    8.5  -11.6
+   71    5 C H  E     - G   0  96A  57     25,-1.9    25,-3.5    -2,-0.3     2,-0.6  -0.972  30.3-123.3-132.6 144.6  -33.0   10.4  -10.5
+   72    6 C h  E     + G   0  95A  50     -2,-0.3     2,-0.3    23,-0.3    23,-0.2  -0.842  49.8 158.6 -80.9 120.3  -33.5   13.5   -8.3
+   73    7 C R  E     - G   0  94A  64     21,-2.6    21,-3.4    -2,-0.6    13,-0.1  -0.953  54.8-124.4-139.7 160.6  -35.8   12.4   -5.5
+   74    8 C R  S    S+     0   0  212     -2,-0.3     2,-0.3    19,-0.2    -1,-0.1   0.897 103.3  21.9 -67.1 -40.1  -36.7   13.5   -2.0
+   75    9 C S  S    S-     0   0   85     19,-0.1     2,-0.3    -3,-0.1    -1,-0.2  -0.951  81.3-124.3-126.3 142.1  -35.8    9.9   -0.7
+   76   10 C i        -     0   0   40     -2,-0.3     2,-0.1    -3,-0.1     6,-0.1  -0.686  29.4-119.5 -89.7 144.9  -33.6    7.2   -2.2
+   77   11 C Y    &gt;   -     0   0  144     -2,-0.3     3,-2.7     1,-0.1    -1,-0.0  -0.439  28.4-105.4 -75.8 156.5  -35.0    3.8   -2.8
+   78   12 C S  T 3  S+     0   0  131      1,-0.3    -1,-0.1    -2,-0.1    -2,-0.0   0.654 122.8  54.5 -57.2 -21.1  -33.6    0.8   -1.0
+   79   13 C T  T 3  S+     0   0   68      2,-0.0    -1,-0.3    19,-0.0     2,-0.2   0.403 102.6  73.0 -86.2  -5.9  -32.0   -0.2   -4.3
+   80   14 C E    &lt;   -     0   0   20     -3,-2.7     2,-0.4    18,-0.1    18,-0.2  -0.637  68.9-131.4-115.4 169.9  -30.2    3.2   -4.9
+   81   15 C Y  E     -H   97   0A  81     16,-2.6    16,-2.5    -2,-0.2     2,-1.1  -0.966  23.1-123.5-122.0 137.8  -27.2    5.2   -3.5
+   82   16 C S  E     +H   96   0A  58     -2,-0.4    14,-0.2    14,-0.2     3,-0.1  -0.652  41.6 162.6 -77.4 104.5  -27.3    8.8   -2.4
+   83   17 C Y  E     -     0   0A  43     12,-2.5     2,-0.2    -2,-1.1    -1,-0.2   0.894  54.8 -41.1 -96.5 -44.6  -24.7   10.3   -4.6
+   84   18 C G  E     -H   95   0A  18     11,-1.1    11,-3.1     2,-0.0     2,-0.3  -0.743  64.8 -76.9-154.5-148.3  -25.3   14.1   -4.5
+   85   19 C T  E     -H   94   0A  86      9,-0.3     2,-0.5    -2,-0.2     9,-0.2  -0.874  14.0-149.8-129.1 150.2  -28.0   16.8   -4.6
+   86   20 C h  E     -H   93   0A  18      7,-1.7     7,-1.8    -2,-0.3     2,-0.5  -0.984  22.5-161.4-115.8 113.7  -30.2   18.4   -7.2
+   87   21 C T  E     -H   92   0A  81     -2,-0.5     2,-0.5     5,-0.2     5,-0.2  -0.858   9.6-176.6 -99.7 126.2  -31.0   21.9   -6.1
+   88   22 C V  E &gt;  S-H   91   0A  73      3,-3.0     3,-1.2    -2,-0.5    -2,-0.0  -0.936  75.1 -32.3-125.6 111.4  -34.0   23.6   -7.7
+   89   23 C M  T 3  S-     0   0  186     -2,-0.5     3,-0.1     1,-0.3    -1,-0.1   0.845 126.4 -46.5  46.1  43.7  -34.5   27.2   -6.7
+   90   24 C G  T 3  S+     0   0   60      1,-0.2     2,-0.6     0, 0.0    -1,-0.3   0.681 113.6 119.4  73.8  18.6  -33.1   26.4   -3.2
+   91   25 C I  E &lt;   - H   0  88A 100     -3,-1.2    -3,-3.0     2,-0.0     2,-0.3  -0.971  54.0-151.4-110.2 115.0  -35.1   23.2   -2.8
+   92   26 C N  E     + H   0  87A  95     -2,-0.6     2,-0.3    -5,-0.2    -5,-0.2  -0.653  18.7 175.1 -88.8 139.2  -32.7   20.3   -2.5
+   93   27 C W  E     - H   0  86A  77     -7,-1.8    -7,-1.7    -2,-0.3     2,-0.3  -0.848  35.5 -97.8-123.4 176.1  -33.3   16.7   -3.5
+   94   28 C R  E     -GH  73  85A 125    -21,-3.4   -21,-2.6    -2,-0.3     2,-0.9  -0.713  21.3-135.1 -93.4 144.8  -31.0   13.7   -3.5
+   95   29 C F  E     -GH  72  84A  12    -11,-3.1   -12,-2.5    -2,-0.3   -11,-1.1  -0.894  34.2-167.7 -95.1 100.8  -29.3   12.5   -6.7
+   96   30 C i  E     -GH  71  82A   0    -25,-3.5   -25,-1.9    -2,-0.9     2,-0.3  -0.854   7.4-177.7-105.0 124.1  -30.0    8.8   -6.4
+   97   31 C g  E      GH  70  81A   0    -16,-2.5   -16,-2.6    -2,-0.6   -27,-0.2  -0.776 360.0 360.0-118.0 156.4  -28.3    6.3   -8.6
+   98   32 C L              0   0   25    -29,-1.6   -29,-3.2    -2,-0.3   -18,-0.1  -0.974 360.0 360.0-151.9 360.0  -28.2    2.5   -9.2
+   99        !*             0   0    0      0, 0.0     0, 0.0     0, 0.0     0, 0.0   0.000 360.0 360.0 360.0 360.0    0.0    0.0    0.0
+  100    1 D A              0   0  137      0, 0.0     2,-0.4     0, 0.0    31,-0.0   0.000 360.0 360.0 360.0 113.7  -50.2   -6.8  -15.4
+  101    2 D F        -     0   0  142     29,-0.0     2,-0.5     2,-0.0    29,-0.0  -0.889 360.0-158.9-110.2 138.6  -46.4   -6.4  -15.8
+  102    3 D T        -     0   0   82     29,-2.5    29,-2.1    -2,-0.4     2,-0.3  -0.989  23.6-179.8-112.1 127.8  -44.2   -8.9  -17.5
+  103    4 D j  E     +I  130   0B  41     -2,-0.5     2,-0.3    27,-0.2    27,-0.2  -0.950  16.5 179.2-135.9 143.8  -40.7   -8.6  -16.4
+  104    5 D H  E     -I  129   0B  87     25,-2.1    25,-3.2    -2,-0.3     2,-0.6  -0.961  33.5-117.4-136.3 153.5  -37.3  -10.2  -17.1
+  105    6 D k  E     +I  128   0B  55     -2,-0.3     2,-0.3    23,-0.2    23,-0.2  -0.873  50.6 165.3 -85.9 122.0  -33.7   -9.6  -15.8
+  106    7 D R  E     -I  127   0B  49     21,-2.6    21,-3.5    -2,-0.6     3,-0.1  -0.976  53.5-118.1-139.4 154.1  -31.7   -8.5  -18.9
+  107    8 D R  S    S-     0   0  208     -2,-0.3     2,-0.3    19,-0.2    -1,-0.1   0.912 107.0  -0.2 -49.7 -50.9  -28.3   -6.9  -19.8
+  108    9 D S  S    S-     0   0   79     19,-0.1    -1,-0.2    18,-0.1     2,-0.1  -0.986  84.7-110.5-139.6 150.2  -30.4   -4.2  -21.4
+  109   10 D l        -     0   0   34     -2,-0.3     2,-0.1    -3,-0.1     6,-0.1  -0.418  36.3-103.8 -73.6 151.4  -34.1   -3.6  -21.7
+  110   11 D Y    &gt;   -     0   0  142      1,-0.1     3,-2.5    -2,-0.1    -1,-0.1  -0.447  36.6-109.6 -62.2 148.0  -35.9   -3.9  -25.0
+  111   12 D S  T 3  S+     0   0  125      1,-0.3    -1,-0.1    -2,-0.1    -2,-0.1   0.763 122.7  57.7 -49.2 -27.8  -36.8   -0.4  -26.3
+  112   13 D T  T 3  S+     0   0   93      2,-0.0    -1,-0.3    19,-0.0     2,-0.2   0.458 101.3  76.3 -83.5  -3.5  -40.5   -1.4  -25.5
+  113   14 D E    &lt;   -     0   0   15     -3,-2.5     2,-0.3    18,-0.1    18,-0.2  -0.579  69.9-139.6-105.1 164.9  -39.5   -2.0  -21.9
+  114   15 D Y  E     -J  130   0B 160     16,-2.2    16,-2.5    -2,-0.2     2,-0.6  -0.948  21.8-122.7-121.0 144.9  -38.8    0.2  -18.9
+  115   16 D S  E     +J  129   0B  55     -2,-0.3    14,-0.2    14,-0.2     3,-0.1  -0.793  26.3 179.2 -90.2 125.0  -36.0   -0.5  -16.3
+  116   17 D Y  E     -     0   0B 130     12,-4.1     2,-0.3    -2,-0.6    13,-0.1   0.527  58.7 -60.4-102.7  -4.7  -37.4   -0.8  -12.8
+  117   18 D G  E     -J  128   0B   6     11,-0.6    11,-1.8   -19,-0.0     2,-0.3  -0.970  69.7 -53.1 159.1-150.8  -34.2   -1.5  -10.9
+  118   19 D T  E     -J  127   0B  47     -2,-0.3     2,-0.3     9,-0.3     9,-0.2  -0.866  27.2-160.4-126.8 152.0  -31.4   -4.1  -10.9
+  119   20 D k  E     -J  126   0B  16      7,-2.1     7,-2.7    -2,-0.3     2,-0.4  -0.922   8.6-155.2-119.9 154.9  -31.0   -7.9  -10.6
+  120   21 D T  E     +J  125   0B  77     -2,-0.3     2,-0.4     5,-0.2     5,-0.2  -0.980  27.8 156.3-130.8 115.8  -27.8   -9.6   -9.5
+  121   22 D V  E &gt;   +J  124   0B  71      3,-2.0     3,-1.5    -2,-0.4    -2,-0.1  -0.989  68.3   6.2-145.7 127.9  -27.6  -13.1  -10.8
+  122   23 D M  T 3  S-     0   0  169     -2,-0.4     3,-0.1     1,-0.3    -1,-0.1   0.713 128.5 -66.7  67.2  23.5  -24.5  -15.1  -11.4
+  123   24 D G  T 3  S+     0   0    6      1,-0.3     2,-0.3  -118,-0.0    -1,-0.3   0.464 113.7 105.1  79.2  -0.5  -22.6  -12.2   -9.8
+  124   25 D I  E &lt;  S- J   0 121B  73     -3,-1.5    -3,-2.0  -119,-0.0     2,-0.3  -0.830  70.8-114.6-107.9 157.6  -23.4   -9.8  -12.6
+  125   26 D N  E     + J   0 120B 103     -2,-0.3     2,-0.3    -5,-0.2    -5,-0.2  -0.683  33.3 177.1 -88.7 140.1  -25.8   -6.9  -12.7
+  126   27 D W  E     - J   0 119B  60     -7,-2.7    -7,-2.1    -2,-0.3     2,-0.4  -0.844  31.6-109.2-128.8 164.5  -28.9   -6.9  -14.9
+  127   28 D R  E     -IJ 106 118B  35    -21,-3.5   -21,-2.6    -2,-0.3     2,-0.8  -0.771  23.8-129.6 -88.5 139.2  -31.7   -4.5  -15.4
+  128   29 D F  E     -IJ 105 117B  82    -11,-1.8   -12,-4.1    -2,-0.4   -11,-0.6  -0.876  36.7-166.8 -82.5 106.5  -35.1   -5.6  -14.1
+  129   30 D l  E     +IJ 104 115B   0    -25,-3.2   -25,-2.1    -2,-0.8     2,-0.3  -0.857  10.4 176.1-108.5 125.3  -37.1   -4.8  -17.3
+  130   31 D j  E      IJ 103 114B   4    -16,-2.5   -16,-2.2    -2,-0.5   -27,-0.2  -0.927 360.0 360.0-128.6 153.4  -40.9   -4.7  -17.4
+  131   32 D L              0   0  108    -29,-2.1   -29,-2.5    -2,-0.3   -18,-0.1  -0.992 360.0 360.0-140.2 360.0  -43.7   -3.9  -19.8
+</pre>
+			<div id="entryhtml" class="highlightwords entry" style="display:none"/>
+			<div id="entryfasta" style="display:none"/>
+		</div>
+	</div>
+</body>
+</html>
