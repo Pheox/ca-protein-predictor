@@ -1,25 +1,6 @@
-This directory contains data.
-
-./orig/
-    - original databases with protein sequences (rs126, cb513)
-
-./adjusted/
-    - filtered protein sequences mapped to secondary structure elements
-      (rs126.data, cb513.data)
-
-./NetTurnP/
-    - dataset
-
-./pdb_vyber/
-    - vybrane sekvencie z PDB, 5300 sekvencii, 5135 orig proteinov (s 1 chainom)
-    - treba ziskat len pripadne podsekvencie (chainy) prislusnych proteinov
-    - celkovo 5299 - 1 bol duplicitny alebo?
-    - 3 chybajuce (3G62.A, 2XHQ.A, 3UGN.C) ziskane z http://www.rcsb.org/pdb/explore/sequenceText.do?structureId=3G62&chainId=A
-    - ostatne chybajuce (1ANP.A, 1BAX.A, 3JOF.I, 1QCR.D, 1HMC.A, 1HMJ.A, 1SGH.B, 1JQS.B, 3R80.U)
-        - http://www.cmbi.ru.nl/WHY_NOT2/search/pdbid/1anp
-        - http://www.bmrb.wisc.edu/ftp/pub/bmrb/derived_data/dssp/all/1anp.dssp
-    - v niektorych sekvenciach nahradene o za C, u za C (na zaklade dat z http://www.rcsb.org/pdb/explore/sequenceText.do?structureId=3G62&chainId=A)
-
+===============================================
+Data for protein secondary structure prediction
+===============================================
 
 =====
 RS126
@@ -28,25 +9,6 @@ RS126
   http://link.springer.com/chapter/10.1007%2F978-3-540-79721-0_46
 - 6acn.concise - dlzka seq-753, dssp 754(vsetky prediktory 754),
   na zaciatku sekvencie chyba aminokyselina E
-
-seq_1acx: ??
-seq_MACM_STRMA: ??
-seq_KEDA_ACTSL: ??
-seq_NCZS_STRCZ: ??
-OrigSeq: original sequence
-cons: prediction
-dsc: prediction
-mul: prediction
-nnssp: prediction
-phd: prediction
-pred: prediction
-zpred: prediction
-access: prediction
-PHD: phd prediction credibility numbers
-Pred: pred prediction credibility numbers
-dssp: experimentalna predikcia
-define: experimentalna predikcia
-stride: experimentalna predikcia
 
 
 =====
@@ -61,21 +23,53 @@ CB513
   14xZ, 31xB, 19xX, B - N alebo D, Z - Q alebo E, J - La alebo I,
   X - unspecified or unknown aa
 
+  H, I, G => H
+  E, B => E
+  _ coils
 
-- RES - residue - aa letters
-- DSSP - secondary structure element
-    H, I, G => H
-    E, B => E
-    _ coils
-- DSSPACC
-- STRIDE
-- RsNo
-- DEFINE
-- align1..n
 
-Used in project:
-- RES - residue - aa letters
-- DSSP - secondary structure element
-- SOLVENT ACCESSIBILITY - kind of probability/measure to interact with water
-    - set to 0 in project framework
+-----------
+Directories
+-----------
 
+./orig/
+    - original databases with protein sequences (rs126, cb513)
+
+./final/
+    - final data (rs_126.data, cb_513.data, pdb_vyber.data)
+
+./pdb_vyber/
+    - 3 chybajuce (3G62.A, 2XHQ.A, 3UGN.C) ziskane z http://www.rcsb.org/pdb/explore/sequenceText.do?structureId=3G62&chainId=A
+    - ostatne chybajuce (1ANP.A, 1BAX.A, 3JOF.I, 1QCR.D, 1HMC.A, 1HMJ.A, 1SGH.B, 1JQS.B, 3R80.U)
+        - http://www.cmbi.ru.nl/WHY_NOT2/search/pdbid/1anp
+        - http://www.bmrb.wisc.edu/ftp/pub/bmrb/derived_data/dssp/all/1anp.dssp
+    - v niektorych sekvenciach nahradene o za C, u za C (na zaklade dat z http://www.rcsb.org/pdb/explore/sequenceText.do?structureId=3G62&chainId=A)
+
+
+-------
+Scripts
+-------
+
+chou_fasman.py
+- vypočíta Chou-Fasmanove koeficienty pre určitú dátovú sadu
+- použitie: $ ./chou_fasman.py ./final/rs_126.data
+
+conf_classes.py
+- vypočíta konformačné triedy pre určitú dátovú sadu
+- použitie: $ ./conf_classes.py ./final/rs_126.data
+
+process_rs126.py
+- skript transformuje originálny RS126 dataset do jednoduchého formátu (viď zdroj. kód skriptu)
+- použitie: $ ./process_rs126.py orig/rs126/
+
+process_cb513.py
+- skript transformuje originálny CB513 dataset do jednoduchého formátu (viď zdroj. kód skriptu)
+- použitie: $ ./process_cb513.py orig/cb513/
+
+q3.py
+- výpočet úspešnosti predikcie na základe miery Q3
+- použitie: $ ./q3.py ./samples/q3.data
+
+sov.py
+- výpočet úspešnosti predikcie na základe miery SOV
+- použitie: $ ./sov.py ./samples/sov.data
