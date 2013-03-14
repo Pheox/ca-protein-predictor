@@ -26,8 +26,8 @@ public class Data {
 
     static Logger logger = Logger.getLogger(Data.class);
 
-    protected ArrayList<DataItem> data;
-    protected HashMap<Character, AminoAcid> amino_acids;
+    public ArrayList<DataItem> data;
+    public HashMap<Character, AminoAcid> amino_acids;
 
 
     public Data(){
@@ -145,4 +145,34 @@ public class Data {
             System.err.println("Error: " + e.getMessage());
         }
     }
+
+
+
+    public double q3(){
+        int all_count = 0;
+        int ok_count = 0;
+
+        for (DataItem di : this.data){
+            for (int i = 0; i <  di.ssp_seq.length(); i++) {
+                if (di.ssp_seq.charAt(i) == di.predicted_seq.charAt(i))
+                    ok_count++;
+            }
+            all_count += di.ssp_seq.length();
+        }
+
+        return (double) ok_count/all_count;
+    }
+
+
+
+    public double sov(){
+
+
+        return 0;
+    }
+
+
+
+
+
 }
