@@ -25,7 +25,7 @@ public class CARule {
         CARule rule = new CARule();
 
         rule.steps = ((Integer) chromosome.getGene(0).getAllele()).intValue();
-        rule.neigh = chromosome.size() - 1;
+        rule.neigh = (chromosome.size() - 2)/2;
         rule.weights = new double[rule.neigh*2 + 1];
 
 

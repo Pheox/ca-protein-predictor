@@ -20,7 +20,8 @@ public class DataItem {
 
 
     public DataItem(){
-
+        this.aa_seq = "";
+        this.ssp_seq = "";
+        this.predicted_seq = "";
     }
-
 }

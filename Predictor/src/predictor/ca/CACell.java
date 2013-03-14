@@ -12,17 +12,41 @@ import predictor.*;
 
 public class CACell{
 
-    protected AminoAcid aminoAcid;
-    protected char ssMotif;
+    public AminoAcid aminoAcid;
+    public char ssMotif;
 
     public double helix_props;
     public double sheet_props;
     public double coil_props;
 
-    public CACell(char aa){
-        this.helix_props = 0;
-        this.sheet_props = 0;
-        this.coil_props = 0;
+
+    public CACell(AminoAcid aa){
+        this.aminoAcid = aa;
+
+        this.helix_props = this.aminoAcid.cf_a;
+        this.sheet_props = this.aminoAcid.cf_b;
+        this.coil_props = this.aminoAcid.cf_c;
+
+        this.compute_motif();
     }
+
+
+    public char compute_motif(){
+        if (this.helix_props > this.sheet_props){
+            if (this.helix_props > this.coil_props)
+                this.ssMotif = 'H';
+            else
+                this.ssMotif = 'C';
+        }
+        else{
+            if (this.coil_props < this.sheet_props)
+                this.ssMotif = 'E';
+            else
+                this.ssMotif = 'C';
+        }
+
+        return this.ssMotif;
+    }
+
 
 }

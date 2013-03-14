@@ -33,7 +33,7 @@ public class TestEA {
 
     public static final int MAX_GENERATIONS = 10;
     public static final int NEIGH = 3;
-    public static final int MAX_STEPS = 100;
+    public static final int MAX_STEPS = 5;
 
     static Logger logger = Logger.getLogger(TestEA.class);
 
@@ -58,12 +58,12 @@ public class TestEA {
         conf.setFitnessFunction(myFF);
 
         // kde ukladat velkost okolia? do config. suboru ?
-        Gene[] sampleGenes = new Gene[1 + TestEA.NEIGH];
+        Gene[] sampleGenes = new Gene[1 + (TestEA.NEIGH*2 + 1)];
 
 
         sampleGenes[0] = new IntegerGene(conf, 0, TestEA.MAX_STEPS);
 
-        for (int i = 1; i-1 < TestEA.NEIGH; i++) {
+        for (int i = 1; i-1 < TestEA.NEIGH*2 + 1; i++) {
             sampleGenes[i] = new DoubleGene(conf, -1, 1);
         }
 

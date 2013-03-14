@@ -28,6 +28,7 @@ public class AminoAcid {
 
     public AminoAcid(char aa){
         this.abbrev = Character.toUpperCase(aa);
+
     }
 
 
