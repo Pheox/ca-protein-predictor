@@ -1,11 +1,13 @@
+====================
 ca-protein-predictor
 ====================
 
 Secondary protein structure prediction based on cellular automata.
 
 
+
 TODO 11 - 17. 3. 2013
-====================
+=====================
 - kapitola o EA (evolucnych strategiach ES)
 - implementacia prototypu
 - navrhnut zakladne experimenty - overenie uspesnosti predikcie na benchmarkoch
@@ -14,37 +16,39 @@ TODO 11 - 17. 3. 2013
 
 
 
-TODO:
-= Abstract
-- je rychla - co presne je selling point, urcime az z vysledkov, vid skuska PSIPRED
+Abstract
+--------
+- is fast - what exactly is a selling point?, we'll see from experiment results (PSIPRED)
 
-= Uvod
-- posledny odstavec uvodu trochu prepracovat
 
-= CA
-- popis okoli, novy obrazok
-- tabulka podobna tej v bakalarke, ale prehladnejsiu!
-- obrazok modif. CA ako v BP, ale nejaky iny, tiez prehladnejsi
-- langtonove slucky
-- experimentalny popis rezidui - chemicky shift ? - do DP asi e, ci?
+Introduction
+------------
+- last paragraph needs reconstruction
 
-= GA
+
+Cellular Automata
+-----------------
+- neighborhood description, new illustration
+- table similar to bachelor thesis (clearer)
+- Langton loops
+- experimental residues description - chemical shifts stuff?
+
+
+Evolutionary algorithms
+-----------------------
 - Sipper (60 %)
-- zadefinovat do diagramu optimal. metod diferencnu evoluciu,
-  swarm particle.. atd. - veci z EVO, steepest descent, tabu search,
-  quantum search (Grovers algorithm), minimax, alfa-beta, A*
-- rozvoj EA nastal po roku 1975 (Holland: Adaptation in Natural and Artificial Systems),
-  Holland je autorom GA, jeho pracu vsak vyrazne rozsiril David Goldberg: Genetic
-  Algorithms in Search, Optimization and Machine Learning (1989)
+- to diagram - differential evolution, swarm partition optimization, steepest descent, tabu search, quantum search (Grovers algorithm), minimax, alpha-beta, A*
 
-= Proteiny
+Proteins
+--------
 
-= Predikcia sek. struktury
-- definovat niekde co je konformacny stav
+Secondary structure prediction
+------------------------------
+- conformation states definition
 
-= Navrh
+Design
+------
 - what about ROC curves
-- what about kumulativny/nekumulativny lift
+- what about cumulative/non-cumulative lift
 
-
-bakalarka = 100 438 latex znakov = cca 50 normostran = cca 40 strán
+Bachelor thesis = 100 438 latex characters = cca 50 standard pages = cca 40 normal pages
