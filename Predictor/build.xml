@@ -1,4 +1,5 @@
-<project>
+<project name="Predictor" default="compile" basedir=".">
+
  <!-- Delete old files -->
 
    <target name="clean">
@@ -13,30 +14,28 @@
    <target name="compile">
      <delete dir="build"/>
      <delete dir="dest"/>
-     <delete dir="doc"/>
-     <mkdir dir="doc"/>
      <mkdir dir="build"/>
      <mkdir dir="dest"/>
-     <!-- Help -->
-         <javadoc
-           access="public"
-           destdir="doc"
-           author="true"
-           version="true"
-           use="true"
-           windowtitle="this is windowtitle"
-        >
-         <fileset dir="src" defaultexcludes="yes">
-             <include name="**/*.java"/>
-         </fileset>
-     </javadoc>
+
+    <path id="build-classpath">
+        <fileset dir="lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <manifestclasspath property="lib.list" jarfile="lib/predictor.jar">
+        <classpath refid="build-classpath"/>
+    </manifestclasspath>
+
 
          <!-- Compiling -->
-         <javac srcdir="src" destdir="build" classpath="jgap.jar"/>
+         <javac includeantruntime="false" srcdir="src" destdir="build"
+                classpath="lib/log4j.jar;lib/jgap.jar"/>
      <!-- Vytvorenie jar suboru -->
-         <jar destfile="dest/predictor.jar" basedir="build">
+         <echo>Creating jar File</echo>
+         <jar jarfile="lib/predictor.jar" basedir="build" >
        <manifest>
          <attribute name="Main-Class" value="predictor.Main"/>
+         <attribute name="Class-Path" value="${lib.list}"/>
        </manifest>
      </jar>
    </target>
@@ -67,7 +66,7 @@
 <!-- Executing jar file -->
 
    <target name="run">
-     <java jar="dest/predictor.jar" fork="true"/>
+     <java jar="lib/predictor.jar" fork="true" classpath="lib/*.jar"/>
    </target>
 
 </project>
