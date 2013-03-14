@@ -11,9 +11,9 @@ Usage:
 ./conf_classes.py <path_to_dir_containing_data_files>
 
 Example:
-./conf_classes.py ./adjusted/rs_126.data
-./conf_classes.py ./adjusted/cb_513.data
-./conf_classes.py ./adjusted/pdb_vyber.data
+./conf_classes.py ./final/rs_126.data
+./conf_classes.py ./final/cb_513.data
+./conf_classes.py ./final/pdb_vyber.data
 
 
 TODO:

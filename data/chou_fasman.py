@@ -10,8 +10,8 @@ Usage:
 ./chou_fasman.py <path_to_dir_containing_data_files>
 
 Example:
-./chou_fasman.py ./adjusted/rs_126.data
-./chou_fasman.py ./adjusted/cb_513.data
+./chou_fasman.py ./final/rs_126.data
+./chou_fasman.py ./final/cb_513.data
 
 """
 
