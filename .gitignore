@@ -18,4 +18,5 @@
 *.toc
 
 # data
-./data/pdb_vyber/files/*
+data/pdb_vyber/files/
+
