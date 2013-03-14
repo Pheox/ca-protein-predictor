@@ -46,20 +46,15 @@ public class TestFF extends FitnessFunction{
 
     public double evaluate(IChromosome chromosome){
         //getGene, getGenes, size()
-        //System.out.println(chromosome);
-
 
         // 1. prejst celu datovu sadu
         // 2. vykonat evaluaciu CA pre zadany pocet krokov + porovnat s referencnou SSP
         // 3. vypocitat konecnu fitness funkciu
-        // skonvertovat chromosome na pole doublov ? resp. chromozom na pravidlo?
-        //
 
         int sum_ok = 0;
         int sum_all = 0;
-        double fitness = 0;
 
-        // TODO: inicializacia pravidla CARule
+        // inicializacia OK ?
         CARule rule = CARule.fromChromosome(chromosome);
 
 
@@ -67,19 +62,18 @@ public class TestFF extends FitnessFunction{
 
             CellularAutomaton ca = new CellularAutomaton(di);
             ca.run(rule, this.data);
-            // ca.cells - nasledne porovnanie s di.ssp_seq
 
-            //System.out.println(di.aa_seq);
-            //System.out.println(di.ssp_seq);
-
-            // inicializacia CA pomocou CF ? -> nacitanie CF
-
-            //String predicted_ssp = this.predict_ssp(aa_seq);
-
+            String predicted_seq = "";
+            for (int i = 0; i < ca.cells.length; i++) {
+                predicted_seq += ca.cells[i].ssMotif;
+            }
+            di.predicted_seq = predicted_seq;
         }
 
+        double fitness = this.data.q3();
+
         logger.info("fitness value: " + fitness);
-        return 1;
+        return fitness;
     }
 }
 
