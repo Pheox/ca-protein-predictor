@@ -19,9 +19,7 @@ import java.util.Properties;
 /*
 TODO's:
 
-
 */
-
 
 
 
@@ -38,31 +36,10 @@ public class Main {
         // logger configuration
         BasicConfigurator.configure();
 
-        Config config = new Config(Main.confPath);
+        // simulator configuration
+        SimConfig config = new SimConfig(Main.confPath);
 
-        //CASSP simulator = new CASSP(config);
-        //simulator.train();
-
-        // knapsack jgap implementation
-        //Knapsack ks = new Knapsack();
-        //ks.go(25000);
-
-
-
-        // test jgap evolution
-        Data data = new Data();
-        data.load_data(config.data);
-        //data.compute_chou_fasman();
-        data.load_chou_fasman(config.data_cf);
-
-        TestEA test = new TestEA(config, data);
-
-
-        try {
-            test.evolve();
-        }
-          catch (Exception e) {
-            e.printStackTrace();
-          }
+        CASSP simulator = new CASSP(config);
+        simulator.train();
     }
 }

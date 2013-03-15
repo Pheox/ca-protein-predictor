@@ -11,6 +11,7 @@ import java.util.*;
 
 import cassp.*;
 import cassp.ca.*;
+import cassp.ea.*;
 
 
 /*
@@ -26,31 +27,29 @@ TODO's:
 
 public class CASSP {
 
-    public Config config;
+    public SimConfig config;
 
 
-    // trainer ??
-
-
-    public CASSP(Config config){
+    public CASSP(SimConfig config){
         this.config = config;
     }
 
 
     public void train(){
 
-        Data data = new Data();
-        data.load_data(data_path);
+        Data data = new Data(this.config.data);
+        data.load_chou_fasman(this.config.data_cf);
 
-        // iterating seems ok
-        for (DataItem di : data.get_data()){
-            //System.out.println(di.aa_seq);
-            //System.out.println(di.ssp_seq);
+        SSPEA evol_alg = new SSPEA(config, data);
+
+        try {
+            evol_alg.evolve();
         }
-
-        // init EA library via config !?
-        // create proper chromosome
+          catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     public double test(){
         return 0.0;

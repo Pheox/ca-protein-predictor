@@ -1,5 +1,5 @@
 /**
-*   TestFF.java
+*   SimpleFF.java
 *
 *   Copyright (c) 2013 Vladimír Brigant
 *   This software is distributed under the terms of the GNU General Public License.
@@ -15,6 +15,7 @@ import cassp.*;
 import cassp.ca.*;
 
 import org.apache.log4j.*;
+
 
 /*
 TODO's:
@@ -32,14 +33,14 @@ Poznamky:
 
 
 
-public class TestFF extends FitnessFunction{
+public class SimpleFF extends FitnessFunction{
 
-    static Logger logger = Logger.getLogger(TestFF.class);
+    static Logger logger = Logger.getLogger(SimpleFF.class);
 
     protected Data data;
 
     // inicializovat s objektom Data ?? - asi to bude takto najlepsie
-    public TestFF(Data data){
+    public SimpleFF(Data data){
         this.data = data;
     }
 

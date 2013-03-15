@@ -1,5 +1,5 @@
 /**
-*   Config.java
+*   SimConfig.java
 *
 *   Copyright (c) 2013 Vladimír Brigant
 *   This software is distributed under the terms of the GNU General Public License.
@@ -19,7 +19,7 @@ TODO's:
 
 
 
-public class Config {
+public class SimConfig {
 
     // data paths
     public String data;
@@ -32,7 +32,7 @@ public class Config {
     public int pop;
 
 
-    public Config(String confPath){
+    public SimConfig(String confPath){
 
         Properties prop = new Properties();
         InputStream is = null;

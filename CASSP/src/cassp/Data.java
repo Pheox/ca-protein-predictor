@@ -35,6 +35,13 @@ public class Data {
         this.amino_acids = new HashMap<Character, AminoAcid>();
     }
 
+    public Data(String file_path){
+        this.data = new ArrayList<DataItem>();
+        this.amino_acids = new HashMap<Character, AminoAcid>();
+        this.load_data(file_path);
+    }
+
+
     public ArrayList<DataItem> get_data(){
         return this.data;
     }
