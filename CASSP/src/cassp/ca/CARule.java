@@ -5,7 +5,7 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
-package predictor.ca;
+package cassp.ca;
 
 import org.jgap.*;
 import org.jgap.data.*;

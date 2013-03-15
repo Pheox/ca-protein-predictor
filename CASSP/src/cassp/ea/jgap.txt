@@ -7,11 +7,6 @@
 
 
 
-
-
-
-
-
 Kontajnery
 ----------
 - v Jave kontajner = kolekcia
@@ -32,7 +27,6 @@ Kontajnery
 
 Logging system
 --------------
-
 
 
 MISC

@@ -6,7 +6,7 @@
 */
 
 
-package predictor.ea;
+package cassp.ea;
 
 import java.io.*;
 import org.jgap.*;
@@ -19,7 +19,7 @@ import org.jgap.Chromosome;
 import org.jgap.IChromosome;
 import org.jgap.FitnessFunction;
 
-import predictor.ea.KnapsackFF;
+import cassp.ea.KnapsackFF;
 
 
 

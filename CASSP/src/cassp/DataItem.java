@@ -5,7 +5,7 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
-package predictor;
+package cassp;
 
 import java.io.*;
 import org.apache.log4j.*;

@@ -6,11 +6,11 @@
 */
 
 
-package predictor.ea;
+package cassp.ea;
 
 import org.jgap.*;
 
-import predictor.ea.Knapsack;
+import cassp.ea.Knapsack;
 
 
 

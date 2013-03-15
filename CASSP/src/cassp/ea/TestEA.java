@@ -5,7 +5,7 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
-package predictor.ea;
+package cassp.ea;
 
 import java.io.*;
 
@@ -16,9 +16,9 @@ import org.jgap.xml.*;
 import org.w3c.dom.*;
 import org.apache.log4j.*;
 
-import predictor.*;
-import predictor.ea.*;
-import predictor.ca.*;
+import cassp.*;
+import cassp.ea.*;
+import cassp.ca.*;
 
 
 

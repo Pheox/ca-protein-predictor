@@ -5,9 +5,9 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
-package predictor;
+package cassp;
 
-import predictor.*;
+import cassp.*;
 
 import java.util.*;
 import java.io.*;

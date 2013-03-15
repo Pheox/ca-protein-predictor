@@ -7,9 +7,9 @@
 
 // code that could be useful, half-impelemnted stuff etc.
 
-package predictor;
+package cassp;
 
-import predictor.ca.CACell;
+import cassp.ca.CACell;
 
 
 

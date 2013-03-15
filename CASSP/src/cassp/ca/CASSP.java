@@ -5,32 +5,39 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
-package predictor.ca;
+package cassp.ca;
 
 import java.util.*;
 
-import predictor.*;
+import cassp.*;
+import cassp.ca.*;
 
 
 /*
 TODO's:
+- metoda train
+- metoda test
 - cross-validacia
+- predict
+- cross_validate
 */
 
 
 
 public class CASSP {
 
+    public Config config;
+
+
     // trainer ??
 
 
-    public CASSP(){
-
+    public CASSP(Config config){
+        this.config = config;
     }
 
 
-    // vystupom je objekt CARule ?! - asi jo
-    public void train(String data_path){
+    public void train(){
 
         Data data = new Data();
         data.load_data(data_path);
@@ -44,5 +51,18 @@ public class CASSP {
         // init EA library via config !?
         // create proper chromosome
     }
+
+    public double test(){
+        return 0.0;
+    }
+
+    public void predict(){
+    }
+
+
+    public double cross_validate(int folds){
+        return  0.0;
+    }
+
 }
 

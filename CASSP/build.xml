@@ -1,4 +1,4 @@
-<project name="Predictor" default="compile" basedir=".">
+<project name="CASSP" default="compile" basedir=".">
 
  <!-- Delete old files -->
 
@@ -22,7 +22,7 @@
             <include name="*.jar"/>
         </fileset>
     </path>
-    <manifestclasspath property="lib.list" jarfile="lib/predictor.jar">
+    <manifestclasspath property="lib.list" jarfile="lib/cassp.jar">
         <classpath refid="build-classpath"/>
     </manifestclasspath>
 
@@ -32,9 +32,9 @@
                 classpath="lib/log4j.jar;lib/jgap.jar"/>
      <!-- Vytvorenie jar suboru -->
          <echo>Creating jar File</echo>
-         <jar jarfile="lib/predictor.jar" basedir="build" >
+         <jar jarfile="lib/cassp.jar" basedir="build" >
        <manifest>
-         <attribute name="Main-Class" value="predictor.Main"/>
+         <attribute name="Main-Class" value="cassp.Main"/>
          <attribute name="Class-Path" value="${lib.list}"/>
        </manifest>
      </jar>
@@ -66,7 +66,7 @@
 <!-- Executing jar file -->
 
    <target name="run">
-     <java jar="lib/predictor.jar" fork="true" classpath="lib/*.jar"/>
+     <java jar="lib/cassp.jar" fork="true" classpath="lib/*.jar"/>
    </target>
 
 </project>
