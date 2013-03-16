@@ -10,8 +10,10 @@ package cassp.ca;
 import java.util.*;
 
 import cassp.*;
-import cassp.ca.*;
 import cassp.ea.*;
+import cassp.ca.*;
+import cassp.ca.rules.*;
+
 
 
 /*
@@ -28,6 +30,8 @@ TODO's:
 public class CASSP {
 
     public SimConfig config;
+    public Data data;
+    public CARule rule;
 
 
     public CASSP(SimConfig config){
@@ -37,13 +41,13 @@ public class CASSP {
 
     public void train(){
 
-        Data data = new Data(this.config.data);
-        data.load_chou_fasman(this.config.data_cf);
+        this.data = new Data(this.config.data);
+        this.data.load_chou_fasman(this.config.data_cf);
 
-        SSPEA evol_alg = new SSPEA(config, data);
+        SSPEA evol_alg = new SSPEA(config, this.data);
 
         try {
-            evol_alg.evolve();
+            this.rule = evol_alg.evolve();
         }
           catch (Exception e) {
             e.printStackTrace();
@@ -52,10 +56,26 @@ public class CASSP {
 
 
     public double test(){
-        return 0.0;
+
+        Data data = new Data(this.config.data_test);
+
+        for (DataItem di: data.data){
+            di.predicted_seq = this.predict(di.aa_seq);
+        }
+
+        return data.q3();
     }
 
-    public void predict(){
+
+    public String predict(String aa_seq){
+
+        DataItem di = new DataItem();
+        di.aa_seq = aa_seq;
+
+        CellularAutomaton ca = new CellularAutomaton(di, this.config);
+        ca.run(this.rule, this.data);
+
+        return ca.getPredictedSeq();
     }
 
 
