@@ -29,7 +29,7 @@ amino_acids = [
 #    "B", "Z", "X"
 ]
 
-ambiguous_amino_acids = ["B", "Z", "X"]
+ambiguous_amino_acids = ["B", "Z", "X", "J"]
 
 
 # conformation states of all amino acids
@@ -101,12 +101,15 @@ def compute_parameters(data_path):
 
 
 def compute_ambiguous():
-    # B = N | D, Z = Q | E, X - average
+    # B = N | D, Z = Q | E, X - average, J -
     for i in range(3):
         ambiguous_cf['B'][i] = (final_cf['N'][i] + final_cf['D'][i])/2
 
     for i in range(3):
         ambiguous_cf['Z'][i] = (final_cf['Q'][i] + final_cf['E'][i])/2
+
+    for i in range(3):
+        ambiguous_cf['J'][i] = (final_cf['L'][i] + final_cf['I'][i])/2
 
     avgs = [0,0,0]
 
