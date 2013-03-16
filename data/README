@@ -20,7 +20,7 @@ CB513
 - 479 seqs zacina C, 9 E, 23 H
 
 - niektore sekvencie obsahuju aj ambiguous aa (B,Z,X), iba 6 sekvencii,
-  14xZ, 31xB, 19xX, B - N alebo D, Z - Q alebo E, J - La alebo I,
+  14xZ, 31xB, 19xX, B - N alebo D, Z - Q alebo E, J - L alebo I (Leucine or Isoleucine),
   X - unspecified or unknown aa
 
   H, I, G => H
