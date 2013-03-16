@@ -11,6 +11,7 @@ import cassp.*;
 import cassp.ca.*;
 import cassp.ca.rules.*;
 
+
 /*
 TODO's:
 - okrajove podmienky - vyuzit vysledkov zo Salansovej bakalarky?
@@ -20,12 +21,19 @@ Poznamky:
 - najskor implementacia len pomocou Chou-Fasmanovych koeficientov,
 neskor doimplementovat zavislost na konformacnych triedach CC,
 pripadne dalsie zavislosti
+- okrajove podmienky/bunky - cerpat zrejme od Salandy - citacia etc.,
+ak vyjde cas, spravit vlastne experimenty
+
 */
 
 
 public class CellularAutomaton {
 
-    public CACell[] cells; //new CACell[aa_seq.length()];
+    public static int BOUNDARY_A = 0;
+    public static int BOUNDARY_B = 0;
+    public static int BOUNDARY_C = 300;
+
+    public CACell[] cells;
     public DataItem dataItem;
     public CARule rule;
     public SimConfig config;
@@ -39,37 +47,46 @@ public class CellularAutomaton {
     }
 
 
-    public void run(CARule rule, Data data){
+    public String run(CARule rule, Data data){
 
         this.rule = rule;
 
-        // 1. cells initialization - seems OK
+        // cells initialization
         for (int i = 0; i < this.dataItem.aa_seq.length(); i++){
-            //this.cells[i] = new CACell(this.dataItem.aa_seq.charAt(i));
             this.cells[i] = new CACell(data.amino_acids.get(this.dataItem.aa_seq.charAt(i)));
         }
 
-        // pocet krokov CA
+        // for all CA steps
         for (int s = 0; s < this.rule.steps; s++) {
-            // prepocet vsetkych buniek
+            // all cells recomputing
             for (int c = 0; c < this.cells.length; c++ ) {
                 double sum_a = 0;
                 double sum_b = 0;
                 double sum_c = 0;
                 double sum_weights = 0;
 
-                // prepocet jednej bunky
+                // one cell recomputing
                 for (int o = c - this.config.neigh; o <= c + this.config.neigh; o++) {
-                    // suma vsetkych vah vynasobenymi parametrami buniek
-                    if ((o < 0) || (o >= this.cells.length -1))
-                        continue;
+
                     sum_weights += this.rule.weights[o - c + this.rule.weights.length/2];
 
-                    sum_a += this.rule.weights[o - c + this.rule.weights.length/2] * this.cells[o].helix_props;
-
-                    sum_b += this.rule.weights[o - c + this.rule.weights.length/2] * this.cells[o].sheet_props;
-
-                    sum_c += this.rule.weights[o - c + this.rule.weights.length/2] * this.cells[o].coil_props;
+                    if ((o < 0) || (o >= this.cells.length -1)){
+                        // boundary cells
+                        sum_a += this.rule.weights[o - c + this.rule.weights.length/2]
+                             * CellularAutomaton.BOUNDARY_A;
+                        sum_b += this.rule.weights[o - c + this.rule.weights.length/2]
+                             * CellularAutomaton.BOUNDARY_B;
+                        sum_c += this.rule.weights[o - c + this.rule.weights.length/2]
+                             * CellularAutomaton.BOUNDARY_C;
+                    }
+                    else{
+                        sum_a += this.rule.weights[o - c + this.rule.weights.length/2]
+                             * this.cells[o].helix_props;
+                        sum_b += this.rule.weights[o - c + this.rule.weights.length/2]
+                             * this.cells[o].sheet_props;
+                        sum_c += this.rule.weights[o - c + this.rule.weights.length/2]
+                             * this.cells[o].coil_props;
+                    }
                 }
 
                 this.cells[c].helix_props = sum_a/sum_weights;
@@ -78,13 +95,16 @@ public class CellularAutomaton {
                 this.cells[c].compute_motif();
             }
         }
+        return this.getPredictedSeq();
+    }
 
-
-
-
-
-        // 2. evolve ca this.rule.steps iterations TODO
-        // and updates cells etc.
-
+    public String getPredictedSeq(){
+        String seq = "";
+        for (int i = 0; i < this.cells.length; i++ ) {
+            seq += this.cells[i].ssMotif;
+        }
+        return seq;
     }
 }
+
+
