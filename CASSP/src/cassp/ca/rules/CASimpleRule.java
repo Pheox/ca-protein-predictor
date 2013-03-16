@@ -42,7 +42,7 @@ public class CASimpleRule extends CARule{
         sampleGenes[0] = new IntegerGene(conf, 0, config.max_steps);
 
         for (int i = 1; i-1 < (this.neigh*2 + 1); i++) {
-            sampleGenes[i] = new DoubleGene(conf, -1, 1);
+            sampleGenes[i] = new DoubleGene(conf, 0, 1);
         }
         IChromosome sampleChromosome = new Chromosome(conf, sampleGenes);
         return sampleChromosome;
@@ -57,7 +57,6 @@ public class CASimpleRule extends CARule{
         for (int i = 1; i < chromosome.size(); i++) {
             this.weights[i-1] = ((Double) chromosome.getGene(i).getAllele()).doubleValue();
         }
-
         return this;
     }
 }

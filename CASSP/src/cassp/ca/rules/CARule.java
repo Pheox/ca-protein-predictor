@@ -15,6 +15,12 @@ import org.jgap.xml.*;
 
 import cassp.*;
 
+/*
+TODO's:
+- aky ma byt rozsah jednotlivych vah? zrejme <0,1>
+*/
+
+
 
 public abstract class CARule {
 
