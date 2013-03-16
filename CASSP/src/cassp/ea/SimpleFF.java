@@ -13,6 +13,7 @@ import org.jgap.data.*;
 
 import cassp.*;
 import cassp.ca.*;
+import cassp.ca.rules.*;
 
 import org.apache.log4j.*;
 
@@ -37,11 +38,13 @@ public class SimpleFF extends FitnessFunction{
 
     static Logger logger = Logger.getLogger(SimpleFF.class);
 
+    public SimConfig config;
     protected Data data;
 
     // inicializovat s objektom Data ?? - asi to bude takto najlepsie
-    public SimpleFF(Data data){
+    public SimpleFF(Data data, SimConfig config){
         this.data = data;
+        this.config = config;
     }
 
 
@@ -55,13 +58,12 @@ public class SimpleFF extends FitnessFunction{
         int sum_ok = 0;
         int sum_all = 0;
 
-        // inicializacia OK ?
-        CARule rule = CARule.fromChromosome(chromosome);
+        CARule rule  = this.createRule(chromosome);
 
 
         for (DataItem di : this.data.get_data()){
 
-            CellularAutomaton ca = new CellularAutomaton(di);
+            CellularAutomaton ca = new CellularAutomaton(di, this.config);
             ca.run(rule, this.data);
 
             String predicted_seq = "";
@@ -75,6 +77,18 @@ public class SimpleFF extends FitnessFunction{
 
         logger.info("fitness value: " + fitness);
         return fitness;
+    }
+
+    private CARule createRule(IChromosome chromosome){
+        CARule rule;
+
+        if (this.config.rule == 1)
+            rule = new CASimpleRule(this.config.neigh);
+        // else if (this.config.rule == 2) etc.
+        else
+            rule = new CASimpleRule(this.config.neigh);
+
+        return rule.fromChromosome(chromosome);
     }
 }
 

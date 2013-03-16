@@ -44,9 +44,6 @@ public class CACell{
             else
                 this.ssMotif = 'C';
         }
-
         return this.ssMotif;
     }
-
-
 }

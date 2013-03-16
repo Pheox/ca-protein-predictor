@@ -11,15 +11,17 @@ package cassp;
 import cassp.ca.*;
 import cassp.ea.*;
 
-import org.apache.log4j.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import java.io.*;
 import java.util.Properties;
 
 /*
 TODO's:
-
+- zatial len trenovanie
 */
+
 
 
 
@@ -29,12 +31,14 @@ TODO's:
 public class Main {
 
     static Logger logger = Logger.getLogger(Main.class);
-    static String confPath = "./src/cassp/configs/test.config";
 
+    static String confPath = "./src/cassp/configs/test.config";
+    static String logPath = "./src/cassp/configs/log.config";
 
     public static void main(String[] args) {
         // logger configuration
-        BasicConfigurator.configure();
+        //BasicConfigurator.configure();
+        PropertyConfigurator.configure(Main.logPath);
 
         // simulator configuration
         SimConfig config = new SimConfig(Main.confPath);

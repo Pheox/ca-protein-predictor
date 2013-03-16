@@ -9,6 +9,7 @@ package cassp.ca;
 
 import cassp.*;
 import cassp.ca.*;
+import cassp.ca.rules.*;
 
 /*
 TODO's:
@@ -27,12 +28,14 @@ public class CellularAutomaton {
     public CACell[] cells; //new CACell[aa_seq.length()];
     public DataItem dataItem;
     public CARule rule;
+    public SimConfig config;
 
 
 
-    public CellularAutomaton(DataItem dataItem) {
+    public CellularAutomaton(DataItem dataItem, SimConfig config) {
         this.dataItem = dataItem;
         this.cells = new CACell[this.dataItem.aa_seq.length()];
+        this.config = config;
     }
 
 
@@ -56,7 +59,7 @@ public class CellularAutomaton {
                 double sum_weights = 0;
 
                 // prepocet jednej bunky
-                for (int o = c - this.rule.neigh; o <= c + this.rule.neigh; o++) {
+                for (int o = c - this.config.neigh; o <= c + this.config.neigh; o++) {
                     // suma vsetkych vah vynasobenymi parametrami buniek
                     if ((o < 0) || (o >= this.cells.length -1))
                         continue;
