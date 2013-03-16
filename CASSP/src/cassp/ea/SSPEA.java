@@ -25,6 +25,19 @@ import cassp.ca.rules.*;
 
 /*
 TODO's:
+- nastavenie genetickych operatorov, rate mut v tvare 1/x (def. 1/12),
+  cross def. 35 % z pop
+- inicializacia - ok
+- mutacia - gausovske rozlozenie
+- krizenie - 1-bodove krizenie
+- selekcia - pozity turnaj
+
+Poznamky:
+AveragingCrossoverOperator
+CrossoverOperator
+GaussianMutationOperator
+GreedyCrossover
+MutationOperator
 
 */
 
@@ -43,11 +56,13 @@ public class SSPEA {
 
     public CARule evolve() throws Exception{
 
-        // default values for evolution, simple changable
-        // chromosome size, population size, fitness function musia byt stale zadane
-        Configuration conf = new DefaultConfiguration(); // ??
+        // EA configuration
+        Configuration conf = new DefaultConfiguration();
+        //conf.addGeneticOperator(new MutationOperator(conf, (int) (1/this.config.p_mut)));
+        conf.addGeneticOperator(new GaussianMutationOperator(conf, 0.1d));
+        conf.addGeneticOperator(new CrossoverOperator(conf, this.config.p_cross));
+        conf.addNaturalSelector(new TournamentSelector(conf, 2, 1.0d), false);
 
-        // save the fittest individual
         conf.setPreservFittestIndividual(true);
 
         FitnessFunction ff = new SimpleFF(this.data, this.config);
@@ -57,15 +72,16 @@ public class SSPEA {
         IChromosome sampleChromosome = rule.toChromosome(conf, this.config);
 
         conf.setSampleChromosome(sampleChromosome);
-        conf.setPopulationSize(5);
+        conf.setPopulationSize(this.config.pop);
 
         Genotype population;
 
         population = Genotype.randomInitialGenotype(conf);
 
         for (int i = 0; i < this.config.max_gen; i++) {
-            logger.info(i + ". generation");
+            logger.info("### " + i + ". generation");
             population.evolve();
+            System.out.print(population.getFittestChromosome());
          }
 
          return rule.fromChromosome(population.getFittestChromosome());

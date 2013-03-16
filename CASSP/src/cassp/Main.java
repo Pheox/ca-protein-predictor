@@ -17,9 +17,11 @@ import org.apache.log4j.PropertyConfigurator;
 import java.io.*;
 import java.util.Properties;
 
+
 /*
 TODO's:
-- zatial len trenovanie
+- advanced trenovanie
+- testovanie
 */
 
 
@@ -45,5 +47,9 @@ public class Main {
 
         CASSP simulator = new CASSP(config);
         simulator.train();
+
+        double result = simulator.test();
+        System.out.println("ACCURACY: " + result);
+        // simulator.predict(String aa_seq);
     }
 }

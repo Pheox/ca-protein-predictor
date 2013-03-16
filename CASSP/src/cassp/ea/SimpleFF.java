@@ -60,24 +60,17 @@ public class SimpleFF extends FitnessFunction{
 
         CARule rule  = this.createRule(chromosome);
 
-
         for (DataItem di : this.data.get_data()){
-
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
-            ca.run(rule, this.data);
-
-            String predicted_seq = "";
-            for (int i = 0; i < ca.cells.length; i++) {
-                predicted_seq += ca.cells[i].ssMotif;
-            }
-            di.predicted_seq = predicted_seq;
+            di.predicted_seq = ca.run(rule, this.data);
         }
 
         double fitness = this.data.q3();
 
-        logger.info("fitness value: " + fitness);
+        //logger.info("fitness value: " + fitness);
         return fitness;
     }
+
 
     private CARule createRule(IChromosome chromosome){
         CARule rule;
