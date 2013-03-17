@@ -64,7 +64,7 @@ public class Data {
                 DataItem di = new DataItem();
                 di.aa_seq = aa_seq;
                 di.ssp_seq = ssp_seq;
-                this.data.add(di);
+                this.add(di);
             }
 
             in.close();
@@ -76,6 +76,7 @@ public class Data {
     }
 
     public void compute_chou_fasman(){
+        // TODO
 
         // conformation states of all amino acids
         HashMap<Character, ArrayList> cs = new HashMap<Character, ArrayList>();
@@ -174,13 +175,25 @@ public class Data {
 
 
     public double sov(){
-
-
+        // TODO
         return 0;
     }
 
 
+    public int length(){
+        return this.data.size();
+    }
 
+    public DataItem get(int i){
+        return this.data.get(i);
+    }
 
+    public void add(DataItem di){
+        this.data.add(di);
+    }
 
+    public void merge(Data data){
+        this.amino_acids = data.amino_acids;
+        this.data.addAll(data.data);
+    }
 }
