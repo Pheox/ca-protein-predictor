@@ -78,7 +78,7 @@ public class CellularAutomaton {
                 this.cells[c].helix_props = sum_a/sum_weights;
                 this.cells[c].sheet_props = sum_b/sum_weights;
                 this.cells[c].coil_props = sum_c/sum_weights;
-                this.cells[c].compute_motif();
+                this.cells[c].computeMotif();
             }
         }
         return this.getPredictedSeq();

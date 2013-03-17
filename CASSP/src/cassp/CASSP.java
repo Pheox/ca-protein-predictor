@@ -33,7 +33,7 @@ public class CASSP {
 
     public void train(){
         this.data = new Data(this.config.data);
-        this.data.load_chou_fasman(this.config.data_cf);
+        this.data.loadChouFasman(this.config.data_cf);
         this.rule = this.trainRule(this.data);
     }
 
@@ -84,7 +84,7 @@ public class CASSP {
 
         // structured creation + data splitting
         this.data = new Data(this.config.data);
-        this.data.load_chou_fasman(this.config.data_cf);
+        this.data.loadChouFasman(this.config.data_cf);
 
         this.cvData = new Data[folds];
         for (int i = 0; i < folds; i++) {

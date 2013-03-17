@@ -1,5 +1,5 @@
 /**
-*   SimpleFF.java
+*   SSPFF.java
 *
 *   Copyright (c) 2013 Vladimír Brigant
 *   This software is distributed under the terms of the GNU General Public License.
@@ -22,15 +22,15 @@ import cassp.ca.rules.*;
 
 
 
-public class SimpleFF extends FitnessFunction{
+public class SSPFF extends FitnessFunction{
 
-    static Logger logger = Logger.getLogger(SimpleFF.class);
+    static Logger logger = Logger.getLogger(SSPFF.class);
 
     public SimConfig config;
     protected Data data;
 
     // inicializovat s objektom Data ?? - asi to bude takto najlepsie
-    public SimpleFF(Data data, SimConfig config){
+    public SSPFF(Data data, SimConfig config){
         this.data = data;
         this.config = config;
     }
@@ -48,7 +48,7 @@ public class SimpleFF extends FitnessFunction{
 
         CARule rule  = this.createRule(chromosome);
 
-        for (DataItem di : this.data.get_data()){
+        for (DataItem di : this.data.getData()){
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
             di.predicted_seq = ca.run(rule, this.data);
         }

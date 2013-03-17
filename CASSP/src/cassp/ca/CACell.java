@@ -29,11 +29,11 @@ public class CACell{
         this.sheet_props = this.aminoAcid.cf_b;
         this.coil_props = this.aminoAcid.cf_c;
 
-        this.compute_motif();
+        this.computeMotif();
     }
 
 
-    public char compute_motif(){
+    public char computeMotif(){
         if (this.helix_props > this.sheet_props){
             if (this.helix_props > this.coil_props)
                 this.ssMotif = 'H';

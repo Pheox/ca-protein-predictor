@@ -56,7 +56,7 @@ public class SSPEA {
 
         conf.setPreservFittestIndividual(true);
 
-        FitnessFunction ff = new SimpleFF(this.data, this.config);
+        FitnessFunction ff = new SSPFF(this.data, this.config);
         conf.setFitnessFunction(ff);
         CARule rule = this.setRule();
 

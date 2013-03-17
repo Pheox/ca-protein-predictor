@@ -34,15 +34,16 @@ public class Data {
     public Data(String file_path){
         this.data = new ArrayList<DataItem>();
         this.amino_acids = new HashMap<Character, AminoAcid>();
-        this.load_data(file_path);
+        this.loadData(file_path);
     }
 
 
-    public ArrayList<DataItem> get_data(){
+    public ArrayList<DataItem> getData(){
         return this.data;
     }
 
-    public void load_data(String file_path){
+
+    public void loadData(String file_path){
 
         try{
             FileInputStream fstream = new FileInputStream(file_path);
@@ -70,7 +71,7 @@ public class Data {
         logger.info("dataset length: " + this.data.size());
     }
 
-    public void compute_chou_fasman(){
+    public void computeChouFasman(){
         // TODO
 
         // conformation states of all amino acids
@@ -85,14 +86,14 @@ public class Data {
         HashMap<Character, ArrayList> ambiguous_cf = new HashMap<Character, ArrayList>();
 
 
-        for (char amino_acid : Utils.amino_acids){
+        for (char amino_acid : Utils.aminoAcids){
             cs.put(amino_acid, new ArrayList(3));
             relat_f.put(amino_acid, new ArrayList(3));
             aa_counts.put(amino_acid, 0);
             final_cf.put(amino_acid, new ArrayList(3));
         }
 
-        for (char amino_acid: Utils.ambiguous_amino_acids){
+        for (char amino_acid: Utils.ambiguousAminoAcids){
             ambiguous_cf.put(amino_acid, new ArrayList(3));
         }
 
@@ -111,13 +112,10 @@ public class Data {
                 }
             }
         }
-
-        // Utils.amino_acids
-        System.out.println(Utils.amino_acids[0]);
     }
 
 
-    public void load_chou_fasman(String file_path){
+    public void loadChouFasman(String file_path){
 
         try{
             FileInputStream fstream = new FileInputStream(file_path);
