@@ -26,6 +26,7 @@ NOTES
     - Sipper (60 %)
     - diagram - differential evolution, swarm partition optimization, steepest descent, tabu search, quantum search (Grovers algorithm), minimax, alpha-beta, A*
 - report-proteins
+    - seems ok
 - report-spp
     - conformation states definition
 - design
