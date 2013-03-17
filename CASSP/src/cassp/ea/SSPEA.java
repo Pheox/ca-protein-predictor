@@ -17,8 +17,9 @@ import org.w3c.dom.*;
 import org.apache.log4j.*;
 
 import cassp.*;
-import cassp.ea.*;
 import cassp.ca.*;
+import cassp.data.*;
+import cassp.config.*;
 import cassp.ca.rules.*;
 
 

@@ -5,7 +5,7 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
-package cassp;
+package cassp.data;
 
 
 public class AminoAcid {
@@ -28,8 +28,5 @@ public class AminoAcid {
 
     public AminoAcid(char aa){
         this.abbrev = Character.toUpperCase(aa);
-
     }
-
-
 }

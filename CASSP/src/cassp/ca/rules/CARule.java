@@ -14,6 +14,7 @@ import org.jgap.impl.*;
 import org.jgap.xml.*;
 
 import cassp.*;
+import cassp.config.*;
 
 /*
 TODO's:

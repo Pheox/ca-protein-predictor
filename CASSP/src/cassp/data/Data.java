@@ -5,15 +5,16 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
-package cassp;
+package cassp.data;
 
-import cassp.*;
 
 import java.util.*;
 import java.io.*;
 import java.util.regex.*;
 
 import org.apache.log4j.*;
+
+import cassp.utils.*;
 
 /*
 TODO's:

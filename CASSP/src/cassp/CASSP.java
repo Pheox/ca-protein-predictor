@@ -5,13 +5,15 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
-package cassp.ca;
+package cassp;
 
 import java.util.*;
 
-import cassp.*;
+
 import cassp.ea.*;
 import cassp.ca.*;
+import cassp.data.*;
+import cassp.config.*;
 import cassp.ca.rules.*;
 
 

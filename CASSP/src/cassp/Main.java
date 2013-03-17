@@ -8,20 +8,19 @@
 package cassp;
 
 
-import cassp.ca.*;
-import cassp.ea.*;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import java.io.*;
 import java.util.Properties;
 
+import cassp.config.*;
 
 /*
 TODO's:
-- advanced trenovanie
-- testovanie
+- advanced trenovanie = dalsie pravidla + pretazenie metod
+  triedy CellularSimulator
+- cross-validacia
 */
 
 
@@ -34,8 +33,8 @@ public class Main {
 
     static Logger logger = Logger.getLogger(Main.class);
 
-    static String confPath = "./src/cassp/configs/test.config";
-    static String logPath = "./src/cassp/configs/log.config";
+    static String confPath = "./src/cassp/config/test.config";
+    static String logPath = "./src/cassp/config/log.config";
 
     public static void main(String[] args) {
         // logger configuration
@@ -50,6 +49,7 @@ public class Main {
 
         double result = simulator.test();
         System.out.println("ACCURACY: " + result);
-        // simulator.predict(String aa_seq);
+
+        simulator.predict("AZTKK");
     }
 }

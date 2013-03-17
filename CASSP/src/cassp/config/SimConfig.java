@@ -6,7 +6,7 @@
 */
 
 
-package cassp;
+package cassp.config;
 
 import java.io.*;
 import java.util.Properties;

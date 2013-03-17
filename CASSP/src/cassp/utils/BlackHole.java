@@ -7,7 +7,7 @@
 
 // code that could be useful, half-impelemnted stuff etc.
 
-package cassp;
+package cassp.utils;
 
 import cassp.ca.CACell;
 
