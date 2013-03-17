@@ -18,7 +18,6 @@ public class DataItem {
     public String ssp_seq;
     public String predicted_seq;
 
-
     public DataItem(){
         this.aa_seq = "";
         this.ssp_seq = "";

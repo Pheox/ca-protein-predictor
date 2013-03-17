@@ -11,12 +11,6 @@ package cassp.config;
 import java.io.*;
 import java.util.Properties;
 
-/*
-TODO's:
-- ziadne dalsie atributy?
-- osetrenie vstupov - pismena namiesto cislic etc.
-*/
-
 
 
 public class SimConfig {

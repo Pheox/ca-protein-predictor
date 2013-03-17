@@ -8,6 +8,7 @@
 package cassp.data;
 
 
+
 public class AminoAcid {
 
     public char abbrev;

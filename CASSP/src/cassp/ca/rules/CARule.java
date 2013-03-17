@@ -16,11 +16,6 @@ import org.jgap.xml.*;
 import cassp.*;
 import cassp.config.*;
 
-/*
-TODO's:
-- aky ma byt rozsah jednotlivych vah? zrejme <0,1>
-*/
-
 
 
 public abstract class CARule {
@@ -28,7 +23,6 @@ public abstract class CARule {
     public int steps;
     public int neigh;
     public double[] weights;
-
 
     public abstract int getSize();
     public abstract IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException;

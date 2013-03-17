@@ -14,23 +14,10 @@ import cassp.config.*;
 import cassp.ca.rules.*;
 
 
-/*
-TODO's:
-- okrajove podmienky - vyuzit vysledkov zo Salansovej bakalarky?
-
-
-Poznamky:
-- najskor implementacia len pomocou Chou-Fasmanovych koeficientov,
-neskor doimplementovat zavislost na konformacnych triedach CC,
-pripadne dalsie zavislosti
-- okrajove podmienky/bunky - cerpat zrejme od Salandy - citacia etc.,
-ak vyjde cas, spravit vlastne experimenty
-
-*/
-
 
 public class CellularAutomaton {
 
+    // boundary conditions
     public static int BOUNDARY_A = 0;
     public static int BOUNDARY_B = 0;
     public static int BOUNDARY_C = 300;
@@ -39,7 +26,6 @@ public class CellularAutomaton {
     public DataItem dataItem;
     public CARule rule;
     public SimConfig config;
-
 
 
     public CellularAutomaton(DataItem dataItem, SimConfig config) {
@@ -58,16 +44,14 @@ public class CellularAutomaton {
             this.cells[i] = new CACell(data.amino_acids.get(this.dataItem.aa_seq.charAt(i)));
         }
 
-        // for all CA steps
         for (int s = 0; s < this.rule.steps; s++) {
-            // all cells recomputing
             for (int c = 0; c < this.cells.length; c++ ) {
+                // cell recomputing
                 double sum_a = 0;
                 double sum_b = 0;
                 double sum_c = 0;
                 double sum_weights = 0;
 
-                // one cell recomputing
                 for (int o = c - this.config.neigh; o <= c + this.config.neigh; o++) {
 
                     sum_weights += this.rule.weights[o - c + this.rule.weights.length/2];
@@ -90,7 +74,7 @@ public class CellularAutomaton {
                              * this.cells[o].coil_props;
                     }
                 }
-
+                // weighted mean
                 this.cells[c].helix_props = sum_a/sum_weights;
                 this.cells[c].sheet_props = sum_b/sum_weights;
                 this.cells[c].coil_props = sum_c/sum_weights;
@@ -99,6 +83,7 @@ public class CellularAutomaton {
         }
         return this.getPredictedSeq();
     }
+
 
     public String getPredictedSeq(){
         String seq = "";

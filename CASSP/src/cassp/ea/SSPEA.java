@@ -25,22 +25,11 @@ import cassp.ca.rules.*;
 
 
 /*
-TODO's:
-- nastavenie genetickych operatorov, rate mut v tvare 1/x (def. 1/12),
-  cross def. 35 % z pop
-- inicializacia - ok
-- mutacia - gausovske rozlozenie
-- krizenie - 1-bodove krizenie
-- selekcia - pozity turnaj
-
-Poznamky:
-AveragingCrossoverOperator
-CrossoverOperator
-GaussianMutationOperator
-GreedyCrossover
-MutationOperator
-
+Notes:
+- default mutation rate - 1/12 (1/X)
+- default crossover rate - 35 % from pop size
 */
+
 
 
 public class SSPEA {

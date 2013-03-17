@@ -7,8 +7,8 @@
 
 package cassp;
 
-import java.util.*;
 
+import java.util.*;
 
 import cassp.ea.*;
 import cassp.ca.*;
@@ -18,18 +18,10 @@ import cassp.ca.rules.*;
 
 
 
-/*
-TODO's:
-- upravit kod
-*/
-
-
-
 public class CASSP {
 
     public SimConfig config;
     public Data data;
-    // cross-validate data
     public Data[] cvData;
     public CARule rule;
 
@@ -46,6 +38,12 @@ public class CASSP {
     }
 
 
+    public double test(){
+        Data data = new Data(this.config.data_test);
+        return this.testRule(data);
+    }
+
+
     private CARule trainRule(Data data){
         SSPEA evol_alg = new SSPEA(config, data);
         CARule rule = null;
@@ -53,16 +51,10 @@ public class CASSP {
         try {
             rule = evol_alg.evolve();
         }
-          catch (Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
         return rule;
-    }
-
-
-    public double test(){
-        Data data = new Data(this.config.data_test);
-        return this.testRule(data);
     }
 
 

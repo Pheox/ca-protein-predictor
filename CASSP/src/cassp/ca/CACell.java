@@ -11,6 +11,7 @@ import cassp.*;
 import cassp.data.*;
 
 
+
 public class CACell{
 
     public AminoAcid aminoAcid;

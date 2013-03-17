@@ -22,11 +22,6 @@ import cassp.ca.rules.*;
 
 public class CASimpleRule extends CARule{
 
-    //public int steps;
-    //public int neigh;
-    //public double[] weights;
-
-
     public CASimpleRule(int neigh){
         this.steps = 0;
         this.neigh = neigh;

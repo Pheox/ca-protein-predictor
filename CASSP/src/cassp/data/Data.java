@@ -16,11 +16,6 @@ import org.apache.log4j.*;
 
 import cassp.utils.*;
 
-/*
-TODO's:
-- prepisat vypocet chou-fasman koeficientov + konformacnych tried
-
-*/
 
 
 public class Data {

@@ -16,14 +16,6 @@ import java.util.Properties;
 
 import cassp.config.*;
 
-/*
-TODO's:
-- advanced trenovanie = dalsie pravidla + pretazenie metod
-  triedy CellularSimulator
-- cross-validacia
-*/
-
-
 
 
 /**
@@ -33,24 +25,25 @@ public class Main {
 
     static Logger logger = Logger.getLogger(Main.class);
 
+    // configuration paths
     static String confPath = "./src/cassp/config/test.config";
     static String logPath = "./src/cassp/config/log.config";
 
     public static void main(String[] args) {
+
         // logger configuration
-        //BasicConfigurator.configure();
         PropertyConfigurator.configure(Main.logPath);
 
         // simulator configuration
         SimConfig config = new SimConfig(Main.confPath);
 
+        // System API examples
         CASSP simulator = new CASSP(config);
         simulator.train();
 
-        double result = simulator.test();
-        System.out.println("ACCURACY: " + result);
+        System.out.println("Accuracy: " + simulator.test());
 
-        simulator.predict("AZTKK");
+        simulator.predict("AZTKKAZZZZKKKTKC");
 
         double cv_acc = simulator.crossValidate(10);
         System.out.println("\ncv_acc: " + cv_acc);

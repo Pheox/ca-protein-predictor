@@ -8,6 +8,7 @@
 package cassp.utils;
 
 
+
 public class Utils {
 
     public static char[] amino_acids = new char[] {
@@ -16,7 +17,6 @@ public class Utils {
     };
 
     public static char[] ambiguous_amino_acids = new char[] {
-        'B', 'Z', 'X'
+        'B', 'Z', 'X', 'J'
     };
-
 }

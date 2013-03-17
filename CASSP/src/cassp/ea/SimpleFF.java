@@ -8,31 +8,17 @@
 package cassp.ea;
 
 import java.util.*;
+
 import org.jgap.*;
 import org.jgap.data.*;
+
+import org.apache.log4j.*;
 
 import cassp.*;
 import cassp.ca.*;
 import cassp.data.*;
 import cassp.config.*;
 import cassp.ca.rules.*;
-
-import org.apache.log4j.*;
-
-
-/*
-TODO's:
-- implementacia fitness funkcie pre celu datovu sadu
-
-
-Poznamky:
-- uspesnost zalozena na Q3 aj SOV
-- SOV uspesnot nutno pocitat pre celu sadu naraz? asi to bude tak
-  jednoduchsie
-- Q3 je mozno aj sekvencne
-- typ aa je vlastnost bunky CA
-
-*/
 
 
 
