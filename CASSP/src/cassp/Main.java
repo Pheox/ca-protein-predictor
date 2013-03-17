@@ -51,5 +51,8 @@ public class Main {
         System.out.println("ACCURACY: " + result);
 
         simulator.predict("AZTKK");
+
+        double cv_acc = simulator.crossValidate(10);
+        System.out.println("\ncv_acc: " + cv_acc);
     }
 }
