@@ -58,6 +58,7 @@ public class SSPEA {
     public CARule evolve() throws Exception{
 
         // EA configuration
+        Configuration.reset();
         Configuration conf = new DefaultConfiguration();
         //conf.addGeneticOperator(new MutationOperator(conf, (int) (1/this.config.p_mut)));
         conf.addGeneticOperator(new GaussianMutationOperator(conf, 0.1d));
