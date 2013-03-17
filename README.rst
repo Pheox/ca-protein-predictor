@@ -5,6 +5,10 @@ ca-protein-predictor
 Secondary protein structure prediction based on cellular automata.
 
 
+.. image:: ./diagrams/dp_model.jpg
+
+
+
 
 TODO 11 - 17. 3. 2013
 =====================
