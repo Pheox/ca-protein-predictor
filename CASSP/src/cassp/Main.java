@@ -40,6 +40,8 @@ public class Main {
         // System API examples
         CASSP simulator = new CASSP(config);
         simulator.train();
+        simulator.createEvolutionImage("obr.png");
+        System.out.println("len: " + simulator.stats.generations.size());
 
         System.out.println("Accuracy: " + simulator.test());
 

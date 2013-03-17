@@ -14,6 +14,7 @@ import cassp.ea.*;
 import cassp.ca.*;
 import cassp.data.*;
 import cassp.config.*;
+import cassp.ea.stats.*;
 import cassp.ca.rules.*;
 
 
@@ -24,6 +25,7 @@ public class CASSP {
     public Data data;
     public Data[] cvData;
     public CARule rule;
+    public EAStats stats;
 
 
     public CASSP(SimConfig config){
@@ -45,11 +47,12 @@ public class CASSP {
 
 
     private CARule trainRule(Data data){
-        SSPEA evol_alg = new SSPEA(config, data);
+        SSPEA evolAlg = new SSPEA(config, data);
         CARule rule = null;
 
         try {
-            rule = evol_alg.evolve();
+            rule = evolAlg.evolve();
+            this.stats = evolAlg.stats;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -116,4 +119,10 @@ public class CASSP {
         // return average accuracy
         return  acc_sum/folds;
     }
+
+
+    public void createEvolutionImage(String name){
+        this.stats.createImage(this.config.stats, name);
+    }
+
 }

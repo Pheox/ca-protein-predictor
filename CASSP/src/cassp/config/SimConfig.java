@@ -28,6 +28,7 @@ public class SimConfig {
     public String data_cf;
     public String data_cc;
     public String data_test;
+    public String stats;
 
     // ea parameters
     public double p_mut;
@@ -58,6 +59,7 @@ public class SimConfig {
         this.data_cf = prop.getProperty("data_cf");
         this.data_cc = prop.getProperty("data_cc");
         this.data_test = prop.getProperty("data_test");
+        this.stats = prop.getProperty("stats");
 
         if (prop.getProperty("p_mut") != null)
             this.p_mut = Double.valueOf(prop.getProperty("p_mut"));

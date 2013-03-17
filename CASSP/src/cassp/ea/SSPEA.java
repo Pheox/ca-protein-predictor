@@ -19,8 +19,10 @@ import org.apache.log4j.*;
 import cassp.*;
 import cassp.ca.*;
 import cassp.data.*;
+import cassp.utils.*;
 import cassp.config.*;
 import cassp.ca.rules.*;
+import cassp.ea.stats.*;
 
 
 
@@ -38,11 +40,14 @@ public class SSPEA {
 
     public Data data;
     public SimConfig config;
+    public EAStats stats;
 
     public SSPEA(SimConfig config, Data data){
         this.data = data;
         this.config = config;
+        this.stats = new EAStats();
     }
+
 
     public CARule evolve() throws Exception{
 
@@ -65,17 +70,27 @@ public class SSPEA {
         conf.setSampleChromosome(sampleChromosome);
         conf.setPopulationSize(this.config.pop);
 
-        Genotype population;
+        Genotype genotype;
 
-        population = Genotype.randomInitialGenotype(conf);
+        genotype = Genotype.randomInitialGenotype(conf);
 
         for (int i = 0; i < this.config.max_gen; i++) {
             logger.info("### " + i + ". generation");
-            population.evolve();
-            System.out.print(population.getFittestChromosome());
+            genotype.evolve();
+
+            // filling GenStats object
+            GenStats gs = new GenStats();
+            gs.max = Utils.getMax(genotype.getPopulation());
+            gs.min = Utils.getMin(genotype.getPopulation());
+            gs.mean = Utils.getMean(genotype.getPopulation());
+            gs.generation = i;
+            this.stats.addGenStats(gs);
+
+            //System.out.print(genotype.getFittestChromosome());
          }
 
-         return rule.fromChromosome(population.getFittestChromosome());
+
+         return rule.fromChromosome(genotype.getFittestChromosome());
     }
 
 
