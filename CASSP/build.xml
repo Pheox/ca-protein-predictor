@@ -1,39 +1,51 @@
-<project name="CASSP" default="compile" basedir=".">
+<project name="CASSP" default="all" basedir=".">
+  <description> CASSP predictor </description>
 
- <!-- Delete old files -->
 
-   <target name="clean">
-     <delete dir="build"/>
-     <delete file="dest\*.jar"/>
-     <delete dir="doc"/>
-     <mkdir dir="doc"/>
-   </target>
+  <!-- set global properties for this build -->
+  <property name="project_name" value="cassp" />
+  <property name="src" location="src" />
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+  <property name="doc"  location="doc" />
+  <property name="lib"  location="lib"/>
+  <property name="res"  location="res"/>
+  <property name="reports" location="reports" />
+  <property name="cob_reports" location="${reports}/cobertura"/>
+  <property name="junit_reports" location="${reports}/junit" />
+  <property name="cobertura.dir" value="${lib}/cobertura" />
+
+
+  <path id="cobertura.classpath">
+      <fileset dir="${cobertura.dir}">
+          <include name="cobertura.jar" />
+          <include name="lib/**/*.jar" />
+      </fileset>
+  </path>
+
+  <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
 
 <!-- Source files compiling, jar file creating -->
 
    <target name="compile">
-     <delete dir="build"/>
-     <delete dir="dest"/>
-     <mkdir dir="build"/>
-     <mkdir dir="dest"/>
+      <mkdir dir="${build}"/>
+      <path id="build-classpath">
+          <fileset dir="lib">
+              <include name="*.jar"/>
+          </fileset>
+      </path>
+      <manifestclasspath property="lib.list" jarfile="lib/cassp.jar">
+          <classpath refid="build-classpath"/>
+      </manifestclasspath>
 
-    <path id="build-classpath">
-        <fileset dir="lib">
-            <include name="*.jar"/>
-        </fileset>
-    </path>
-    <manifestclasspath property="lib.list" jarfile="lib/cassp.jar">
-        <classpath refid="build-classpath"/>
-    </manifestclasspath>
-
-
-         <!-- Compiling -->
-         <javac includeantruntime="false" srcdir="src" destdir="build" debug="true"
-                classpath="lib/log4j.jar;lib/jgap.jar;lib/jgnuplot.jar"/>
-     <!-- Vytvorenie jar suboru -->
-         <echo>Creating jar File</echo>
-         <jar jarfile="lib/cassp.jar" basedir="build" >
-       <manifest>
+       <!-- Compiling -->
+       <javac includeantruntime="false" srcdir="${src}" destdir="${build}" debug="true"
+              classpath="lib/log4j.jar;lib/jgap.jar;lib/jgnuplot.jar;lib/junit.jar"/>
+      <!-- jar creation -->
+      <echo>Creating jar File</echo>
+      <jar jarfile="${lib}/cassp.jar" basedir="${build}" >
+      <manifest>
          <attribute name="Main-Class" value="cassp.Main"/>
          <attribute name="Class-Path" value="${lib.list}"/>
        </manifest>
@@ -41,12 +53,9 @@
    </target>
 
 
-
 <!-- Docs generating -->
 
-   <target name = "doc" description="generate documentation" depends="compile">
-     <delete dir="doc"/>
-     <mkdir dir="doc"/>
+   <target name="doc" description="generate documentation" depends="compile">
      <javadoc
            access="public"
            destdir="doc"
@@ -54,7 +63,7 @@
            version="true"
            use="true"
            windowtitle="CASSP Documentation"
-           classpath="lib/log4j.jar;lib/jgap.jar;lib/jgnuplot.jar"
+           classpath="lib/log4j.jar;lib/jgap.jar;lib/jgnuplot.jar;lib/junit.jar"
       >
       <doctitle><![CDATA[<h1>CASSP - Cellular Automata Secondary Sctructure Prediction</h1>]]></doctitle>
       <bottom><![CDATA[<i>Copyleft &#169; 2013 Vladimir Brigant. All Rights Reserved. Generated:
@@ -65,18 +74,104 @@
             //-->
         </script></i>]]>
       </bottom>
-      <fileset dir="src" defaultexcludes="yes">
+      <fileset dir="${src}" defaultexcludes="yes">
          <include name="**/*.java"/>
       </fileset>
      </javadoc>
    </target>
 
 
+<!-- Tests suite -->
+
+<target name="run-tests" depends="compile" description="run a test suite" >
+    <mkdir dir="${junit_reports}/raw" />
+    <mkdir dir="${junit_reports}/html" />
+    <junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
+
+      <sysproperty key="net.sourceforge.cobertura.datafile"
+        file="cobertura.ser" />
+
+        <classpath location="${instrumented.dir}" />
+        <classpath location="${classes.dir}" />
+        <classpath refid="cobertura.classpath" />
+
+      <classpath>
+        <dirset dir="${build}/cassp/"/>
+
+        <fileset dir="${lib}">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+      <batchtest fork="yes" todir="${junit_reports}/raw/">
+        <formatter type="xml"/>
+        <fileset dir="${src}/cassp/tests/">
+          <include name="**/*Test*.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="test" depends="run-tests">
+    <junitreport todir="${junit_reports}">
+      <fileset dir="${junit_reports}/raw/">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${junit_reports}/html/"/>
+    </junitreport>
+  </target>
+
+
+
+<!-- Test suite code covering by cobertura -->
+
+  <target name="cobertura">
+    <cobertura-instrument>
+        <ignore regex="org.apache.log4j.*" />
+        <fileset dir="${build}">
+            <include name="**/*.class" />
+            <exclude name="**/*Test.class" />
+        </fileset>
+        <fileset dir="${lib}">
+            <include name="cassp.jar" />
+        </fileset>
+    </cobertura-instrument>
+
+    <cobertura-report format="html" destdir="${cob_reports}" srcdir="${src}"/>
+
+  </target>
+
+
 
 <!-- Executing jar file -->
 
    <target name="run">
-     <java jar="lib/cassp.jar" fork="true" classpath="lib/*.jar"/>
+     <java jar="${lib}/cassp.jar" fork="true" classpath="${lib}/*.jar"/>
    </target>
+
+
+<!-- supporting targets -->
+
+  <target name="init" description="initialize the build environment">
+      <!-- Create the time stamp -->
+      <tstamp/>
+      <!-- Create directory structures -->
+      <mkdir dir="${build}" />
+      <mkdir dir="${doc}" />
+      <mkdir dir="${reports}" />
+      <mkdir dir="${cob_reports}" />
+      <mkdir dir="${junit_reports}" />
+  </target>
+
+  <target name="clean" description="clean up">
+      <!-- Delete the ${build}, ${dist}, ${doc} directory trees -->
+      <delete dir="${build}"/>
+      <delete dir="${dist}"/>
+      <delete dir="${doc}"/>
+      <delete dir="${cob_reports}" />
+      <delete dir="${junit_reports}"/>
+  </target>
+
+
+  <target name="all" depends="clean, init, compile, doc, test, cobertura"></target>
 
 </project>
