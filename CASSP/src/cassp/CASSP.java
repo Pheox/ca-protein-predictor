@@ -19,6 +19,12 @@ import cassp.ca.rules.*;
 
 
 
+/**
+* CASSP = cellular automata secondary structure predictor<p>
+* This class provides API for training, testing, cross-validating and predicting
+* protein secondary structure based on specified dataset.
+* @see Data
+*/
 public class CASSP {
 
     public SimConfig config;
@@ -28,6 +34,10 @@ public class CASSP {
     public EAStats stats;
 
 
+    /**
+    *
+    * @param config configuration object
+    */
     public CASSP(SimConfig config){
         this.config = config;
     }

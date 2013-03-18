@@ -5,10 +5,6 @@
 *.war
 *.ear
 
-# Javadoc Files #
-*.css
-*.html
-
 # Latex Files #
 *.aux
 *.bbl
@@ -19,4 +15,4 @@
 
 # data
 data/pdb_vyber/files/
-
+CASSP/frontend/

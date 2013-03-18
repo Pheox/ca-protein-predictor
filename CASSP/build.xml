@@ -9,7 +9,7 @@
      <mkdir dir="doc"/>
    </target>
 
-<!-- Source files compiling, jar file creating + help generating -->
+<!-- Source files compiling, jar file creating -->
 
    <target name="compile">
      <delete dir="build"/>
@@ -42,9 +42,9 @@
 
 
 
-<!-- generovanie napovedy do dest/ zlozky -->
+<!-- Docs generating -->
 
-   <target name = "doc">
+   <target name = "doc" description="generate documentation" depends="compile">
      <delete dir="doc"/>
      <mkdir dir="doc"/>
      <javadoc
@@ -53,11 +53,21 @@
            author="true"
            version="true"
            use="true"
-           windowtitle="this is window title"
-        >
-         <fileset dir="src" defaultexcludes="yes">
-             <include name="**/*.java"/>
-         </fileset>
+           windowtitle="CASSP Documentation"
+           classpath="lib/log4j.jar;lib/jgap.jar;lib/jgnuplot.jar"
+      >
+      <doctitle><![CDATA[<h1>CASSP - Cellular Automata Secondary Sctructure Prediction</h1>]]></doctitle>
+      <bottom><![CDATA[<i>Copyleft &#169; 2013 Vladimir Brigant. All Rights Reserved. Generated:
+        <script language="JavaScript">
+          <!--
+            date=Date()
+            document.write(date)
+            //-->
+        </script></i>]]>
+      </bottom>
+      <fileset dir="src" defaultexcludes="yes">
+         <include name="**/*.java"/>
+      </fileset>
      </javadoc>
    </target>
 
