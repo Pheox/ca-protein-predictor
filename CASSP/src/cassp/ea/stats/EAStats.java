@@ -81,7 +81,6 @@ public class EAStats{
         // save image
         plot.setOutput(Terminal.PNG, dir + name, "640, 480");
         try{
-            System.out.println("a");
             plot.plot();
         }catch (Exception e){
             logger.error("\n" + e);
