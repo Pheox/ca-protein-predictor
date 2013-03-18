@@ -18,6 +18,9 @@ import org.apache.log4j.*;
 
 public class EAStats{
 
+    static double MIN_Y_RANGE = 0.55;
+    static double MAX_Y_RANGE = 0.59;
+
     static Logger logger = Logger.getLogger(EAStats.class);
 
     public ArrayList<GenStats> generations;
@@ -34,17 +37,18 @@ public class EAStats{
 
 
     public void createImage(String dir, String name){
-
         // init jgnuplot
         Plot.setGnuplotExecutable("gnuplot");
         Plot.setPlotDirectory(dir);
 
         // basic configuration
         Plot plot = new Plot();
+        plot.setTitle("Fitness value evolution");
         plot.setKey("right bottom box");
-        //plot.setSamples("50");
-        //plot.setRanges("[-10:10]");
-
+        plot.setXLabel("Generation");
+        plot.setYLabel("Fitness");
+        plot.setRanges("[0:" + this.generations.size() + "] ["
+            + EAStats.MIN_Y_RANGE + ":" + EAStats.MAX_Y_RANGE + "]");
 
         // create tmp file with data
         File tmpFile = null;
@@ -55,8 +59,9 @@ public class EAStats{
 
             for (int i = 0; i < this.generations.size(); i++) {
                 bw.write(this.generations.get(i).generation + "\t");
-                bw.write(this.generations.get(i).min + "\t");
-                bw.write(String.valueOf(this.generations.get(i).max));
+                bw.write(this.generations.get(i).mean + "\t");
+                bw.write(this.generations.get(i).max + "\t");
+                bw.write(String.valueOf(this.generations.get(i).min));
                 bw.write("\n");
             }
             bw.close();
@@ -65,26 +70,23 @@ public class EAStats{
             logger.error("\n" + e);
         }
 
-        // get mins and set x & y ranges
-        plot.setXLabel("Generacia");
-        plot.setYLabel("Fitness");
-
-        plot.setDataFileName(tmpFile.getAbsolutePath());
-
-//      g << "set yrange [0:" + s2 + "]";
-//      g << "plot \""+ string("tmpGifFile.tmp")+"\" using 1:2 smooth bezier ti \"priemer\","
-//      "\"\" using 1:3 smooth bezier ti \"min\","
-//      "\"\" using 1:4 smooth bezier  ti \"max\"";
+        plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:2 smooth bezier", Axes.NOT_SPECIFIED,
+            "mean", Style.LINES));
+        plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:3 smooth bezier", Axes.NOT_SPECIFIED,
+            "max", Style.LINES));
+        plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:4 smooth bezier", Axes.NOT_SPECIFIED,
+            "min", Style.LINES));
 
 
-        // save image, set size ??
-        plot.setOutput(Terminal.PNG, dir + name);
+        // save image
+        plot.setOutput(Terminal.PNG, dir + name, "640, 480");
         try{
+            System.out.println("a");
             plot.plot();
         }catch (Exception e){
             logger.error("\n" + e);
         }
 
-        //tmpFile.deleteOnExit();
+        tmpFile.deleteOnExit();
     }
 }
