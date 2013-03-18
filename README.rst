@@ -2,6 +2,33 @@
 CASSP (Cellular Automata Secondary Strucure Predictor)
 ======================================================
 
+Requirements
+============
+
+* `JGAP <http://jgap.sourceforge.net/>`_
+
+* `jgnuplot <http://jgnuplot.sourceforge.net/>`_
+
+* `JUnit <http://junit.org/>`_
+
+* `Log4j <http://logging.apache.org/log4j/2.x/>`_
+
+* `Cobertura <http://sourceforge.net/projects/cobertura/>`_
+
+
+Compiling & Execution
+=====================
+
+ |    ``$ cd CASSP``
+ |    ``$ ant clean``
+ |    ``$ ant init``
+ |    ``$ ant compile``
+ |    ``$ ant test``
+ |    ``$ ant run``
+ |    ``$ ant cobertura # tests code covering``
+ |    ``$ ant # clean, init, compile, test and cobertura``
+
+
 
 .. image:: ./diagrams/dp_model.jpg
 
