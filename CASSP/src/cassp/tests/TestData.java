@@ -27,8 +27,7 @@ public class TestData extends TestCase {
         TestRunner.run(suite());
     }
 
-    protected Data simpleData;
-    protected Data complexData;
+    private Data simpleData;
 
 
     public void setUp() {
@@ -44,12 +43,10 @@ public class TestData extends TestCase {
     }
 
     public void testQ3() {
-        System.out.println(this.simpleData.q3());
         assertEquals(52.6315, this.simpleData.q3(), 0.001);
     }
 
     public void testSOV(){
-        System.out.println(this.simpleData.sov());
         assertEquals(40.7613, this.simpleData.sov(), 0.001);
     }
 }

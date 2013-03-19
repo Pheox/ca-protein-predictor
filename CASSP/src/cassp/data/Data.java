@@ -344,6 +344,7 @@ public class Data {
 
 
     /* Getters & setters */
+
     public ArrayList<DataItem> getData(){
         return this.data;
     }

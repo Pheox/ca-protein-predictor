@@ -35,7 +35,7 @@ public class CASimpleRule extends CARule{
     public IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException{
         Gene[] sampleGenes = new Gene[this.getSize()];
 
-        sampleGenes[0] = new IntegerGene(conf, 0, config.max_steps);
+        sampleGenes[0] = new IntegerGene(conf, 0, config.getMaxSteps());
 
         for (int i = 1; i-1 < (this.neigh*2 + 1); i++) {
             sampleGenes[i] = new DoubleGene(conf, 0, 1);

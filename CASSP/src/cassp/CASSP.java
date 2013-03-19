@@ -44,14 +44,14 @@ public class CASSP {
 
 
     public void train(){
-        this.data = new Data(this.config.data);
-        this.data.loadChouFasman(this.config.data_cf);
+        this.data = new Data(this.config.getDataPath());
+        this.data.loadChouFasman(this.config.getDataCFPath());
         this.rule = this.trainRule(this.data);
     }
 
 
     public double test(){
-        Data data = new Data(this.config.data_test);
+        Data data = new Data(this.config.getTestDataPath());
         return this.testRule(data);
     }
 
@@ -96,8 +96,8 @@ public class CASSP {
         if (folds < 1) return -1;
 
         // structured creation + data splitting
-        this.data = new Data(this.config.data);
-        this.data.loadChouFasman(this.config.data_cf);
+        this.data = new Data(this.config.getDataPath());
+        this.data.loadChouFasman(this.config.getDataCFPath());
 
         this.cvData = new Data[folds];
         for (int i = 0; i < folds; i++) {
@@ -132,7 +132,7 @@ public class CASSP {
 
 
     public void createEvolutionImage(String name){
-        this.stats.createImage(this.config.stats, name);
+        this.stats.createImage(this.config.getStatsPath(), name);
     }
 
 }

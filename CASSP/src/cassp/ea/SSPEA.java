@@ -56,7 +56,7 @@ public class SSPEA {
         Configuration conf = new DefaultConfiguration();
         //conf.addGeneticOperator(new MutationOperator(conf, (int) (1/this.config.p_mut)));
         conf.addGeneticOperator(new GaussianMutationOperator(conf, 0.1d));
-        conf.addGeneticOperator(new CrossoverOperator(conf, this.config.p_cross));
+        conf.addGeneticOperator(new CrossoverOperator(conf, this.config.getCrossProb()));
         conf.addNaturalSelector(new TournamentSelector(conf, 2, 1.0d), false);
 
         conf.setPreservFittestIndividual(true);
@@ -68,13 +68,13 @@ public class SSPEA {
         IChromosome sampleChromosome = rule.toChromosome(conf, this.config);
 
         conf.setSampleChromosome(sampleChromosome);
-        conf.setPopulationSize(this.config.pop);
+        conf.setPopulationSize(this.config.getPop());
 
         Genotype genotype;
 
         genotype = Genotype.randomInitialGenotype(conf);
 
-        for (int i = 0; i < this.config.max_gen; i++) {
+        for (int i = 0; i < this.config.getMaxGen(); i++) {
             logger.info("### " + i + ". generation");
             genotype.evolve();
 
@@ -95,10 +95,10 @@ public class SSPEA {
 
 
     private CARule setRule(){
-        if (this.config.rule == 1)
-            return new CASimpleRule(this.config.neigh);
+        if (this.config.getRuleID() == 1)
+            return new CASimpleRule(this.config.getNeigh());
         // else if (this.config.rule == 2) etc.
         else
-            return new CASimpleRule(this.config.neigh);
+            return new CASimpleRule(this.config.getNeigh());
     }
 }

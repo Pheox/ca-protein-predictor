@@ -14,38 +14,69 @@ import cassp.data.*;
 
 public class CACell{
 
-    public AminoAcid aminoAcid;
-    public char ssMotif;
+    private AminoAcid aminoAcid;
+    private char motiv;
 
-    public double helix_props;
-    public double sheet_props;
-    public double coil_props;
+    private double helixProps;
+    private double sheetProps;
+    private double coilProps;
 
 
     public CACell(AminoAcid aa){
         this.aminoAcid = aa;
 
-        this.helix_props = this.aminoAcid.cf_a;
-        this.sheet_props = this.aminoAcid.cf_b;
-        this.coil_props = this.aminoAcid.cf_c;
+        this.helixProps = this.aminoAcid.cf_a;
+        this.sheetProps = this.aminoAcid.cf_b;
+        this.coilProps = this.aminoAcid.cf_c;
 
         this.computeMotif();
     }
 
 
     public char computeMotif(){
-        if (this.helix_props > this.sheet_props){
-            if (this.helix_props > this.coil_props)
-                this.ssMotif = 'H';
+        if (this.helixProps > this.sheetProps){
+            if (this.helixProps > this.coilProps)
+                this.motiv = 'H';
             else
-                this.ssMotif = 'C';
+                this.motiv = 'C';
         }
         else{
-            if (this.coil_props < this.sheet_props)
-                this.ssMotif = 'E';
+            if (this.coilProps < this.sheetProps)
+                this.motiv = 'E';
             else
-                this.ssMotif = 'C';
+                this.motiv = 'C';
         }
-        return this.ssMotif;
+        return this.motiv;
+    }
+
+
+    /* Getters & setters */
+
+    public double getHelixProps(){
+        return this.helixProps;
+    }
+
+    public void setHelixProps(double props){
+        this.helixProps = props;
+    }
+
+    public double getSheetProps(){
+        return this.sheetProps;
+    }
+
+    public void setSheetProps(double props){
+        this.sheetProps = props;
+    }
+
+    public double getCoilProps(){
+        return this.coilProps;
+    }
+
+    public void setCoilProps(double props){
+        this.coilProps = props;
+    }
+
+    public char getMotiv(){
+        return this.motiv;
     }
 }

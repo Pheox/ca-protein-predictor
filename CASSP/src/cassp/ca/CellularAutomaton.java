@@ -28,9 +28,14 @@ public class CellularAutomaton {
     private SimConfig config;
 
 
+    /**
+    *
+    * @param dataItem
+    * @param config
+    */
     public CellularAutomaton(DataItem dataItem, SimConfig config) {
         this.dataItem = dataItem;
-        this.cells = new CACell[this.dataItem.getAaSeq().length()];
+        this.cells = new CACell[this.dataItem.length()];
         this.config = config;
     }
 
@@ -40,44 +45,44 @@ public class CellularAutomaton {
         this.rule = rule;
 
         // cells initialization
-        for (int i = 0; i < this.dataItem.getAaSeq().length(); i++){
+        for (int i = 0; i < this.dataItem.length(); i++){
             this.cells[i] = new CACell(data.getAminoAcid(this.dataItem.getAaAt(i)));
         }
 
         for (int s = 0; s < this.rule.steps; s++) {
             for (int c = 0; c < this.cells.length; c++ ) {
                 // cell recomputing
-                double sum_a = 0;
-                double sum_b = 0;
-                double sum_c = 0;
-                double sum_weights = 0;
+                double sumA = 0;
+                double sumB = 0;
+                double sumC = 0;
+                double sumWeights = 0;
 
-                for (int o = c - this.config.neigh; o <= c + this.config.neigh; o++) {
+                for (int o = c - this.config.getNeigh(); o <= c + this.config.getNeigh(); o++) {
 
-                    sum_weights += this.rule.weights[o - c + this.rule.weights.length/2];
+                    sumWeights += this.rule.weights[o - c + this.rule.weights.length/2];
 
                     if ((o < 0) || (o >= this.cells.length -1)){
                         // boundary cells
-                        sum_a += this.rule.weights[o - c + this.rule.weights.length/2]
+                        sumA += this.rule.weights[o - c + this.rule.weights.length/2]
                              * CellularAutomaton.BOUNDARY_A;
-                        sum_b += this.rule.weights[o - c + this.rule.weights.length/2]
+                        sumB += this.rule.weights[o - c + this.rule.weights.length/2]
                              * CellularAutomaton.BOUNDARY_B;
-                        sum_c += this.rule.weights[o - c + this.rule.weights.length/2]
+                        sumC += this.rule.weights[o - c + this.rule.weights.length/2]
                              * CellularAutomaton.BOUNDARY_C;
                     }
                     else{
-                        sum_a += this.rule.weights[o - c + this.rule.weights.length/2]
-                             * this.cells[o].helix_props;
-                        sum_b += this.rule.weights[o - c + this.rule.weights.length/2]
-                             * this.cells[o].sheet_props;
-                        sum_c += this.rule.weights[o - c + this.rule.weights.length/2]
-                             * this.cells[o].coil_props;
+                        sumA += this.rule.weights[o - c + this.rule.weights.length/2]
+                             * this.cells[o].getHelixProps();
+                        sumB += this.rule.weights[o - c + this.rule.weights.length/2]
+                             * this.cells[o].getSheetProps();
+                        sumC += this.rule.weights[o - c + this.rule.weights.length/2]
+                             * this.cells[o].getCoilProps();
                     }
                 }
                 // weighted mean
-                this.cells[c].helix_props = sum_a/sum_weights;
-                this.cells[c].sheet_props = sum_b/sum_weights;
-                this.cells[c].coil_props = sum_c/sum_weights;
+                this.cells[c].setHelixProps(sumA/sumWeights);
+                this.cells[c].setSheetProps(sumB/sumWeights);
+                this.cells[c].setCoilProps(sumC/sumWeights);
                 this.cells[c].computeMotif();
             }
         }
@@ -85,13 +90,14 @@ public class CellularAutomaton {
     }
 
 
+    /**
+    * Returns predicted sequence taken from cells in final CA configuration.
+    */
     public String getPredictedSeq(){
         String seq = "";
         for (int i = 0; i < this.cells.length; i++ ) {
-            seq += this.cells[i].ssMotif;
+            seq += this.cells[i].getMotiv();
         }
         return seq;
     }
 }
-
-

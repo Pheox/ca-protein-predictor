@@ -60,11 +60,11 @@ public class SSPFF extends FitnessFunction{
     private CARule createRule(IChromosome chromosome){
         CARule rule;
 
-        if (this.config.rule == 1)
-            rule = new CASimpleRule(this.config.neigh);
+        if (this.config.getRuleID() == 1)
+            rule = new CASimpleRule(this.config.getNeigh());
         // else if (this.config.rule == 2) etc.
         else
-            rule = new CASimpleRule(this.config.neigh);
+            rule = new CASimpleRule(this.config.getNeigh());
 
         return rule.fromChromosome(chromosome);
     }
