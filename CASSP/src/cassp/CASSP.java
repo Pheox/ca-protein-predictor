@@ -72,8 +72,8 @@ public class CASSP {
 
 
     private double testRule(Data testData){
-        for (DataItem di: testData.data){
-            di.predicted_seq = this.predict(di.aa_seq);
+        for (DataItem di: testData.getData()){
+            di.setPredSeq(this.predict(di.getAaSeq()));
         }
         return testData.q3();
     }
@@ -82,7 +82,7 @@ public class CASSP {
     public String predict(String aa_seq){
 
         DataItem di = new DataItem();
-        di.aa_seq = aa_seq;
+        di.setAaSeq(aa_seq);
 
         CellularAutomaton ca = new CellularAutomaton(di, this.config);
         ca.run(this.rule, this.data);
@@ -102,7 +102,7 @@ public class CASSP {
         this.cvData = new Data[folds];
         for (int i = 0; i < folds; i++) {
             this.cvData[i] = new Data();
-            this.cvData[i].amino_acids = this.data.amino_acids;
+            this.cvData[i].setAminoAcids(this.data.getAminoAcids());
         }
 
         for (int i = 0; i < this.data.length(); i++) {

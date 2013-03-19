@@ -26,37 +26,34 @@ public class SSPFF extends FitnessFunction{
 
     static Logger logger = Logger.getLogger(SSPFF.class);
 
-    public SimConfig config;
-    protected Data data;
+    private SimConfig config;
+    private Data data;
 
-    // inicializovat s objektom Data ?? - asi to bude takto najlepsie
+    /**
+    * What is the best initialization?
+    */
     public SSPFF(Data data, SimConfig config){
         this.data = data;
         this.config = config;
     }
 
 
+    /**
+    * Computes value of fitness function for a given chromosome.
+    * @param chromosome Chromosome which fitness value is computing.
+    */
     public double evaluate(IChromosome chromosome){
-        //getGene, getGenes, size()
 
-        // 1. prejst celu datovu sadu
-        // 2. vykonat evaluaciu CA pre zadany pocet krokov + porovnat s referencnou SSP
-        // 3. vypocitat konecnu fitness funkciu
-
-        int sum_ok = 0;
-        int sum_all = 0;
+        int sumOk = 0;
+        int sumAll = 0;
 
         CARule rule  = this.createRule(chromosome);
 
         for (DataItem di : this.data.getData()){
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
-            di.predicted_seq = ca.run(rule, this.data);
+            di.setPredSeq(ca.run(rule, this.data));
         }
-
-        double fitness = this.data.q3();
-
-        //logger.info("fitness value: " + fitness);
-        return fitness;
+        return this.data.q3();
     }
 
 

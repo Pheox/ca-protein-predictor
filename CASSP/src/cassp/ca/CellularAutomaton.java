@@ -22,15 +22,15 @@ public class CellularAutomaton {
     public static int BOUNDARY_B = 0;
     public static int BOUNDARY_C = 300;
 
-    public CACell[] cells;
-    public DataItem dataItem;
-    public CARule rule;
-    public SimConfig config;
+    private CACell[] cells;
+    private DataItem dataItem;
+    private CARule rule;
+    private SimConfig config;
 
 
     public CellularAutomaton(DataItem dataItem, SimConfig config) {
         this.dataItem = dataItem;
-        this.cells = new CACell[this.dataItem.aa_seq.length()];
+        this.cells = new CACell[this.dataItem.getAaSeq().length()];
         this.config = config;
     }
 
@@ -40,8 +40,8 @@ public class CellularAutomaton {
         this.rule = rule;
 
         // cells initialization
-        for (int i = 0; i < this.dataItem.aa_seq.length(); i++){
-            this.cells[i] = new CACell(data.amino_acids.get(this.dataItem.aa_seq.charAt(i)));
+        for (int i = 0; i < this.dataItem.getAaSeq().length(); i++){
+            this.cells[i] = new CACell(data.getAminoAcid(this.dataItem.getAaAt(i)));
         }
 
         for (int s = 0; s < this.rule.steps; s++) {
