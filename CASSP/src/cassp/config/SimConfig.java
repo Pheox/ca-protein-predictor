@@ -24,26 +24,34 @@ public class SimConfig {
     static int RULE = 1;
 
     // data paths
-    public String data;
-    public String data_cf;
-    public String data_cc;
-    public String data_test;
-    public String stats;
+    private String dataPath;
+    private String dataCFPath;
+    private String dataCCPath;
+    private String dataTestPath;
+    private String statsPath;
 
     // ea parameters
-    public double p_mut;
-    public double p_cross;
-    public int max_gen;
-    public int pop;
+    private double p_mut;
+    private double p_cross;
+    private int max_gen;
+    private int pop;
 
     // ca parameters
-    public int max_steps;
-    public int neigh;
-    public int rule;
+    private int max_steps;
+    private int neigh;
+    private int rule;
+
+
+    public SimConfig(){
+    }
 
 
     public SimConfig(String confPath){
+        this.loadConfig(confPath);
+    }
 
+
+    public void loadConfig(String confPath){
         Properties prop = new Properties();
         InputStream is = null;
 
@@ -55,11 +63,11 @@ public class SimConfig {
             e.printStackTrace();
         }
 
-        this.data = prop.getProperty("data");
-        this.data_cf = prop.getProperty("data_cf");
-        this.data_cc = prop.getProperty("data_cc");
-        this.data_test = prop.getProperty("data_test");
-        this.stats = prop.getProperty("stats");
+        this.dataPath = prop.getProperty("data");
+        this.dataCFPath = prop.getProperty("data_cf");
+        this.dataCCPath = prop.getProperty("data_cc");
+        this.dataTestPath = prop.getProperty("data_test");
+        this.statsPath = prop.getProperty("stats");
 
         if (prop.getProperty("p_mut") != null)
             this.p_mut = Double.valueOf(prop.getProperty("p_mut"));
@@ -95,6 +103,107 @@ public class SimConfig {
             this.rule = Integer.parseInt(prop.getProperty("rule"));
         else
             this.rule = SimConfig.RULE;
+    }
+
+
+    /* Getters & setters */
+
+    public double getMutProb(){
+        return this.p_mut;
+    }
+
+    public void setMutProb(double prob){
+        this.p_mut = prob;
+    }
+
+    public double getCrossProb(){
+        return this.p_cross;
+    }
+
+    public void setCrossProb(double prob){
+        this.p_cross = prob;
+    }
+
+    public int getMaxGen(){
+        return this.max_gen;
+    }
+
+    public void setMaxGen(int maxGen){
+        this.max_gen = maxGen;
+    }
+
+    public int getPop(){
+        return this.pop;
+    }
+
+    public void setPop(int pop){
+        this.pop = pop;
+    }
+
+    public int getMaxSteps(){
+        return this.max_steps;
+    }
+
+    public void setMaxSteps(int maxSteps){
+        this.max_steps = maxSteps;
+    }
+
+    public int getNeigh(){
+        return this.neigh;
+    }
+
+    public void setNeigh(int neigh){
+        this.neigh = neigh;
+    }
+
+    public int getRuleID(){
+        return this.rule;
+    }
+
+    public void setRuleID(int id){
+        this.rule = id;
+    }
+
+    public String getStatsPath(){
+        return this.statsPath;
+    }
+
+    public void setStatsPath(String statsPath){
+        this.statsPath = statsPath;
+    }
+
+    public String getDataPath(){
+        return this.dataPath;
+    }
+
+    public void setDataPath(String dataPath){
+        this.dataPath = dataPath;
+    }
+
+
+    public String getDataCFPath(){
+        return this.dataCFPath;
+    }
+
+    public void setDataCFPath(String path){
+        this.dataCFPath = path;
+    }
+
+
+    public String getDataCCPath(){
+        return this.dataCCPath;
+    }
+
+    public void setDataCCPath(String path){
+        this.dataCCPath = path;
+    }
+
+    public String getTestDataPath(){
+        return this.dataTestPath;
+    }
+
+    public void setTestDataPath(String path){
+        this.dataTestPath = path;
     }
 }
 
