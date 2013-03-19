@@ -12,6 +12,7 @@
   <property name="res"  location="res"/>
   <property name="reports" location="reports" />
   <property name="cob_reports" location="${reports}/cobertura"/>
+  <property name="instrum" location="${build}/instrumented" />
   <property name="junit_reports" location="${reports}/junit" />
   <property name="cobertura.dir" value="${lib}/cobertura" />
 
@@ -81,51 +82,14 @@
    </target>
 
 
+
 <!-- Tests suite -->
 
 <target name="run-tests" depends="compile" description="run a test suite" >
     <mkdir dir="${junit_reports}/raw" />
     <mkdir dir="${junit_reports}/html" />
-    <junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
 
-      <sysproperty key="net.sourceforge.cobertura.datafile"
-        file="cobertura.ser" />
-
-        <classpath location="${instrumented.dir}" />
-        <classpath location="${classes.dir}" />
-        <classpath refid="cobertura.classpath" />
-
-      <classpath>
-        <dirset dir="${build}/cassp/"/>
-
-        <fileset dir="${lib}">
-          <include name="**/*.jar"/>
-        </fileset>
-      </classpath>
-      <batchtest fork="yes" todir="${junit_reports}/raw/">
-        <formatter type="xml"/>
-        <fileset dir="${src}/cassp/tests/">
-          <include name="**/*Test*.java"/>
-        </fileset>
-      </batchtest>
-    </junit>
-  </target>
-
-  <target name="test" depends="run-tests">
-    <junitreport todir="${junit_reports}">
-      <fileset dir="${junit_reports}/raw/">
-        <include name="TEST-*.xml"/>
-      </fileset>
-      <report format="frames" todir="${junit_reports}/html/"/>
-    </junitreport>
-  </target>
-
-
-
-<!-- Test suite code covering by cobertura -->
-
-  <target name="cobertura">
-    <cobertura-instrument>
+    <cobertura-instrument todir="${instrum}">
         <ignore regex="org.apache.log4j.*" />
         <fileset dir="${build}">
             <include name="**/*.class" />
@@ -136,8 +100,41 @@
         </fileset>
     </cobertura-instrument>
 
+    <junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
+
+      <sysproperty key="net.sourceforge.cobertura.datafile"
+        file="cobertura.ser" />
+
+        <classpath location="${instrum}" />
+        <classpath location="${build}/cassp/" />
+        <classpath refid="cobertura.classpath" />
+        <classpath>
+          <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+          </fileset>
+        </classpath>
+
+      <batchtest fork="yes" todir="${junit_reports}/raw/">
+        <formatter type="xml"/>
+        <fileset dir="${src}/cassp/tests/">
+          <include name="**/*Test*.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+
     <cobertura-report format="html" destdir="${cob_reports}" srcdir="${src}"/>
 
+  </target>
+
+
+
+  <target name="test" depends="run-tests">
+    <junitreport todir="${junit_reports}">
+      <fileset dir="${junit_reports}/raw/">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${junit_reports}/html/"/>
+    </junitreport>
   </target>
 
 
@@ -156,6 +153,7 @@
       <tstamp/>
       <!-- Create directory structures -->
       <mkdir dir="${build}" />
+      <mkdir dir="${instrum}" />
       <mkdir dir="${doc}" />
       <mkdir dir="${reports}" />
       <mkdir dir="${cob_reports}" />
@@ -172,6 +170,6 @@
   </target>
 
 
-  <target name="all" depends="clean, init, compile, doc, test, cobertura"></target>
+  <target name="all" depends="clean, init, compile, doc, test"></target>
 
 </project>
