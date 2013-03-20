@@ -3,36 +3,37 @@
 % Goldberg - Genetic Algorithms in Search, Optimization and Machine Learning.
 % Hynek - Geneticke algoritmy a geneticke programovanie.
 
-% algoritmus EA alebo GA ??
+% algoritmus EA alebo GA ?? - EA (budem vyuzivat ES)
 
 % porovnanie s nejakou biografiou + citacia
 Charles Darwin bol Anglièan, syn významného lekára.
 Vy¹tudoval teológiu, po ¹túdiu sa zaoberal geologickými formáciami
-v horách Walesu. Koncom roka 1831 v¹ak odi¹iel na 5-roè\-nú výskumnú cestu okolo sveta.
+v~horách Walesu. Koncom roka 1831 v¹ak odi¹iel na~5\mbox{-}roè\-nú výskumnú cestu okolo sveta.
 Loï HMS Beagle ho zaviedla aj na Galapágy, ekvádorské súostrovie 19 sopeèných ostrovov
-vo východnej èasti Tichého oceánu, kde zhroma¾dil podµa jeho slov najcennej¹iu èas»
-prírodovedeckého materiálu, ktorý pou¾il vo svojom najväè¹om diele
-publikovanom v roku 1859 s názvom {\it O vzniku druhov prírodným výberom alebo uchovávanie prospe¹ných plemien v boji o ¾ivot}.
-Vrhá ucelený pohµad na vývoj druhov oslobodený od spirituality
-a nábo¾enských predstáv svojej a predchádzajúcich dôb a hlavou plnou
-prírodovedných informácii získaných z okru¾nej plavby okolo sveta.
+vo~východnej èasti Tichého oceánu, kde zhroma¾dil podµa jeho slov najcennej¹iu èas»
+prírodovedeckého materiálu, ktorý pou¾il vo~svojom najväè¹om diele
+publikovanom v~roku 1859\,--\,{\it O~vzniku druhov prírodným výberom alebo
+uchovávanie prospe¹ných plemien v~boji o~¾ivot}.
+Vrhá ucelený pohµad na~vývoj druhov oslobodený od~spi\-ri\-tua\-lity a~nábo¾enských
+predstáv svojej a~predchádzajúcich dôb a~hlavou plnou
+prírodovedných informácii získaných z~okru¾nej plavby okolo sveta.
 Darwin vysvetµuje vznik rôznych druhov organizmov
-na základe prirodzeného výberu, teda schopnosti pre¾i» len tých najschopnej¹ích.
+na~základe prirodzeného výberu, teda schopnosti pre¾i» len tých naj\-schop\-nej¹ích.
 % citacia darwina?
-Významným argumentom pre jeho teóriu boli aj stratigrafické výsledky geológa Charlesa Lyella,
-ktoré podporovali rodiacu sa evoluènú teóriu v \uvoz{èasovej zlo¾itosti}.
-Aplikované princípy klasickej evoluènej teórie s mnohými \uvoz{vylep¹eniami}
-hrajú významnú úlohu vo fonde vedomostí µudstva.
+Významným argumentom pre~jeho teóriu boli aj stratigrafické výsledky geológa Charlesa Lyella,
+ktoré podporovali rodiacu sa evoluènú teóriu v~\uvoz{èasovej zlo¾itosti}.
+Aplikované princípy klasickej evoluènej teórie s~mnohými \uvoz{vylep¹eniami}
+hrajú význam\-nú úlohu vo~fonde vedomostí µudstva.
 
 
 % GA 1973, ES 1964, EP 1962, GP 1989
-Evoluèné algoritmy, ktoré sú postavené na my¹lienkach evoluènej teórie,
-zaèali vznika» u¾ v 50-tych rokoch 20. storoèia.
+Evoluèné algoritmy, ktoré sú postavené na~my¹lienkach evoluènej teórie,
+zaèali vznika» u¾ v~50-tych rokoch 20. storoèia.
 Výraznej¹í záujem v¹ak nastal a¾ koncom 80-tych rokoch minulého storoèia,
 kedy David Goldberg významne roz¹íril prácu Johna Holland z roku 1975
-o genetických algoritmoch, v práci publikovanej v roku 1989 \cite{goldberg_ga_89}.
+o~genetických algoritmoch \cite{holland1975}, v~práci publikovanej v~roku 1989 \cite{goldberg_ga_89}.
 Znaèným impulzom pre popularizáciu EA bola prvá väè¹ia práca
-o genetickom programovaní, ktorej autorom je John Kozza \cite{koza_1}.
+o~genetickom programovaní, ktorej autorom je John Kozza \cite{koza_1}.
 
 
 
@@ -43,23 +44,22 @@ o genetickom programovaní, ktorej autorom je John Kozza \cite{koza_1}.
 
 Vo~zvy¹ku tejto práce sa budú vyskytova» pojmy pochádzajúce z~biológie,
 no sémantika nie v¹etkých je zhodná so~sémantikou v~kontexte
-evoluèných algoritmov. Pre ujasnenie pojmov ponúkam ich krátky prehµad.
+evoluèných algoritmov. Pre ujasnenie pojmov je uvedený ich krátky prehµad.
 
-Medzi základné pojmy Darwinovej evoluèn¹j teórie patrí populácia.
-Populácia je mno¾ina jedincov, ka¾dý je reprezentovaný svojím genetickým materiálom.
-V~tejto práci budem voµne zamieòa» pojmy genetický materiál, genóm a~chromozóm,
+Medzi základné pojmy Darwinovej evoluènej teórie patrí populácia.
+Populácia je mno¾ina jedincov, ktorí sú reprezentovaní svojím genetickým materiálom.
+V~tejto práci budú voµne zamieòané pojmy genetický materiál, genóm a~chromozóm,
 aj keï z~pohµadu biológie tieto pojmy nie sú rovnocenné.
-Vlastné zakódovanie genetickej informácie do~urèitej ¹truktúry oznaèujeme ako genotyp.
+Genotyp je vlastné zakódovanie genetickej informácie do~urèitej ¹truktúry.
 Spôsob, akým sa genotyp v~danom prostredí interpretuje,
 ako dob\-re rie¹i nastolený problém, sa nazýva fenotyp.
 Jedinec s~rovnakým genotypom mô¾e ma» v inom prostredí odli¹nú schopnos» pre¾itia,
-teda odli¹né prostredia spôsobili odli¹nú interpretáciu genotypu na~fenotyp.
-Genetický materiál resp. genóm sa skladá z~lineárne usporiadaných génov,
+inými slovami, odli¹né prostredie spôsobí odli¹nú interpretáciu genotypu na~fenotyp.
+Genetický materiál sa skladá z~lineárne usporiadaných génov,
 v~kontexte EA jeden gén kóduje jednu vlastnos».
 Konkrétna vlastos», hodnota génu, sa nazýva alela.
 V~rámci poèítaèovej terminológie mô¾eme poveda», ¾e ka¾dý gén reprezentuje
 urèitý dátový typ a~alely sú hodnotami daného dátového typu, génu.
-
 
 
 
