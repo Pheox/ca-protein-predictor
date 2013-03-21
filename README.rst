@@ -29,6 +29,12 @@ Compiling & Execution
  |    ``$ ant # clean, init, compile, test and cobertura``
 
 
+Tests
+=====
+
+* `JUnit tests report <http://www.stud.fit.vutbr.cz/~xbriga00/dp/reports/junit/>`_
+* `Cobertura coverage report <http://www.stud.fit.vutbr.cz/~xbriga00/dp/reports/cobertura/>`_
+
 
 .. image:: ./diagrams/dp_model.jpg
 
