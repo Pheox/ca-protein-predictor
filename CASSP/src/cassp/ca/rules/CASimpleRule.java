@@ -23,7 +23,7 @@ import cassp.ca.rules.*;
 public class CASimpleRule extends CARule{
 
     public CASimpleRule(int neigh){
-        this.steps = 0;
+        this.steps = 1;
         this.neigh = neigh;
     }
 

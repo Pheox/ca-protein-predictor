@@ -57,4 +57,12 @@ public abstract class CARule {
     public double getWeight(int index){
         return this.weights[index];
     }
+
+    public double[] getWeights(){
+        return this.weights;
+    }
+
+    public void setWeights(double[] weights){
+        this.weights = weights;
+    }
 }
