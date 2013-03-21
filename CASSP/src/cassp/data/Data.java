@@ -15,6 +15,7 @@ import java.lang.Math;
 
 import org.apache.log4j.*;
 
+import cassp.*;
 import cassp.utils.*;
 
 
@@ -156,8 +157,8 @@ public class Data {
                     AminoAcid amino = new AminoAcid();
                     amino.setAbbrev(match.group(1).charAt(0));
 
-                    amino.setCFA(Integer.parseInt(match.group(2)));
-                    amino.setCFB(Integer.parseInt(match.group(3)));
+                    amino.setCFH(Integer.parseInt(match.group(2)));
+                    amino.setCFE(Integer.parseInt(match.group(3)));
                     amino.setCFC(Integer.parseInt(match.group(4)));
 
                     this.aminoAcids.put(new Character(amino.getAbbrev()), amino);
@@ -204,6 +205,11 @@ public class Data {
             sov += di.getSOV()*norm;
         }
         return sov/norm;
+    }
+
+    public AccuracyStats getAccuracyStats(){
+        AccuracyStats accStats = new AccuracyStats();
+        return accStats;
     }
 
 

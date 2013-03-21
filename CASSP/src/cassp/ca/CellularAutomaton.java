@@ -18,8 +18,8 @@ import cassp.ca.rules.*;
 public class CellularAutomaton {
 
     // boundary conditions
-    public static int BOUNDARY_A = 0;
-    public static int BOUNDARY_B = 0;
+    public static int BOUNDARY_H = 0;
+    public static int BOUNDARY_E = 0;
     public static int BOUNDARY_C = 300;
 
     private CACell[] cells;
@@ -66,8 +66,8 @@ public class CellularAutomaton {
 
             for (int c = 0; c < this.cells.length; c++ ) {
                 // cell recomputing
-                double sumA = 0;
-                double sumB = 0;
+                double sumH = 0;
+                double sumE = 0;
                 double sumC = 0;
                 double sumWeights = 0;
 
@@ -78,19 +78,19 @@ public class CellularAutomaton {
 
                     if ((o < 0) || (o > this.cells.length - 1)){
                         // boundary cells
-                        sumA += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_A;
-                        sumB += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_B;
+                        sumH += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_H;
+                        sumE += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_E;
                         sumC += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_C;
                     }
                     else{
-                        sumA += this.rule.getWeight(weightIndex)*tmpCells[o].getHelixProps();
-                        sumB += this.rule.getWeight(weightIndex)*tmpCells[o].getSheetProps();
+                        sumH += this.rule.getWeight(weightIndex)*tmpCells[o].getHelixProps();
+                        sumE += this.rule.getWeight(weightIndex)*tmpCells[o].getSheetProps();
                         sumC += this.rule.getWeight(weightIndex)*tmpCells[o].getCoilProps();
                     }
                 }
                 // weighted mean
-                this.cells[c].setHelixProps(sumA/sumWeights);
-                this.cells[c].setSheetProps(sumB/sumWeights);
+                this.cells[c].setHelixProps(sumH/sumWeights);
+                this.cells[c].setSheetProps(sumE/sumWeights);
                 this.cells[c].setCoilProps(sumC/sumWeights);
                 this.cells[c].computeMotif();
             }

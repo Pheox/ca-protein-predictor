@@ -72,9 +72,9 @@ public class TestCARules extends TestCase {
         String seq = this.ca.run(this.simpleRule, this.data);
 
         assertEquals(seq, "CEC");
-        assertEquals(this.ca.getCell(1).getHelixProps(), 93.333, 0.1);
-        assertEquals(this.ca.getCell(1).getSheetProps(), 156.666, 0.1);
-        assertEquals(this.ca.getCell(1).getCoilProps(), 116.666, 0.1);
+        assertEquals(93.333, this.ca.getCell(1).getHelixProps(), 0.1);
+        assertEquals(156.666, this.ca.getCell(1).getSheetProps(), 0.1);
+        assertEquals(116.666, this.ca.getCell(1).getCoilProps(), 0.1);
     }
 
     // public void testSimpleRuleNeigh5()

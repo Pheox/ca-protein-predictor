@@ -14,13 +14,13 @@ public class AminoAcid {
     private char abbrev;
 
     // Chou-Fasman parameters
-    private double cfA;
-    private double cfB;
+    private double cfH;
+    private double cfE;
     private double cfC;
 
     // conformation classes
-    private double ccA;
-    private double ccB;
+    private double ccH;
+    private double ccE;
     private double ccC;
     private char cc;
 
@@ -42,20 +42,20 @@ public class AminoAcid {
         return this.abbrev;
     }
 
-    public void setCFA(double cfA){
-        this.cfA = cfA;
+    public void setCFH(double cfH){
+        this.cfH = cfH;
     }
 
-    public double getCFA(){
-        return this.cfA;
+    public double getCFH(){
+        return this.cfH;
     }
 
-    public void setCFB(double cfB){
-        this.cfB = cfB;
+    public void setCFE(double cfE){
+        this.cfE = cfE;
     }
 
-    public double getCFB(){
-        return this.cfB;
+    public double getCFE(){
+        return this.cfE;
     }
 
     public void setCFC(double cfC){
@@ -66,20 +66,20 @@ public class AminoAcid {
         return this.cfC;
     }
 
-    public void setCCA(double ccA){
-        this.ccA = ccA;
+    public void setCCH(double ccH){
+        this.ccH = ccH;
     }
 
-    public double getCCA(){
-        return this.ccA;
+    public double getCCH(){
+        return this.ccH;
     }
 
-    public void setCCB(double ccB){
-        this.ccB = ccB;
+    public void setCCE(double ccE){
+        this.ccE = ccE;
     }
 
-    public double getCCB(){
-        return this.ccB;
+    public double getCCE(){
+        return this.ccE;
     }
 
     public void setCCC(double ccC){
