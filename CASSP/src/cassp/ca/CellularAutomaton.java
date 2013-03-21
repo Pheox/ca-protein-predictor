@@ -49,7 +49,7 @@ public class CellularAutomaton {
             this.cells[i] = new CACell(data.getAminoAcid(this.dataItem.getAaAt(i)));
         }
 
-        for (int s = 0; s < this.rule.steps; s++) {
+        for (int s = 0; s < this.rule.getSteps(); s++) {
             for (int c = 0; c < this.cells.length; c++ ) {
                 // cell recomputing
                 double sumA = 0;
@@ -59,24 +59,19 @@ public class CellularAutomaton {
 
                 for (int o = c - this.config.getNeigh(); o <= c + this.config.getNeigh(); o++) {
 
-                    sumWeights += this.rule.weights[o - c + this.rule.weights.length/2];
+                    int weightIndex = o - c + this.rule.getWeightsLength()/2;
+                    sumWeights += this.rule.getWeight(weightIndex);
 
                     if ((o < 0) || (o >= this.cells.length -1)){
                         // boundary cells
-                        sumA += this.rule.weights[o - c + this.rule.weights.length/2]
-                             * CellularAutomaton.BOUNDARY_A;
-                        sumB += this.rule.weights[o - c + this.rule.weights.length/2]
-                             * CellularAutomaton.BOUNDARY_B;
-                        sumC += this.rule.weights[o - c + this.rule.weights.length/2]
-                             * CellularAutomaton.BOUNDARY_C;
+                        sumA += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_A;
+                        sumB += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_B;
+                        sumC += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_C;
                     }
                     else{
-                        sumA += this.rule.weights[o - c + this.rule.weights.length/2]
-                             * this.cells[o].getHelixProps();
-                        sumB += this.rule.weights[o - c + this.rule.weights.length/2]
-                             * this.cells[o].getSheetProps();
-                        sumC += this.rule.weights[o - c + this.rule.weights.length/2]
-                             * this.cells[o].getCoilProps();
+                        sumA += this.rule.getWeight(weightIndex)*this.cells[o].getHelixProps();
+                        sumB += this.rule.getWeight(weightIndex)*this.cells[o].getSheetProps();
+                        sumC += this.rule.getWeight(weightIndex)*this.cells[o].getCoilProps();
                     }
                 }
                 // weighted mean

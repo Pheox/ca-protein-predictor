@@ -46,10 +46,10 @@ public class SOVSegment {
         return Math.min(min1, min2);
     }
 
-    public int seqId;
-    public int start;
-    public int stop;
-    public char motiv;
+    private int seqId;
+    private int start;
+    private int stop;
+    private char motiv;
 
     public SOVSegment(int seqId, int start, int stop, char motiv){
         this.seqId = seqId;
@@ -71,7 +71,6 @@ public class SOVSegment {
     public int length(){
         return (this.stop - this.start + 1);
     }
-
 
     public String toString(){
         return this.seqId + ": " + this.start + ": " + this.stop + ": " + this.motiv;

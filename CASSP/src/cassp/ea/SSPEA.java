@@ -38,9 +38,9 @@ public class SSPEA {
 
     static Logger logger = Logger.getLogger(SSPEA.class);
 
-    public Data data;
-    public SimConfig config;
-    public EAStats stats;
+    private Data data;
+    private SimConfig config;
+    private EAStats stats;
 
     public SSPEA(SimConfig config, Data data){
         this.data = data;
@@ -80,15 +80,12 @@ public class SSPEA {
 
             // filling GenStats object
             GenStats gs = new GenStats();
-            gs.max = Utils.getMax(genotype.getPopulation());
-            gs.min = Utils.getMin(genotype.getPopulation());
-            gs.mean = Utils.getMean(genotype.getPopulation());
-            gs.generation = i;
+            gs.setMax(Utils.getMax(genotype.getPopulation()));
+            gs.setMin(Utils.getMin(genotype.getPopulation()));
+            gs.setMean(Utils.getMean(genotype.getPopulation()));
+            gs.setGeneration(i);
             this.stats.addGenStats(gs);
-
-            //System.out.print(genotype.getFittestChromosome());
          }
-
 
          return rule.fromChromosome(genotype.getFittestChromosome());
     }
@@ -100,5 +97,12 @@ public class SSPEA {
         // else if (this.config.rule == 2) etc.
         else
             return new CASimpleRule(this.config.getNeigh());
+    }
+
+
+    /* Getters & setters */
+
+    public EAStats getStats(){
+        return this.stats;
     }
 }

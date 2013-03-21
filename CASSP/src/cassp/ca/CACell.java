@@ -25,9 +25,9 @@ public class CACell{
     public CACell(AminoAcid aa){
         this.aminoAcid = aa;
 
-        this.helixProps = this.aminoAcid.cf_a;
-        this.sheetProps = this.aminoAcid.cf_b;
-        this.coilProps = this.aminoAcid.cf_c;
+        this.helixProps = this.aminoAcid.getCFA();
+        this.sheetProps = this.aminoAcid.getCFB();
+        this.coilProps = this.aminoAcid.getCFC();
 
         this.computeMotif();
     }

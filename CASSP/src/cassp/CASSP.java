@@ -27,11 +27,11 @@ import cassp.ca.rules.*;
 */
 public class CASSP {
 
-    public SimConfig config;
-    public Data data;
-    public Data[] cvData;
-    public CARule rule;
-    public EAStats stats;
+    private SimConfig config;
+    private Data data;
+    private Data[] cvData;
+    private CARule rule;
+    private EAStats stats;
 
 
     /**
@@ -62,7 +62,7 @@ public class CASSP {
 
         try {
             rule = evolAlg.evolve();
-            this.stats = evolAlg.stats;
+            this.stats = evolAlg.getStats();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -126,7 +126,7 @@ public class CASSP {
             acc_sum += this.testRule(testData);
         }
 
-        // return average accuracy
+        // average accuracy
         return  acc_sum/folds;
     }
 
@@ -134,5 +134,4 @@ public class CASSP {
     public void createEvolutionImage(String name){
         this.stats.createImage(this.config.getStatsPath(), name);
     }
-
 }

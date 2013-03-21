@@ -148,20 +148,19 @@ public class Data {
             String line;
             Pattern pattern = Pattern.compile("(\\w):\\s(\\d+),\\s(\\d+),\\s(\\d+)");
 
-
             while ((line = br.readLine()) != null)   {
 
                 Matcher match = pattern.matcher(line);
 
                 if (match.matches()) {
                     AminoAcid amino = new AminoAcid();
-                    amino.abbrev = match.group(1).charAt(0);
+                    amino.setAbbrev(match.group(1).charAt(0));
 
-                    amino.cf_a = Integer.parseInt(match.group(2));
-                    amino.cf_b = Integer.parseInt(match.group(3));
-                    amino.cf_c = Integer.parseInt(match.group(4));
+                    amino.setCFA(Integer.parseInt(match.group(2)));
+                    amino.setCFB(Integer.parseInt(match.group(3)));
+                    amino.setCFC(Integer.parseInt(match.group(4)));
 
-                    this.aminoAcids.put(new Character(amino.abbrev), amino);
+                    this.aminoAcids.put(new Character(amino.getAbbrev()), amino);
                 }
             }
 

@@ -23,7 +23,7 @@ public class EAStats{
 
     static Logger logger = Logger.getLogger(EAStats.class);
 
-    public ArrayList<GenStats> generations;
+    private ArrayList<GenStats> generations;
 
 
     public EAStats(){
@@ -58,10 +58,10 @@ public class EAStats{
             BufferedWriter bw = new BufferedWriter(fo);
 
             for (int i = 0; i < this.generations.size(); i++) {
-                bw.write(this.generations.get(i).generation + "\t");
-                bw.write(this.generations.get(i).mean + "\t");
-                bw.write(this.generations.get(i).max + "\t");
-                bw.write(String.valueOf(this.generations.get(i).min));
+                bw.write(this.generations.get(i).getGeneration() + "\t");
+                bw.write(this.generations.get(i).getMean() + "\t");
+                bw.write(this.generations.get(i).getMax() + "\t");
+                bw.write(String.valueOf(this.generations.get(i).getMin()));
                 bw.write("\n");
             }
             bw.close();

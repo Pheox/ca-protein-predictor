@@ -16,10 +16,10 @@ public class GenStats{
 
     static Logger logger = Logger.getLogger(GenStats.class);
 
-    public int generation;
-    public double mean;
-    public double min;
-    public double max;
+    private int generation;
+    private double mean;
+    private double min;
+    private double max;
 
 
     public GenStats(){
@@ -28,4 +28,37 @@ public class GenStats{
         this.max = 0;
     }
 
+    /* Getters & setters */
+
+    public void setGeneration(int generation){
+        this.generation = generation;
+    }
+
+    public int getGeneration(){
+        return this.generation;
+    }
+
+    public void setMean(double mean){
+        this.mean = mean;
+    }
+
+    public double getMean(){
+        return this.mean;
+    }
+
+    public void setMax(double max){
+        this.max = max;
+    }
+
+    public double getMax(){
+        return this.max;
+    }
+
+    public void setMin(double min){
+        this. min = min;
+    }
+
+    public double getMin(){
+        return this.min;
+    }
 }

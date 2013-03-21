@@ -17,14 +17,44 @@ import cassp.*;
 import cassp.config.*;
 
 
-
+/**
+*
+**/
 public abstract class CARule {
 
-    public int steps;
-    public int neigh;
-    public double[] weights;
+    protected int steps;
+    protected int neigh;
+    protected double[] weights;
 
     public abstract int getSize();
     public abstract IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException;
     public abstract CARule fromChromosome(IChromosome chromosome);
+
+
+    public int getWeightsLength(){
+        return this.weights.length;
+    }
+
+
+    /* Getters & setters */
+
+    public void setSteps(int steps){
+        this.steps = steps;
+    }
+
+    public int getSteps(){
+        return this.steps;
+    }
+
+    public void setNeigh(int neigh){
+        this.neigh = neigh;
+    }
+
+    public int getNeigh(){
+        return this.neigh;
+    }
+
+    public double getWeight(int index){
+        return this.weights[index];
+    }
 }
