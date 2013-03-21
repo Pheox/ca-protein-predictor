@@ -25,8 +25,8 @@ public class SimConfig {
     static public int MAX_STEPS = 10;
     static public int NEIGH = 3;
     static public int RULE = 1;
-    static public double P_MUT = 0.03;
-    static public double P_CROSS = 0.75;
+    static public double MUT_PROB = 0.03;
+    static public double CROSS_PROB = 0.75;
     static public int MAX_GEN = 10000;
     static public int POP = 100;
 
@@ -56,7 +56,19 @@ public class SimConfig {
     private int rule;
 
 
-    public SimConfig(){}
+    public SimConfig(){
+        this.cvFolds = SimConfig.CV_FOLDS;
+        this.accuracyType = SimConfig.ACCURACY_TYPE;
+        this.reliabClasses = SimConfig.RELIAB_CLASSES;
+        this.accClasses = SimConfig.ACC_CLASSES;
+        this.mutProb = SimConfig.MUT_PROB;
+        this.crossProb = SimConfig.CROSS_PROB;
+        this.maxGen = SimConfig.MAX_GEN;
+        this.pop = SimConfig.POP;
+        this.maxSteps = SimConfig.MAX_STEPS;
+        this.neigh = SimConfig.NEIGH;
+        this.rule = SimConfig.RULE;
+    }
 
 
     public SimConfig(String confPath){
@@ -105,12 +117,12 @@ public class SimConfig {
         if (prop.getProperty("p_mut") != null)
             this.mutProb = Double.valueOf(prop.getProperty("p_mut"));
         else
-            this.mutProb = SimConfig.P_MUT;
+            this.mutProb = SimConfig.MUT_PROB;
 
         if (prop.getProperty("p_cross") != null)
             this.crossProb = Double.valueOf(prop.getProperty("p_cross"));
         else
-            this.crossProb = SimConfig.P_CROSS;
+            this.crossProb = SimConfig.CROSS_PROB;
 
         if (prop.getProperty("pop") != null)
             this.pop = Integer.parseInt(prop.getProperty("pop"));
