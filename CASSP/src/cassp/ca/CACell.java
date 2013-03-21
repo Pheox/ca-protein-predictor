@@ -32,6 +32,14 @@ public class CACell{
         this.computeMotif();
     }
 
+    public CACell(CACell cell){
+        this.aminoAcid = cell.getAminoAcid();
+        this.motiv = cell.getMotiv();
+        this.helixProps = cell.getHelixProps();
+        this.sheetProps = cell.getSheetProps();
+        this.coilProps = cell.getCoilProps();
+    }
+
 
     public char computeMotif(){
         if (this.helixProps > this.sheetProps){
@@ -49,8 +57,20 @@ public class CACell{
         return this.motiv;
     }
 
+    public String toString(){
+        String s = "\namino acid " + this.aminoAcid.getAbbrev() + "\n";
+        s += "helix props: " + this.helixProps + "\n";
+        s += "sheet props: " + this.sheetProps + "\n";
+        s += "coil props: " + this.coilProps + "\n";
+        return s;
+    }
+
 
     /* Getters & setters */
+
+    public AminoAcid getAminoAcid(){
+        return this.aminoAcid;
+    }
 
     public double getHelixProps(){
         return this.helixProps;
