@@ -19,3 +19,6 @@ CASSP/frontend/
 CASSP/doc/
 CASSP/reports/
 CASSP/cobertura.ser
+
+# generated gnuplot scripts
+*.txt
