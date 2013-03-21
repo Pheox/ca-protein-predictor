@@ -40,6 +40,13 @@ public class CellularAutomaton {
     }
 
 
+    public CellularAutomaton(DataItem dataItem){
+        this.dataItem = dataItem;
+        this.cells = new CACell[this.dataItem.length()];
+        this.config = new SimConfig();
+    }
+
+
     public String run(CARule rule, Data data){
 
         this.rule = rule;
@@ -50,6 +57,13 @@ public class CellularAutomaton {
         }
 
         for (int s = 0; s < this.rule.getSteps(); s++) {
+
+            // cells array copy
+            CACell[] tmpCells = new CACell[this.cells.length];
+            for (int u = 0; u < this.cells.length; u++) {
+                tmpCells[u] = new CACell(this.cells[u]);
+            }
+
             for (int c = 0; c < this.cells.length; c++ ) {
                 // cell recomputing
                 double sumA = 0;
@@ -62,16 +76,16 @@ public class CellularAutomaton {
                     int weightIndex = o - c + this.rule.getWeightsLength()/2;
                     sumWeights += this.rule.getWeight(weightIndex);
 
-                    if ((o < 0) || (o >= this.cells.length -1)){
+                    if ((o < 0) || (o > this.cells.length - 1)){
                         // boundary cells
                         sumA += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_A;
                         sumB += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_B;
                         sumC += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_C;
                     }
                     else{
-                        sumA += this.rule.getWeight(weightIndex)*this.cells[o].getHelixProps();
-                        sumB += this.rule.getWeight(weightIndex)*this.cells[o].getSheetProps();
-                        sumC += this.rule.getWeight(weightIndex)*this.cells[o].getCoilProps();
+                        sumA += this.rule.getWeight(weightIndex)*tmpCells[o].getHelixProps();
+                        sumB += this.rule.getWeight(weightIndex)*tmpCells[o].getSheetProps();
+                        sumC += this.rule.getWeight(weightIndex)*tmpCells[o].getCoilProps();
                     }
                 }
                 // weighted mean
@@ -94,5 +108,10 @@ public class CellularAutomaton {
             seq += this.cells[i].getMotiv();
         }
         return seq;
+    }
+
+
+    public CACell getCell(int index){
+        return this.cells[index];
     }
 }
