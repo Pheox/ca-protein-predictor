@@ -46,6 +46,7 @@ public class SSPFF extends FitnessFunction{
 
         int sumOk = 0;
         int sumAll = 0;
+        double fitness = 0.0;
 
         CARule rule  = this.createRule(chromosome);
 
@@ -53,7 +54,12 @@ public class SSPFF extends FitnessFunction{
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
             di.setPredSeq(ca.run(rule, this.data));
         }
-        return this.data.q3();
+
+        if (this.config.getAccuracyType() == SimConfig.Q3)
+            fitness = this.data.q3();
+        else if (this.config.getAccuracyType() == SimConfig.SOV)
+            fitness = this.data.sov();
+        return fitness;
     }
 
 

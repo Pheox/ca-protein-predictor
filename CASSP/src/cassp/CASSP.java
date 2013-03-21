@@ -31,7 +31,8 @@ public class CASSP {
     private Data data;
     private Data[] cvData;
     private CARule rule;
-    private EAStats stats;
+    private EAStats eaStats;
+    private AccuracyStats accStats;
 
 
     /**
@@ -50,19 +51,13 @@ public class CASSP {
     }
 
 
-    public double test(){
-        Data data = new Data(this.config.getTestDataPath());
-        return this.testRule(data);
-    }
-
-
     private CARule trainRule(Data data){
         SSPEA evolAlg = new SSPEA(config, data);
         CARule rule = null;
 
         try {
             rule = evolAlg.evolve();
-            this.stats = evolAlg.getStats();
+            this.eaStats = evolAlg.getStats();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -71,11 +66,27 @@ public class CASSP {
     }
 
 
-    private double testRule(Data testData){
+
+    public double test(){
+        Data data = new Data(this.config.getTestDataPath());
+        this.testRule(data);
+
+        double accuracy = 0.0;
+
+        if (this.config.getAccuracyType() == SimConfig.Q3)
+            accuracy = data.q3();
+        else if (this.config.getAccuracyType() == SimConfig.SOV)
+            accuracy = data.sov();
+        return accuracy;
+    }
+
+
+    private void testRule(Data testData){
+        this.accStats = new AccuracyStats(5, 5);
+
         for (DataItem di: testData.getData()){
             di.setPredSeq(this.predict(di.getAaSeq()));
         }
-        return testData.q3();
     }
 
 
@@ -89,6 +100,7 @@ public class CASSP {
 
         return ca.getPredictedSeq();
     }
+
 
 
     public double crossValidate(int folds){
@@ -123,7 +135,12 @@ public class CASSP {
             }
 
             this.rule = this.trainRule(mergedData);
-            acc_sum += this.testRule(testData);
+            this.testRule(testData);
+
+            if (this.config.getAccuracyType() == SimConfig.Q3)
+                acc_sum += testData.q3();
+            else if (this.config.getAccuracyType() == SimConfig.SOV)
+                acc_sum += testData.sov();
         }
 
         // average accuracy
@@ -132,6 +149,17 @@ public class CASSP {
 
 
     public void createEvolutionImage(String name){
-        this.stats.createImage(this.config.getStatsPath(), name);
+        this.eaStats.createImage(this.config.getStatsPath(), name);
+    }
+
+
+    /* Getters & setters */
+
+    public AccuracyStats getAccuracyStats(){
+        return this.accStats;
+    }
+
+    public EAStats getEAStats(){
+        return this.eaStats;
     }
 }

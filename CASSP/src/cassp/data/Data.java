@@ -177,19 +177,17 @@ public class Data {
     * to a number of all amino acids.
     */
     public double q3(){
-        int allCount = 0;
-        int okCount = 0;
+        double allCount = 0.0;
+        double okCount  = 0.0;
 
         for (DataItem di : this.data){
-            for (int i = 0; i <  di.length(); i++) {
-                if (di.getSspAt(i) == di.getPredAt(i))
-                    okCount++;
-            }
-            allCount += di.getSspSeq().length();
+            di.computeQ3();
+            okCount += di.getQ3()*di.length();
+            allCount += di.length();
         }
-        return (double) okCount/allCount*100;
-    }
 
+        return (double) okCount/allCount;
+    }
 
 
     /**
@@ -197,130 +195,15 @@ public class Data {
     * SOV takes into account segments overlaps.
     */
     public double sov(){
+        double sov = 0.0;
+        int norm = 0;
 
-        int counter = 0;
-        char motiv;
-
-        Map<SOVSegment, ArrayList<SOVSegment>> olSegments;
-        ArrayList<SOVSegment> origSegments = new ArrayList<SOVSegment>();
-        ArrayList<SOVSegment> predSegments = new ArrayList<SOVSegment>();
-
-        for (int i = 0; i < this.data.size(); i++) {
-            counter++;
-            origSegments.addAll(getAllSegments(this.data.get(i).getSspSeq(), counter));
-            predSegments.addAll(getAllSegments(this.data.get(i).getPredSeq(), counter));
+        for (DataItem di: this.data) {
+            di.computeSOV();
+            norm += di.getSOVNorm();
+            sov += di.getSOV()*norm;
         }
-
-        olSegments = getOverlappingSegments(origSegments, predSegments);
-
-        double n = computeNormConstant(olSegments);
-
-        double sumSOV = 0.0;
-
-        for (Map.Entry<SOVSegment, ArrayList<SOVSegment>> entry: olSegments.entrySet()) {
-            SOVSegment origSeg = entry.getKey();
-            ArrayList<SOVSegment> predSegs = entry.getValue();
-
-            if (predSegs.size() > 0){
-                for (SOVSegment predSeg: predSegs){
-
-                    double partSOV = SOVSegment.minov(origSeg, predSeg);
-                    partSOV += SOVSegment.delta(origSeg, predSeg);
-                    partSOV = partSOV / SOVSegment.maxov(origSeg, predSeg) * origSeg.length();
-                    sumSOV += partSOV;
-                }
-            }
-        }
-        return sumSOV/n*100;
-    }
-
-
-    /**
-    * Computes normalization constant needed for SOV accuracy measure computing.
-    *
-    * @param olSegments Map of overlapped segments, it is mapping original (not predicted)
-    * segment to all predicted segments it overlaps with.
-    */
-    private double computeNormConstant(Map<SOVSegment, ArrayList<SOVSegment>> olSegments){
-
-        // sum of lengths of overlapping segments
-        int sumOL = 0;
-
-        // sum of lengths of non overlapping segments
-        int sumNOL = 0;
-
-        for (Map.Entry<SOVSegment, ArrayList<SOVSegment>> entry : olSegments.entrySet()) {
-            SOVSegment origSeg = entry.getKey();
-            ArrayList<SOVSegment> predSegs = entry.getValue();
-
-            if (predSegs.size() == 0)
-                sumNOL += origSeg.length();
-            else
-                sumOL += origSeg.length() * predSegs.size();
-
-        }
-        return sumOL + sumNOL;
-    }
-
-
-    /**
-    *
-    */
-    private Map<SOVSegment, ArrayList<SOVSegment>> getOverlappingSegments(
-        ArrayList<SOVSegment> origSegments, ArrayList<SOVSegment> predSegments){
-
-        Map<SOVSegment, ArrayList<SOVSegment>> olSegments = new HashMap<SOVSegment, ArrayList<SOVSegment>>();
-
-
-        for (SOVSegment orig: origSegments){
-            olSegments.put(orig, new ArrayList<SOVSegment>());
-
-            for (SOVSegment pred: predSegments){
-                if (orig.isOverlapping(pred))
-                    olSegments.get(orig).add(pred);
-            }
-        }
-
-        return olSegments;
-    }
-
-
-
-
-
-    private ArrayList<SOVSegment> getAllSegments(String seq, int counter){
-
-        int start = 0;
-        int stop = 0;
-        boolean chainFlag = false;
-        char motiv = 'H';
-        ArrayList<SOVSegment> segments = new ArrayList<SOVSegment>();
-
-        for (int i = 0; i < seq.length(); i++) {
-            if (chainFlag == false){
-                start = i;
-                stop = i;
-                motiv = seq.charAt(i);
-                chainFlag = true;
-            }
-            else{
-                if (seq.charAt(i) != motiv){
-                    SOVSegment segment = new SOVSegment(counter, start, stop, motiv);
-                    segments.add(segment);
-                    start = i;
-                    stop = i;
-                    motiv = seq.charAt(i);
-                }
-                else{
-                    stop += 1;
-                }
-            }
-            if (i == seq.length() - 1){
-                SOVSegment segment = new SOVSegment(counter, start, stop, motiv);
-                segments.add(segment);
-            }
-        }
-        return segments;
+        return sov/norm;
     }
 
 

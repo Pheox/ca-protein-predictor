@@ -15,13 +15,23 @@ import java.util.Properties;
 
 public class SimConfig {
 
-    static double P_MUT = 0.03;
-    static double P_CROSS = 0.75;
-    static int MAX_GEN = 10000;
-    static int POP = 100;
-    static int MAX_STEPS = 10;
-    static int NEIGH = 3;
-    static int RULE = 1;
+    static public int Q3 = 0;
+    static public int SOV = 1;
+
+    static public int CV_FOLDS = 3;
+    static public int ACCURACY_TYPE = 0; // Q3
+    static public int MAX_STEPS = 10;
+    static public int NEIGH = 3;
+    static public int RULE = 1;
+    static public double P_MUT = 0.03;
+    static public double P_CROSS = 0.75;
+    static public int MAX_GEN = 10000;
+    static public int POP = 100;
+
+
+    // general
+    private int cvFolds;
+    private int accuracyType;
 
     // data paths
     private String dataPath;
@@ -31,19 +41,18 @@ public class SimConfig {
     private String statsPath;
 
     // ea parameters
-    private double p_mut;
-    private double p_cross;
-    private int max_gen;
+    private double mutProb;
+    private double crossProb;
+    private int maxGen;
     private int pop;
 
     // ca parameters
-    private int max_steps;
+    private int maxSteps;
     private int neigh;
     private int rule;
 
 
-    public SimConfig(){
-    }
+    public SimConfig(){}
 
 
     public SimConfig(String confPath){
@@ -69,15 +78,25 @@ public class SimConfig {
         this.dataTestPath = prop.getProperty("data_test");
         this.statsPath = prop.getProperty("stats");
 
-        if (prop.getProperty("p_mut") != null)
-            this.p_mut = Double.valueOf(prop.getProperty("p_mut"));
+        if (prop.getProperty("cv_folds") != null)
+            this.cvFolds = Integer.parseInt(prop.getProperty("cv_folds"));
         else
-            this.p_mut = SimConfig.P_MUT;
+            this.cvFolds = SimConfig.CV_FOLDS;
+
+        if (prop.getProperty("accuracy_type") != null)
+            this.accuracyType = Integer.parseInt(prop.getProperty("accuracy_type"));
+        else
+            this.accuracyType = SimConfig.ACCURACY_TYPE;
+
+        if (prop.getProperty("p_mut") != null)
+            this.mutProb = Double.valueOf(prop.getProperty("p_mut"));
+        else
+            this.mutProb = SimConfig.P_MUT;
 
         if (prop.getProperty("p_cross") != null)
-            this.p_cross = Double.valueOf(prop.getProperty("p_cross"));
+            this.crossProb = Double.valueOf(prop.getProperty("p_cross"));
         else
-            this.p_cross = SimConfig.P_CROSS;
+            this.crossProb = SimConfig.P_CROSS;
 
         if (prop.getProperty("pop") != null)
             this.pop = Integer.parseInt(prop.getProperty("pop"));
@@ -85,14 +104,14 @@ public class SimConfig {
             this.pop = SimConfig.POP;
 
         if (prop.getProperty("max_gen") != null)
-            this.max_gen = Integer.parseInt(prop.getProperty("max_gen"));
+            this.maxGen = Integer.parseInt(prop.getProperty("max_gen"));
         else
-            this.pop = SimConfig.MAX_GEN;
+            this.maxGen = SimConfig.MAX_GEN;
 
         if (prop.getProperty("max_steps") != null)
-            this.max_steps = Integer.parseInt(prop.getProperty("max_steps"));
+            this.maxSteps = Integer.parseInt(prop.getProperty("max_steps"));
         else
-            this.max_steps = SimConfig.MAX_STEPS;
+            this.maxSteps = SimConfig.MAX_STEPS;
 
         if (prop.getProperty("neigh") != null)
             this.neigh = Integer.parseInt(prop.getProperty("neigh"));
@@ -108,28 +127,44 @@ public class SimConfig {
 
     /* Getters & setters */
 
+    public int getCVFolds(){
+        return this.cvFolds;
+    }
+
+    public void getCVFolds(int folds){
+        this.cvFolds = folds;
+    }
+
+    public int getAccuracyType(){
+        return this.accuracyType;
+    }
+
+    public void setAccuracyType(int type){
+        this.accuracyType = type;
+    }
+
     public double getMutProb(){
-        return this.p_mut;
+        return this.mutProb;
     }
 
     public void setMutProb(double prob){
-        this.p_mut = prob;
+        this.mutProb = prob;
     }
 
     public double getCrossProb(){
-        return this.p_cross;
+        return this.crossProb;
     }
 
     public void setCrossProb(double prob){
-        this.p_cross = prob;
+        this.crossProb = prob;
     }
 
     public int getMaxGen(){
-        return this.max_gen;
+        return this.maxGen;
     }
 
     public void setMaxGen(int maxGen){
-        this.max_gen = maxGen;
+        this.maxGen = maxGen;
     }
 
     public int getPop(){
@@ -141,11 +176,11 @@ public class SimConfig {
     }
 
     public int getMaxSteps(){
-        return this.max_steps;
+        return this.maxSteps;
     }
 
     public void setMaxSteps(int maxSteps){
-        this.max_steps = maxSteps;
+        this.maxSteps = maxSteps;
     }
 
     public int getNeigh(){
@@ -180,7 +215,6 @@ public class SimConfig {
         this.dataPath = dataPath;
     }
 
-
     public String getDataCFPath(){
         return this.dataCFPath;
     }
@@ -188,7 +222,6 @@ public class SimConfig {
     public void setDataCFPath(String path){
         this.dataCFPath = path;
     }
-
 
     public String getDataCCPath(){
         return this.dataCCPath;
