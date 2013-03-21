@@ -20,6 +20,8 @@ public class SimConfig {
 
     static public int CV_FOLDS = 3;
     static public int ACCURACY_TYPE = 0; // Q3
+    static public int RELIAB_CLASSES = 10;
+    static public int ACC_CLASSES = 10;
     static public int MAX_STEPS = 10;
     static public int NEIGH = 3;
     static public int RULE = 1;
@@ -32,6 +34,8 @@ public class SimConfig {
     // general
     private int cvFolds;
     private int accuracyType;
+    private int reliabClasses;
+    private int accClasses;
 
     // data paths
     private String dataPath;
@@ -87,6 +91,16 @@ public class SimConfig {
             this.accuracyType = Integer.parseInt(prop.getProperty("accuracy_type"));
         else
             this.accuracyType = SimConfig.ACCURACY_TYPE;
+
+        if (prop.getProperty("reliab_classes") != null)
+            this.reliabClasses = Integer.parseInt(prop.getProperty("reliab_classes"));
+        else
+            this.reliabClasses = SimConfig.RELIAB_CLASSES;
+
+        if (prop.getProperty("acc_classes") != null)
+            this.accClasses = Integer.parseInt(prop.getProperty("acc_classes"));
+        else
+            this.accClasses = SimConfig.ACC_CLASSES;
 
         if (prop.getProperty("p_mut") != null)
             this.mutProb = Double.valueOf(prop.getProperty("p_mut"));
