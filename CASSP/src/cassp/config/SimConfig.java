@@ -264,5 +264,20 @@ public class SimConfig {
     public void setTestDataPath(String path){
         this.dataTestPath = path;
     }
-}
 
+    public int getReliabClasses(){
+        return this.reliabClasses;
+    }
+
+    public void setReliabClasses(int reliabClasses){
+        this.reliabClasses = reliabClasses;
+    }
+
+    public int getAccClasses(){
+        return this.accClasses;
+    }
+
+    public void setAccClasses(int accClasses){
+        this.accClasses = accClasses;
+    }
+}
