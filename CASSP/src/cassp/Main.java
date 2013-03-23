@@ -44,7 +44,13 @@ public class Main {
 
         double totalAcc = simulator.test();
 
-        //AccuracyStats accStats = simulator.computeAccuracyStats();
+        simulator.computeAccuracyStats();
+        simulator.createAccClassesImage("acc.png");
+        simulator.createReliabImage("rel.png");
+
+
+
+
 
         System.out.println("Accuracy: " + simulator.test());
 
