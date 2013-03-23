@@ -6,7 +6,7 @@
 */
 
 
-package cassp.data;
+package cassp.utils;
 
 
 import java.lang.Math;
