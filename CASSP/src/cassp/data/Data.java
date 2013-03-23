@@ -27,6 +27,9 @@ public class Data {
     private ArrayList<DataItem> data;
     private HashMap<Character, AminoAcid> aminoAcids;
 
+    private int maxCF;
+    private int maxCC;
+
 
     /**
     * Constructor 1 - initializes structures
@@ -34,6 +37,7 @@ public class Data {
     public Data(){
         this.data = new ArrayList<DataItem>();
         this.aminoAcids = new HashMap<Character, AminoAcid>();
+        this.maxCF = -1;
     }
 
     /**
@@ -44,6 +48,7 @@ public class Data {
         this.data = new ArrayList<DataItem>();
         this.aminoAcids = new HashMap<Character, AminoAcid>();
         this.loadData(filePath);
+        this.maxCF = -1;
     }
 
 
@@ -157,10 +162,18 @@ public class Data {
                     AminoAcid amino = new AminoAcid();
                     amino.setAbbrev(match.group(1).charAt(0));
 
-                    amino.setCFH(Integer.parseInt(match.group(2)));
-                    amino.setCFE(Integer.parseInt(match.group(3)));
-                    amino.setCFC(Integer.parseInt(match.group(4)));
+                    int cfH = Integer.parseInt(match.group(2));
+                    int cfE = Integer.parseInt(match.group(3));
+                    int cfC = Integer.parseInt(match.group(4));
 
+                    if (cfH > this.maxCF)
+                        this.maxCF = cfH;
+                    if (cfE > this.maxCF)
+                        this.maxCF = cfE;
+                    if (cfC > this.maxCF)
+                        this.maxCF = cfC;
+
+                    amino.setCFH(cfH); amino.setCFE(cfE); amino.setCFC(cfC);
                     this.aminoAcids.put(new Character(amino.getAbbrev()), amino);
                 }
             }
@@ -169,47 +182,6 @@ public class Data {
         }catch (Exception e){
             System.err.println("Error: " + e.getMessage());
         }
-    }
-
-
-    /**
-    * Computes Q3 accuracy measure for actual Data object.
-    * Q3 is ratio of a number of good predicted amino acids
-    * to a number of all amino acids.
-    */
-    public double q3(){
-        double allCount = 0.0;
-        double okCount  = 0.0;
-
-        for (DataItem di : this.data){
-            di.computeQ3();
-            okCount += di.getQ3()*di.length();
-            allCount += di.length();
-        }
-
-        return (double) okCount/allCount;
-    }
-
-
-    /**
-    * Computes SOV accuracy measure for actual Data object.
-    * SOV takes into account segments overlaps.
-    */
-    public double sov(){
-        double sov = 0.0;
-        int norm = 0;
-
-        for (DataItem di: this.data) {
-            di.computeSOV();
-            norm += di.getSOVNorm();
-            sov += di.getSOV()*norm;
-        }
-        return sov/norm;
-    }
-
-    public AccuracyStats getAccuracyStats(){
-        AccuracyStats accStats = new AccuracyStats();
-        return accStats;
     }
 
 
@@ -251,5 +223,9 @@ public class Data {
 
     public HashMap<Character, AminoAcid> getAminoAcids(){
         return this.aminoAcids;
+    }
+
+    public int getMaxCF(){
+        return this.maxCF;
     }
 }

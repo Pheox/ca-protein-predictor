@@ -13,6 +13,7 @@ import java.util.*;
 import cassp.ea.*;
 import cassp.ca.*;
 import cassp.data.*;
+import cassp.utils.*;
 import cassp.config.*;
 import cassp.ea.stats.*;
 import cassp.ca.rules.*;
@@ -68,21 +69,26 @@ public class CASSP {
 
 
     public double test(){
+        // pre accStats nastavit max reliab, rule.getMaxReliab
+        // predict
+        // accStats.parseStats(DataItem di)
+
+
         Data data = new Data(this.config.getTestDataPath());
         this.testRule(data);
 
         double accuracy = 0.0;
 
         if (this.config.getAccuracyType() == SimConfig.Q3)
-            accuracy = data.q3();
+            accuracy = Utils.q3(data);
         else if (this.config.getAccuracyType() == SimConfig.SOV)
-            accuracy = data.sov();
+            accuracy = Utils.sov(data);
         return accuracy;
     }
 
 
     private void testRule(Data testData){
-        this.accStats = new AccuracyStats(5, 5);
+        //this.accStats = new AccuracyStats(5, 5);
 
         for (DataItem di: testData.getData()){
             di.setPredSeq(this.predict(di.getAaSeq()));
@@ -138,9 +144,9 @@ public class CASSP {
             this.testRule(testData);
 
             if (this.config.getAccuracyType() == SimConfig.Q3)
-                acc_sum += testData.q3();
+                acc_sum += Utils.q3(testData);
             else if (this.config.getAccuracyType() == SimConfig.SOV)
-                acc_sum += testData.sov();
+                acc_sum += Utils.sov(testData);
         }
 
         // average accuracy
@@ -151,6 +157,26 @@ public class CASSP {
     public void createEvolutionImage(String name){
         this.eaStats.createImage(this.config.getStatsPath(), name);
     }
+
+    public void createReliabImage(String name){
+        this.accStats.createReliabImage(this.config.getStatsPath(), name);
+    }
+
+    public void createAccClassesImage(String name){
+        this.accStats.createAccClassesImage(this.config.getStatsPath(), name);
+    }
+
+
+    public void computeAccuracyStats(){
+        this.accStats = new AccuracyStats(
+            this.rule.getMaxProps(this.data.getMaxCF()),
+            this.config.getReliabClasses(),
+            this.config.getAccClasses()
+        );
+
+        this.accStats.parseStats(this.data, this.config.getAccuracyType());
+    }
+
 
 
     /* Getters & setters */

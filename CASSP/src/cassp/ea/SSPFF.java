@@ -17,6 +17,7 @@ import org.apache.log4j.*;
 import cassp.*;
 import cassp.ca.*;
 import cassp.data.*;
+import cassp.utils.*;
 import cassp.config.*;
 import cassp.ca.rules.*;
 
@@ -56,9 +57,9 @@ public class SSPFF extends FitnessFunction{
         }
 
         if (this.config.getAccuracyType() == SimConfig.Q3)
-            fitness = this.data.q3();
+            fitness = Utils.q3(this.data);
         else if (this.config.getAccuracyType() == SimConfig.SOV)
-            fitness = this.data.sov();
+            fitness = Utils.sov(this.data);
         return fitness;
     }
 
