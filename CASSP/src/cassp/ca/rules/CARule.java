@@ -14,11 +14,12 @@ import org.jgap.impl.*;
 import org.jgap.xml.*;
 
 import cassp.*;
+import cassp.ca.*;
 import cassp.config.*;
 
 
 /**
-*
+* Abstract cellular automata rule.
 **/
 public abstract class CARule {
 
@@ -29,11 +30,15 @@ public abstract class CARule {
     public abstract int getSize();
     public abstract IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException;
     public abstract CARule fromChromosome(IChromosome chromosome);
+    public abstract void nextState(CACell[] cells, CACell cell, int index);
 
 
     public int getWeightsLength(){
         return this.weights.length;
     }
+
+
+    public abstract double getMaxProps(int maxCF);
 
 
     /* Getters & setters */

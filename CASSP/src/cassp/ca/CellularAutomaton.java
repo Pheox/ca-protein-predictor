@@ -7,6 +7,8 @@
 
 package cassp.ca;
 
+import java.util.Arrays;
+
 import cassp.*;
 import cassp.ca.*;
 import cassp.data.*;
@@ -64,37 +66,13 @@ public class CellularAutomaton {
                 tmpCells[u] = new CACell(this.cells[u]);
             }
 
+            // next states computation
             for (int c = 0; c < this.cells.length; c++ ) {
-                // cell recomputing
-                double sumH = 0;
-                double sumE = 0;
-                double sumC = 0;
-                double sumWeights = 0;
-
-                for (int o = c - this.config.getNeigh(); o <= c + this.config.getNeigh(); o++) {
-
-                    int weightIndex = o - c + this.rule.getWeightsLength()/2;
-                    sumWeights += this.rule.getWeight(weightIndex);
-
-                    if ((o < 0) || (o > this.cells.length - 1)){
-                        // boundary cells
-                        sumH += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_H;
-                        sumE += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_E;
-                        sumC += this.rule.getWeight(weightIndex)*CellularAutomaton.BOUNDARY_C;
-                    }
-                    else{
-                        sumH += this.rule.getWeight(weightIndex)*tmpCells[o].getHelixProps();
-                        sumE += this.rule.getWeight(weightIndex)*tmpCells[o].getSheetProps();
-                        sumC += this.rule.getWeight(weightIndex)*tmpCells[o].getCoilProps();
-                    }
-                }
-                // weighted mean
-                this.cells[c].setHelixProps(sumH/sumWeights);
-                this.cells[c].setSheetProps(sumE/sumWeights);
-                this.cells[c].setCoilProps(sumC/sumWeights);
-                this.cells[c].computeMotif();
+                rule.nextState(tmpCells, this.cells[c], c);
             }
         }
+        this.computePropsMeanDiff();
+
         return this.getPredictedSeq();
     }
 
@@ -110,8 +88,30 @@ public class CellularAutomaton {
         return seq;
     }
 
-
     public CACell getCell(int index){
         return this.cells[index];
+    }
+
+
+    /**
+    * compute mean diffs between max and second highest props
+    */
+    public void computePropsMeanDiff(){
+
+        double diffSum = 0.0;
+
+        for (int i=0; i < this.cells.length; i++) {
+            double[] sortedProps = this.sortProps(this.cells[i]);
+            diffSum += sortedProps[2] - sortedProps[1];
+        }
+
+        this.dataItem.setPropsMeanDiff(diffSum/this.cells.length);
+    }
+
+
+    private double[] sortProps(CACell cell){
+        double[] props = {cell.getHelixProps(), cell.getSheetProps(), cell.getCoilProps()};
+        Arrays.sort(props);
+        return props;
     }
 }

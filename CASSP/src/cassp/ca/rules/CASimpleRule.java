@@ -15,12 +15,19 @@ import org.w3c.dom.*;
 import org.apache.log4j.*;
 
 import cassp.*;
+import cassp.ca.*;
 import cassp.config.*;
 import cassp.ca.rules.*;
 
 
 
 public class CASimpleRule extends CARule{
+
+        // boundary conditions
+    public static int BOUNDARY_H = 0;
+    public static int BOUNDARY_E = 0;
+    public static int BOUNDARY_C = 300;
+
 
     public CASimpleRule(int neigh){
         this.steps = 1;
@@ -54,5 +61,42 @@ public class CASimpleRule extends CARule{
             this.weights[i-1] = ((Double) chromosome.getGene(i).getAllele()).doubleValue();
         }
         return this;
+    }
+
+    public void nextState(CACell[] cells, CACell cell, int c){
+        double sumH = 0;
+        double sumE = 0;
+        double sumC = 0;
+        double sumWeights = 0;
+
+        for (int o = c - this.neigh; o <= c + this.neigh; o++) {
+
+            int weightIndex = o - c + this.getWeightsLength()/2;
+            sumWeights += this.weights[weightIndex];
+
+            if ((o < 0) || (o > cells.length - 1)){
+                // boundary cells
+                sumH += this.weights[weightIndex]*CASimpleRule.BOUNDARY_H;
+                sumE += this.weights[weightIndex]*CASimpleRule.BOUNDARY_E;
+                sumC += this.weights[weightIndex]*CASimpleRule.BOUNDARY_C;
+            }
+            else{
+                sumH += this.weights[weightIndex]*cells[o].getHelixProps();
+                sumE += this.weights[weightIndex]*cells[o].getSheetProps();
+                sumC += this.weights[weightIndex]*cells[o].getCoilProps();
+            }
+        }
+        // weighted mean
+        cell.setHelixProps(sumH/sumWeights);
+        cell.setSheetProps(sumE/sumWeights);
+        cell.setCoilProps(sumC/sumWeights);
+        cell.computeMotif();
+    }
+
+
+
+
+    public double getMaxProps(int maxCF){
+        return maxCF*this.neigh;
     }
 }

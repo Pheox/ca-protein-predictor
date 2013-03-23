@@ -15,13 +15,14 @@ import org.w3c.dom.*;
 import org.apache.log4j.*;
 
 import cassp.*;
+import cassp.ca.*;
 import cassp.config.*;
 import cassp.ca.rules.*;
 
 
 /**
 * Rule takes into account both Chou-Fasman coefficients and Conformation classes.
-*
+* Cell propensities computation: alpha*CF + beta*CC
 */
 public class CAConformRule extends CARule{
 
@@ -70,6 +71,13 @@ public class CAConformRule extends CARule{
         return this;
     }
 
+    public void nextState(CACell[] cells, CACell cell, int index){
+        // TODO
+    }
+
+    public double getMaxProps(int maxCF){
+        return 100.0;// TODO
+    }
 
     public int getSize(){
         return 1 + 2*neigh + 1 + 2;
