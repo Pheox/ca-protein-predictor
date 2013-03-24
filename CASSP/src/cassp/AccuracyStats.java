@@ -147,6 +147,8 @@ public class AccuracyStats {
         }
     }
 
+
+
     /**
     *
     */
@@ -161,7 +163,7 @@ public class AccuracyStats {
         plot.unsetKey();
         plot.setXLabel("Reliability index");
         plot.setYLabel("Q3[%]");
-        plot.setRanges("[0:" + this.reliabClassesNumber + "] [0:100]");
+        plot.setYRange("0", "100");
 
         // create tmp file with data
         File tmpFile = null;
@@ -171,8 +173,10 @@ public class AccuracyStats {
             BufferedWriter bw = new BufferedWriter(fo);
 
             for (int i = 0; i < this.reliabClasses.length; i++) {
-                bw.write(i + "\t");
-                bw.write(this.reliabClasses[i] + "\n");
+                if (this.reliabClasses[i] != 0){
+                    bw.write(i + "\t");
+                    bw.write(this.reliabClasses[i] + "\n");
+                }
             }
             bw.close();
         }
@@ -180,8 +184,8 @@ public class AccuracyStats {
             logger.error("\n" + e);
         }
 
-        plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:2", Axes.NOT_SPECIFIED,
-            "Mean: " + this.totalAccuracy, Style.BOXES));
+        plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:2 ", Axes.NOT_SPECIFIED,
+            "Mean: " + this.totalAccuracy, Style.POINTS));
 
         // save image
         plot.setOutput(Terminal.PNG, dir + name, "640, 480");
@@ -190,7 +194,6 @@ public class AccuracyStats {
         }catch (Exception e){
             logger.error("\n" + e);
         }
-
         tmpFile.deleteOnExit();
     }
 
@@ -238,7 +241,6 @@ public class AccuracyStats {
         }catch (Exception e){
             logger.error("\n" + e);
         }
-
         tmpFile.deleteOnExit();
     }
 }
