@@ -28,7 +28,7 @@ public class Data {
     private HashMap<Character, AminoAcid> aminoAcids;
 
     private int maxCF;
-    private int maxCC;
+    private double maxCC;
 
 
     /**
@@ -36,8 +36,9 @@ public class Data {
     */
     public Data(){
         this.data = new ArrayList<DataItem>();
-        this.aminoAcids = new HashMap<Character, AminoAcid>();
+        this.initAminoAcids();
         this.maxCF = -1;
+        this.maxCC = -1;
     }
 
     /**
@@ -46,9 +47,22 @@ public class Data {
     */
     public Data(String filePath){
         this.data = new ArrayList<DataItem>();
-        this.aminoAcids = new HashMap<Character, AminoAcid>();
+        this.initAminoAcids();
         this.loadData(filePath);
         this.maxCF = -1;
+        this.maxCC = -1;
+    }
+
+    private void initAminoAcids(){
+        this.aminoAcids = new HashMap<Character, AminoAcid>();
+        for (int i = 0; i < Utils.aminoAcids.length; i++) {
+            this.aminoAcids.put(Utils.aminoAcids[i], new AminoAcid(Utils.aminoAcids[i]));
+        }
+
+        for (int i = 0; i < Utils.ambiguousAminoAcids.length; i++) {
+            this.aminoAcids.put(Utils.ambiguousAminoAcids[i],
+                new AminoAcid(Utils.ambiguousAminoAcids[i]));
+        }
     }
 
 
@@ -159,8 +173,7 @@ public class Data {
                 Matcher match = pattern.matcher(line);
 
                 if (match.matches()) {
-                    AminoAcid amino = new AminoAcid();
-                    amino.setAbbrev(match.group(1).charAt(0));
+                    AminoAcid amino = this.aminoAcids.get(match.group(1).charAt(0));
 
                     int cfH = Integer.parseInt(match.group(2));
                     int cfE = Integer.parseInt(match.group(3));
@@ -174,16 +187,53 @@ public class Data {
                         this.maxCF = cfC;
 
                     amino.setCFH(cfH); amino.setCFE(cfE); amino.setCFC(cfC);
-                    this.aminoAcids.put(new Character(amino.getAbbrev()), amino);
                 }
             }
-
             in.close();
         }catch (Exception e){
             System.err.println("Error: " + e.getMessage());
         }
     }
 
+
+
+     public void loadConformCoeffs(String filePath){
+
+        try{
+            FileInputStream fstream = new FileInputStream(filePath);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            Pattern pattern = Pattern.compile(
+                "(\\w)\\s+([0-9.]+)\\s+([0-9.]+)\\s+([0-9.]+)\\s+([0-9.]+)\\s+([0-9.]+)\\s+([0-9.]+).*");
+
+
+            while ((line = br.readLine()) != null)   {
+
+                Matcher match = pattern.matcher(line);
+
+                if (match.matches()) {
+                    AminoAcid amino = this.aminoAcids.get(match.group(1).charAt(0));
+
+                    double[] confCoeffs = new double[]{
+                        Double.valueOf(match.group(2)), Double.valueOf(match.group(3)),
+                        Double.valueOf(match.group(4)), Double.valueOf(match.group(5)),
+                        Double.valueOf(match.group(6)), Double.valueOf(match.group(7))
+                    };
+
+                    for (int i = 0; i < confCoeffs.length; i++) {
+                        if (confCoeffs[i] > this.maxCC)
+                            this.maxCC = confCoeffs[i];
+                    }
+                    amino.setConfCoeffs(confCoeffs);
+                }
+            }
+            in.close();
+        }catch (Exception e){
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
 
     public int length(){
         return this.data.size();

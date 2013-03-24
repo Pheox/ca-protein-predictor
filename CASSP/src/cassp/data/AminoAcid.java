@@ -19,16 +19,32 @@ public class AminoAcid {
     private double cfC;
 
     // conformation classes
-    private double ccH;
-    private double ccE;
-    private double ccC;
-    private char cc;
+    private double ccBegH;
+    private double ccBreakH;
+    private double ccBegE;
+    private double ccBreakE;
+    private double ccBegC;
+    private double ccBreakC;
 
     public AminoAcid(){
+        this.init();
     }
 
     public AminoAcid(char aa){
         this.abbrev = Character.toUpperCase(aa);
+        this.init();
+    }
+
+    private void init(){
+        this.cfH = 0;
+        this.cfE = 0;
+        this.cfC = 0;
+        this.ccBegH = 0;
+        this.ccBegE = 0;
+        this.ccBegC = 0;
+        this.ccBreakH = 0;
+        this.ccBreakE = 0;
+        this.ccBreakC = 0;
     }
 
 
@@ -66,35 +82,27 @@ public class AminoAcid {
         return this.cfC;
     }
 
-    public void setCCH(double ccH){
-        this.ccH = ccH;
+    public void setConfCoeffs(double begH, double begE, double begC,
+        double breakH, double breakE, double breakC){
+        this.ccBegH = begH;
+        this.ccBegE = begE;
+        this.ccBegC = begC;
+        this.ccBreakH = breakH;
+        this.ccBreakE = breakE;
+        this.ccBreakC = breakC;
     }
 
-    public double getCCH(){
-        return this.ccH;
+    public void setConfCoeffs(double[] confCoeffs){
+        this.ccBegH = confCoeffs[0];
+        this.ccBegE = confCoeffs[1];
+        this.ccBegC = confCoeffs[2];
+        this.ccBreakH = confCoeffs[3];
+        this.ccBreakE = confCoeffs[4];
+        this.ccBreakC = confCoeffs[5];
     }
 
-    public void setCCE(double ccE){
-        this.ccE = ccE;
-    }
-
-    public double getCCE(){
-        return this.ccE;
-    }
-
-    public void setCCC(double ccC){
-        this.ccC = ccC;
-    }
-
-    public double getCCC(){
-        return this.ccC;
-    }
-
-    public void setConformClass(char cc){
-        this.cc = cc;
-    }
-
-    public char getConformClass(){
-        return this.cc;
+    public double[] getConfCoeffs(){
+        return new double[]{this.ccBegH, this.ccBegE, this.ccBegC,
+            this.ccBreakH, this.ccBreakE, this.ccBreakC};
     }
 }

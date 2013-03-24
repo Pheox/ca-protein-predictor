@@ -48,6 +48,7 @@ public class CASSP {
     public void train(){
         this.data = new Data(this.config.getDataPath());
         this.data.loadChouFasman(this.config.getDataCFPath());
+        this.data.loadConformCoeffs(this.config.getDataCCPath());
         this.rule = this.trainRule(this.data);
     }
 
