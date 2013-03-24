@@ -37,19 +37,43 @@ public class CASSP {
 
 
     /**
-    *
+    * CASSP Constructor
     * @param config configuration object
     */
     public CASSP(SimConfig config){
         this.config = config;
+        this.accStats = null;
     }
 
 
-    public void train(){
-        this.data = new Data(this.config.getDataPath());
-        this.data.loadChouFasman(this.config.getDataCFPath());
-        this.data.loadConformCoeffs(this.config.getDataCCPath());
+    /**
+    * Training to find out the fittest rule.
+    * @return Best rule.
+    */
+    public CARule train(){
+        this.setupData();
         this.rule = this.trainRule(this.data);
+        return this.rule;
+    }
+
+
+    // load data and load/compute neccessary coefficients
+    private void setupData(){
+        this.data = new Data(this.config.getDataPath());
+
+        // get Chou-Fasman coefficients
+        String cfPath = this.config.getDataCFPath();
+        if (cfPath != null && cfPath.length() > 0)
+            this.data.loadChouFasman(this.config.getDataCFPath());
+        else
+            this.data.computeChouFasman();
+
+        // get conformation coefficients
+        String ccPath = this.config.getDataCCPath();
+        if (ccPath != null && ccPath.length() > 0)
+            this.data.loadConformCoeffs(this.config.getDataCCPath());
+        else
+            this.data.computeConformCoeffs();
     }
 
 
@@ -68,13 +92,11 @@ public class CASSP {
     }
 
 
-
+    /**
+    * Application of trained rule to test dataset.
+    * @return accuracy of specified type (Q3 or SOV)
+    */
     public double test(){
-        // pre accStats nastavit max reliab, rule.getMaxReliab
-        // predict
-        // accStats.parseStats(DataItem di)
-
-
         Data data = new Data(this.config.getTestDataPath());
         this.testRule(data);
 
@@ -89,18 +111,21 @@ public class CASSP {
 
 
     private void testRule(Data testData){
-        //this.accStats = new AccuracyStats(5, 5);
-
         for (DataItem di: testData.getData()){
             di.setPredSeq(this.predict(di.getAaSeq()));
         }
     }
 
 
-    public String predict(String aa_seq){
-
+    /**
+    * Secondary structure prediction of amino acid sequence.
+    *
+    * @param aaSeq amino acid sequence
+    * @return predicted secondary structure sequence
+    */
+    public String predict(String aaSeq){
         DataItem di = new DataItem();
-        di.setAaSeq(aa_seq);
+        di.setAaSeq(aaSeq);
 
         CellularAutomaton ca = new CellularAutomaton(di, this.config);
         ca.run(this.rule, this.data);
@@ -109,12 +134,16 @@ public class CASSP {
     }
 
 
-
+    /**
+    * Cross-validation - dataset is divided to <folds> parts.
+    *
+    * @param folds number of sub-trainings and sub-testings
+    * @return mean accuracy of sub-tests
+    */
     public double crossValidate(int folds){
-
         if (folds < 1) return -1;
 
-        // structured creation + data splitting
+        // structures creation + data splitting
         this.data = new Data(this.config.getDataPath());
         this.data.loadChouFasman(this.config.getDataCFPath());
 
@@ -155,26 +184,48 @@ public class CASSP {
     }
 
 
+    /**
+    * Creates PNG image of fitness value evolution in generations.
+    * @param name file name of created image
+    */
     public void createEvolutionImage(String name){
+        if (this.accStats == null)
+            this.computeAccuracyStats();
         this.eaStats.createImage(this.config.getStatsPath(), name);
     }
 
+
+    /**
+    * Creates PNG file of accuracy depending on reliabiliry classes.
+    * @param name file name of created image
+    */
     public void createReliabImage(String name){
+        if (this.accStats == null)
+            this.computeAccuracyStats();
         this.accStats.createReliabImage(this.config.getStatsPath(), name);
     }
 
+
+    /**
+    * Creates PNG file illustrating histogram of accuracy classes.
+    * @param name file name of created image
+    */
     public void createAccClassesImage(String name){
+        if (this.accStats == null)
+            this.computeAccuracyStats();
         this.accStats.createAccClassesImage(this.config.getStatsPath(), name);
     }
 
 
+    /**
+    * Computes all neccessary statistics.
+    */
     public void computeAccuracyStats(){
         this.accStats = new AccuracyStats(
-            this.rule.getMaxProps(this.data.getMaxCF()),
+            this.rule.getMaxProps(new double[]{this.data.getMaxCF(), this.data.getMaxCC()}),
             this.config.getReliabClasses(),
             this.config.getAccClasses()
         );
-
         this.accStats.parseStats(this.data, this.config.getAccuracyType());
     }
 
