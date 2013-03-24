@@ -39,6 +39,24 @@ public class TestConfig extends TestCase {
 
     public void testLoadConfig(){
         this.config.loadConfig("./src/cassp/tests/test.config");
-        assertEquals(this.config.getPop(), 10);
+
+        assertEquals(0, this.config.getCVFolds());
+        assertEquals(0, this.config.getAccuracyType());
+        assertEquals(100, this.config.getAccClasses());
+        assertEquals(100, this.config.getReliabClasses());
+        assertEquals("../data/final/rs_126.data", this.config.getDataPath());
+        assertEquals("../data/chou_fasman/rs_126.cf", this.config.getDataCFPath());
+        assertEquals("../data/conf_classes/rs_126.cc", this.config.getDataCCPath());
+        assertEquals("../data/final/pdb_vyber.data", this.config.getTestDataPath());
+        assertEquals("../experiments/", this.config.getStatsPath());
+
+        assertEquals(3, this.config.getPop());
+        assertEquals(0.05, this.config.getMutProb());
+        assertEquals(0.5, this.config.getCrossProb());
+        assertEquals(5, this.config.getMaxGen());
+
+        assertEquals(3, this.config.getMaxSteps());
+        assertEquals(1, this.config. getNeigh());
+        assertEquals(1, this.config.getRuleID());
     }
 }
