@@ -36,7 +36,7 @@ amino_acids = [
 #    "B", "Z", "X"
 ]
 
-ambiguous_amino_acids = ["B", "Z", "X"]
+ambiguous_amino_acids = ["B", "Z", "X", "J"]
 
 # amino acids count
 aa_counts = dict((k, 0) for k in amino_acids)
@@ -149,17 +149,20 @@ def compute_ambiguous():
 
     cp_beginnings.update({"B": {"H": 0, "E": 0, "C": 0},
                           "Z": {"H": 0, "E": 0, "C": 0},
-                          "X": {"H": 0, "E": 0, "C": 0}
+                          "X": {"H": 0, "E": 0, "C": 0},
+                          "J": {"H": 0, "E": 0, "C": 0}
     })
 
     cp_breakings.update({"B": {"H": 0, "E": 0, "C": 0},
                          "Z": {"H": 0, "E": 0, "C": 0},
-                         "X": {"H": 0, "E": 0, "C": 0}
+                         "X": {"H": 0, "E": 0, "C": 0},
+                         "J": {"H": 0, "E": 0, "C": 0}
     })
 
     cc.update({"B": {"H": 0, "E": 0, "C": 0},
                "Z": {"H": 0, "E": 0, "C": 0},
-               "X": {"H": 0, "E": 0, "C": 0}
+               "X": {"H": 0, "E": 0, "C": 0},
+               "J": {"H": 0, "E": 0, "C": 0}
     })
 
     # 1. compute for X
@@ -177,15 +180,19 @@ def compute_ambiguous():
     for m in ('H', 'E', 'C'):
         cc["X"][m] = conf_class("X", m)
 
+    # B, Z, J
     for m in ('H', 'E', 'C'):
         cp_beginnings["B"][m] = (cp_beginnings["N"][m] + cp_beginnings["D"][m]) / 2.0
         cp_breakings["B"][m] = (cp_breakings["N"][m] + cp_beginnings["D"][m]) / 2.0
         cp_beginnings["Z"][m] = (cp_beginnings["N"][m] + cp_beginnings["D"][m]) / 2.0
         cp_breakings["Z"][m] = (cp_breakings["N"][m] + cp_beginnings["D"][m]) / 2.0
+        cp_beginnings["J"][m] = (cp_beginnings["L"][m] + cp_beginnings["I"][m]) / 2.0
+        cp_breakings["J"][m] = (cp_breakings["L"][m] + cp_beginnings["I"][m]) / 2.0
 
     for m in ('H', 'E', 'C'):
         cc["B"][m] = conf_class("B", m)
         cc["Z"][m] = conf_class("Z", m)
+        cc["J"][m] = conf_class("J", m)
 
 
 def print_results():
