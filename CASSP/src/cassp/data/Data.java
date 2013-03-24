@@ -27,7 +27,7 @@ public class Data {
     private ArrayList<DataItem> data;
     private HashMap<Character, AminoAcid> aminoAcids;
 
-    private int maxCF;
+    private double maxCF;
     private double maxCC;
 
 
@@ -243,6 +243,13 @@ public class Data {
     }
 
 
+    /**
+    * TODO
+    */
+    public void computeConformCoeffs(){
+
+    }
+
 
     /**
     * Loads Chou-Fasman parameters from data file in format:
@@ -369,7 +376,11 @@ public class Data {
         return this.aminoAcids;
     }
 
-    public int getMaxCF(){
+    public double getMaxCF(){
         return this.maxCF;
+    }
+
+    public double getMaxCC(){
+        return this.maxCC;
     }
 }

@@ -93,10 +93,7 @@ public class CASimpleRule extends CARule{
         cell.computeMotif();
     }
 
-
-
-
-    public double getMaxProps(int maxCF){
-        return maxCF*this.neigh;
+    public double getMaxProps(double[] maxCoeffs){
+        return maxCoeffs[0]*this.neigh;
     }
 }

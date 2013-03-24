@@ -28,32 +28,34 @@ public class CAConformRule extends CARule{
 
     private double alpha;
     private double beta;
+    private double gamma;
 
 
     public CAConformRule(int neigh){
         this.alpha = 0.0;
         this.beta = 0.0;
+        this.gamma = 0.0;
         this.steps = 0;
         this.neigh = neigh;
     }
 
-
     public IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException{
-        Gene[] sampleGenes = new Gene[this.getSize()];
+        Gene[] genes = new Gene[this.getSize()];
 
         // steps
-        sampleGenes[0] = new IntegerGene(conf, 0, config.getMaxSteps());
+        genes[0] = new IntegerGene(conf, 0, config.getMaxSteps());
 
-        // alpha & beta
-        sampleGenes[1] = new DoubleGene(conf, 0, 1);
-        sampleGenes[2] = new DoubleGene(conf, 0, 1);
+        // alpha & beta & gamma
+        genes[1] = new DoubleGene(conf, 0, 1);
+        genes[2] = new DoubleGene(conf, 0, 1);
+        genes[3] = new DoubleGene(conf, 0, 1);
 
         // weights
-        for (int i = 3; i-1 < (this.neigh*2 + 1); i++) {
-            sampleGenes[i] = new DoubleGene(conf, 0, 1);
+        for (int i = 4; i - 1 < (this.neigh*2 + 1); i++) {
+            genes[i] = new DoubleGene(conf, 0, 1);
         }
-        IChromosome sampleChromosome = new Chromosome(conf, sampleGenes);
-        return sampleChromosome;
+        IChromosome chromosome = new Chromosome(conf, genes);
+        return chromosome;
     }
 
     public CAConformRule fromChromosome(IChromosome chromosome){
@@ -66,7 +68,7 @@ public class CAConformRule extends CARule{
         this.weights = new double[this.neigh*2 + 1];
 
         for (int i = 3; i < chromosome.size(); i++) {
-            this.weights[i-1] = ((Double) chromosome.getGene(i).getAllele()).doubleValue();
+            this.weights[i - 1] = ((Double) chromosome.getGene(i).getAllele()).doubleValue();
         }
         return this;
     }
@@ -75,11 +77,11 @@ public class CAConformRule extends CARule{
         // TODO
     }
 
-    public double getMaxProps(int maxCF){
-        return 100.0;// TODO
+    public double getMaxProps(double[] maxCoeffs){
+        return maxCoeffs[0]*this.neigh + maxCoeffs[1]*this.neigh*2;
     }
 
     public int getSize(){
-        return 1 + 2*neigh + 1 + 2;
+        return 1 + 2*neigh + 1 + 3;
     }
 }

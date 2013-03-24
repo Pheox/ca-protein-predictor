@@ -38,7 +38,7 @@ public abstract class CARule {
     }
 
 
-    public abstract double getMaxProps(int maxCF);
+    public abstract double getMaxProps(double[] maxCoeffs);
 
 
     /* Getters & setters */
