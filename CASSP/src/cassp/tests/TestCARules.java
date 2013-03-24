@@ -19,7 +19,6 @@ import cassp.ca.rules.*;
 
 
 
-
 public class TestCARules extends TestCase {
 
     public static Test suite() {
@@ -77,5 +76,40 @@ public class TestCARules extends TestCase {
         assertEquals(116.666, this.ca.getCell(1).getCoilProps(), 0.1);
     }
 
-    // public void testSimpleRuleNeigh5()
+    public void testConformRuleNeigh1(){
+        this.config.setNeigh(1);
+
+        di.setAaSeq("CRM");
+        data.add(di);
+        this.data.loadChouFasman("./src/cassp/tests/test.cf");
+        this.data.loadConformCoeffs("./src/cassp/tests/test.cc");
+        this.ca = new CellularAutomaton(di, this.config);
+
+        this.conformRule = new CAConformRule(1);
+        this.conformRule.setSteps(1);
+
+        double[] weights = new double[3];
+        weights[0] = 1; weights[1] = 1; weights[2] = 1;
+
+        this.conformRule.setWeights(weights);
+        this.conformRule.setAlpha(0.01);
+        this.conformRule.setBeta(1);
+        this.conformRule.setGamma(1);
+
+
+        String seq = this.ca.run(this.conformRule, this.data);
+
+        assertEquals(seq, "CEC");
+        assertEquals(2.244, this.ca.getCell(0).getHelixProps(), 0.1);
+        assertEquals(3.084, this.ca.getCell(0).getSheetProps(), 0.1);
+        assertEquals(5.005, this.ca.getCell(0).getCoilProps(), 0.1);
+
+        assertEquals(3.054, this.ca.getCell(1).getHelixProps(), 0.1);
+        assertEquals(3.571, this.ca.getCell(1).getSheetProps(), 0.1);
+        assertEquals(2.688, this.ca.getCell(1).getCoilProps(), 0.1);
+
+        assertEquals(2.898, this.ca.getCell(2).getHelixProps(), 0.1);
+        assertEquals(2.366, this.ca.getCell(2).getSheetProps(), 0.1);
+        assertEquals(3.721, this.ca.getCell(2).getCoilProps(), 0.1);
+    }
 }

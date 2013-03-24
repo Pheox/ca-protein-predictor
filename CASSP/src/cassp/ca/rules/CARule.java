@@ -30,7 +30,7 @@ public abstract class CARule {
     public abstract int getSize();
     public abstract IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException;
     public abstract CARule fromChromosome(IChromosome chromosome);
-    public abstract void nextState(CACell[] cells, CACell cell, int index);
+    public abstract void nextState(CACell[] cells, CACell cell, int c);
 
 
     public int getWeightsLength(){

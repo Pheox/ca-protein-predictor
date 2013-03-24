@@ -73,8 +73,39 @@ public class CAConformRule extends CARule{
         return this;
     }
 
-    public void nextState(CACell[] cells, CACell cell, int index){
-        // TODO
+    public void nextState(CACell[] cells, CACell cell, int c){
+        double sumH = 0;
+        double sumE = 0;
+        double sumC = 0;
+        double sumWeights = 0;
+
+        for (int o = c - this.neigh; o <= c + this.neigh; o++) {
+
+            int weightIndex = o - c + this.getWeightsLength()/2;
+            sumWeights += this.weights[weightIndex];
+
+            if ((o < 0) || (o > cells.length - 1)){
+                // boundary cells
+                sumH += this.weights[weightIndex]*CASimpleRule.BOUNDARY_H;
+                sumE += this.weights[weightIndex]*CASimpleRule.BOUNDARY_E;
+                sumC += this.weights[weightIndex]*CASimpleRule.BOUNDARY_C;
+            }
+            else{
+                sumH += this.weights[weightIndex]*cells[o].getHelixProps();
+                sumE += this.weights[weightIndex]*cells[o].getSheetProps();
+                sumC += this.weights[weightIndex]*cells[o].getCoilProps();
+            }
+        }
+
+        double[] confCoeffs = cell.getAminoAcid().getConfCoeffs();
+
+        cell.setHelixProps(this.alpha*sumH/sumWeights +
+            this.beta*confCoeffs[0] +  this.gamma*confCoeffs[3]);
+        cell.setSheetProps(this.alpha*sumE/sumWeights +
+            this.beta*confCoeffs[1] +  this.gamma*confCoeffs[4]);
+        cell.setCoilProps(this.alpha*sumC/sumWeights +
+            this.beta*confCoeffs[2] +  this.gamma*confCoeffs[5]);
+        cell.computeMotif();
     }
 
     public double getMaxProps(double[] maxCoeffs){
@@ -83,5 +114,29 @@ public class CAConformRule extends CARule{
 
     public int getSize(){
         return 1 + 2*neigh + 1 + 3;
+    }
+
+    public void setAlpha(double alpha){
+        this.alpha = alpha;
+    }
+
+    public double getAlpha(){
+        return this.alpha;
+    }
+
+    public void setBeta(double beta){
+        this.beta = beta;
+    }
+
+    public double getBeta(){
+        return this.beta;
+    }
+
+    public void setGamma(double gamma){
+        this.gamma = gamma;
+    }
+
+    public double getGamma(){
+        return this.gamma;
     }
 }
