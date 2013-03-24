@@ -122,32 +122,126 @@ public class Data {
 
 
         for (char amino_acid : Utils.aminoAcids){
-            cs.put(amino_acid, new ArrayList(3));
-            relat_f.put(amino_acid, new ArrayList(3));
+            cs.put(amino_acid, new ArrayList<Integer>(Arrays.asList(0, 0, 0)));
+            relat_f.put(amino_acid, new ArrayList<Double>(Arrays.asList(0.0, 0.0, 0.0)));
             aa_counts.put(amino_acid, 0);
-            final_cf.put(amino_acid, new ArrayList(3));
+            final_cf.put(amino_acid, new ArrayList<Double>(Arrays.asList(0.0, 0.0, 0.0)));
         }
 
         for (char amino_acid: Utils.ambiguousAminoAcids){
-            ambiguous_cf.put(amino_acid, new ArrayList(3));
+            ambiguous_cf.put(amino_acid, new ArrayList<Double>(Arrays.asList(0.0, 0.0, 0.0)));
         }
 
-
+        // counts and conf. states count computing
         for (DataItem di: this.data){
             for (int i = 0; i < di.length(); i++) {
-                if ("ZBJX".indexOf(di.getAaAt(i)) == -1)
+
+                if ("ZBJX".indexOf(di.getAaAt(i)) != -1)
                     continue;
 
                 int count = aa_counts.get(di.getAaAt(i));
                 aa_counts.put(di.getAaAt(i), count + 1);
 
                 if (di.getSspAt(i) == 'H'){
-                    //count = cs.get(di.aa_seq.charAt(i)).get(0).intValue();
-                    //cs.get(di.aa_seq.charAt(i)).set(0, count + 1);
+                    count = (Integer) cs.get(di.getAaAt(i)).get(0);
+                    cs.get(di.getAaAt(i)).set(0, count + 1);
+                }
+                else if (di.getSspAt(i) == 'E'){
+                    count = (Integer) cs.get(di.getAaAt(i)).get(1);
+                    cs.get(di.getAaAt(i)).set(1, count + 1);
+                }
+                else{
+                    count = (Integer) cs.get(di.getAaAt(i)).get(2);
+                    cs.get(di.getAaAt(i)).set(2, count + 1);
                 }
             }
         }
+
+        // relative frequencies computing
+        Iterator iterator = cs.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            for (int i = 0; i < 3; i++) {
+                int count = ((Integer) cs.get(entry.getKey()).get(i));
+                double relat = count/(double) aa_counts.get(entry.getKey());
+                relat_f.get(entry.getKey()).set(i, relat);
+            }
+
+            iterator.remove();
+        }
+
+        double[] sums = new double[]{0.0, 0.0, 0.0};
+        iterator = relat_f.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            sums[0] += (Double) relat_f.get(entry.getKey()).get(0);
+            sums[1] += (Double) relat_f.get(entry.getKey()).get(1);
+            sums[2] += (Double) relat_f.get(entry.getKey()).get(2);
+        }
+
+        // average relative frequencies computing
+        double[] avgs = new double[]{0.0, 0.0, 0.0};
+        for (int i = 0; i < 3; i++) {
+            avgs[i] = sums[i]/20.0;
+        }
+
+        // chou-fasman coeffs computing
+        iterator = relat_f.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            for (int i = 0; i < 3; i++) {
+                double finalCF = (Double) relat_f.get(entry.getKey()).get(i) / avgs[i];
+                final_cf.get(entry.getKey()).set(i, finalCF);
+            }
+        }
+
+        // chou-fasmans for ambiguous amino acids
+        for (int i = 0; i < 3; i++) {
+            ambiguous_cf.get('B').set(i,
+                ((Double) final_cf.get('N').get(i) + (Double) final_cf.get('D').get(i))/2);
+            ambiguous_cf.get('Z').set(i,
+                ((Double) final_cf.get('Q').get(i) + (Double) final_cf.get('E').get(i))/2);
+            ambiguous_cf.get('J').set(i,
+                ((Double) final_cf.get('L').get(i) + (Double) final_cf.get('I').get(i))/2);
+        }
+
+        avgs = new double[]{0.0, 0.0, 0.0};
+
+        iterator = final_cf.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            avgs[0] += (Double) final_cf.get(entry.getKey()).get(0);
+            avgs[1] += (Double) final_cf.get(entry.getKey()).get(1);
+            avgs[2] += (Double) final_cf.get(entry.getKey()).get(2);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            avgs[i] = avgs[i]/20.0;
+        }
+
+        for (int i = 0; i < 3; i++) {
+            ambiguous_cf.get('X').set(i, avgs[i]);
+        }
+
+        iterator = final_cf.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            AminoAcid amino = this.aminoAcids.get(entry.getKey());
+            amino.setCFH(Math.floor((Double) final_cf.get(entry.getKey()).get(0) * 100));
+            amino.setCFE(Math.floor((Double) final_cf.get(entry.getKey()).get(1) * 100));
+            amino.setCFC(Math.floor((Double) final_cf.get(entry.getKey()).get(2) * 100));
+        }
+
+        iterator = ambiguous_cf.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            AminoAcid amino = this.aminoAcids.get(entry.getKey());
+            amino.setCFH(Math.floor((Double) ambiguous_cf.get(entry.getKey()).get(0) * 100));
+            amino.setCFE(Math.floor((Double) ambiguous_cf.get(entry.getKey()).get(1) * 100));
+            amino.setCFC(Math.floor((Double) ambiguous_cf.get(entry.getKey()).get(2) * 100));
+        }
     }
+
 
 
     /**

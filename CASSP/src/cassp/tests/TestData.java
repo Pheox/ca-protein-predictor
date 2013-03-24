@@ -37,6 +37,23 @@ public class TestData extends TestCase {
         this.data = null;
     }
 
+    public void testComputeChouFasman(){
+        this.data.loadData("./src/cassp/tests/rs_126.data");
+        this.data.computeChouFasman();
+
+        AminoAcid aa = this.data.getAminoAcid('A');
+
+        assertEquals(143.0, aa.getCFH());
+        assertEquals(65.0, aa.getCFE());
+        assertEquals(87.0, aa.getCFC());
+
+        aa = this.data.getAminoAcid('J');
+
+        assertEquals(116.0, aa.getCFH());
+        assertEquals(137.0, aa.getCFE());
+        assertEquals(67.0, aa.getCFC());
+    }
+
     public void testLoadChouFasman(){
         this.data.loadChouFasman("./src/cassp/tests/test.cf");
 
