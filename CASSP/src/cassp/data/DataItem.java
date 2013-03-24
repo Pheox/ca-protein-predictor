@@ -18,9 +18,6 @@ public class DataItem {
     private String aaSeq;
     private String sspSeq;
     private String predictedSeq;
-    private double q3;
-    private double sov;
-    private int sovN;
     private double propsMeanDiff;
 
 
@@ -77,18 +74,6 @@ public class DataItem {
 
     public void setPredSeq(String pred){
         this.predictedSeq = pred;
-    }
-
-    public double getSOV(){
-        return this.sov;
-    }
-
-    public int getSOVNorm(){
-        return this.sovN;
-    }
-
-    public double getQ3(){
-        return this.q3;
     }
 
     public double getPropsMeanDiff(){

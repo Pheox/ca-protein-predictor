@@ -23,7 +23,7 @@ import cassp.ca.rules.*;
 
 public class CASimpleRule extends CARule{
 
-        // boundary conditions
+    // boundary conditions
     public static int BOUNDARY_H = 0;
     public static int BOUNDARY_E = 0;
     public static int BOUNDARY_C = 300;
