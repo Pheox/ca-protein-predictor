@@ -189,27 +189,20 @@ def compute_ambiguous():
 
 
 def print_results():
-    for aa, states in cc.iteritems():
-        print aa + " ",
-        for motiv, conf_class in states.iteritems():
-            print str(conf_class) + " ",
-        print
+#    for aa, states in cc.iteritems():
+#        print aa + " ",
+#        for motiv, conf_class in states.iteritems():
+#            print str(conf_class) + " ",
+#        print
 
-    print "\n--- breakings ---"
-    for aa, d in cp_breakings.iteritems():
-        print aa + " ",
-        for motiv, acc in d.iteritems():
-            print str(acc) + " ",
-        print
-
-    print "\n--- beginnings ---"
     for aa, d in cp_beginnings.iteritems():
         print aa + " ",
         for motiv, acc in d.iteritems():
             print str(acc) + " ",
+
+        for motiv, acc in cp_breakings[aa].iteritems():
+            print str(acc) + " ",
         print
-
-
 
 
 
