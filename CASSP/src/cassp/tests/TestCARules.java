@@ -67,7 +67,6 @@ public class TestCARules extends TestCase {
         weights[0] = 1; weights[1] = 1; weights[2] = 1;
 
         this.simpleRule.setWeights(weights);
-
         String seq = this.ca.run(this.simpleRule, this.data);
 
         assertEquals(seq, "CEC");
@@ -98,18 +97,18 @@ public class TestCARules extends TestCase {
 
 
         String seq = this.ca.run(this.conformRule, this.data);
+        assertEquals("CCC", seq);
 
-        assertEquals(seq, "CEC");
-        assertEquals(2.244, this.ca.getCell(0).getHelixProps(), 0.1);
-        assertEquals(3.084, this.ca.getCell(0).getSheetProps(), 0.1);
-        assertEquals(5.005, this.ca.getCell(0).getCoilProps(), 0.1);
+        assertEquals(2.245, this.ca.getCell(0).getHelixProps(), 0.1);
+        assertEquals(3.97186, this.ca.getCell(0).getSheetProps(), 0.1);
+        assertEquals(4.09224, this.ca.getCell(0).getCoilProps(), 0.1);
 
-        assertEquals(3.054, this.ca.getCell(1).getHelixProps(), 0.1);
-        assertEquals(3.571, this.ca.getCell(1).getSheetProps(), 0.1);
-        assertEquals(2.688, this.ca.getCell(1).getCoilProps(), 0.1);
+        assertEquals(3.0546, this.ca.getCell(1).getHelixProps(), 0.1);
+        assertEquals(3.0866, this.ca.getCell(1).getSheetProps(), 0.1);
+        assertEquals(3.1728, this.ca.getCell(1).getCoilProps(), 0.1);
 
-        assertEquals(2.898, this.ca.getCell(2).getHelixProps(), 0.1);
-        assertEquals(2.366, this.ca.getCell(2).getSheetProps(), 0.1);
-        assertEquals(3.721, this.ca.getCell(2).getCoilProps(), 0.1);
+        assertEquals(2.8989, this.ca.getCell(2).getHelixProps(), 0.1);
+        assertEquals(2.655, this.ca.getCell(2).getSheetProps(), 0.1);
+        assertEquals(3.4326, this.ca.getCell(2).getCoilProps(), 0.1);
     }
 }
