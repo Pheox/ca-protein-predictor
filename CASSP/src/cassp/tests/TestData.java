@@ -54,6 +54,32 @@ public class TestData extends TestCase {
         assertEquals(67.0, aa.getCFC());
     }
 
+    public void testComputeConformCoeffs(){
+        this.data.loadData("./src/cassp/tests/rs_126.data");
+        this.data.computeConformCoeffs();
+
+        AminoAcid aa = this.data.getAminoAcid('A');
+
+        double[] confCoeffs = aa.getConfCoeffs();
+
+        assertEquals(1.0755, confCoeffs[0], 0.01);
+        assertEquals(0.8905, confCoeffs[1], 0.01);
+        assertEquals(0.82009, confCoeffs[2], 0.01);
+        assertEquals(1.44905, confCoeffs[3], 0.01);
+        assertEquals(0.50619, confCoeffs[4], 0.01);
+        assertEquals(0.71155, confCoeffs[5], 0.01);
+
+        aa = this.data.getAminoAcid('J');
+        confCoeffs = aa.getConfCoeffs();
+
+        assertEquals(0.92038, confCoeffs[0], 0.01);
+        assertEquals(0.84004, confCoeffs[1], 0.01);
+        assertEquals(0.994, confCoeffs[2], 0.01);
+        assertEquals(1.1049, confCoeffs[3], 0.01);
+        assertEquals(1.2333, confCoeffs[4], 0.01);
+        assertEquals(0.62239, confCoeffs[5], 0.01);
+    }
+
     public void testLoadChouFasman(){
         this.data.loadChouFasman("./src/cassp/tests/test.cf");
 
@@ -77,20 +103,20 @@ public class TestData extends TestCase {
         double[] confCoeffs = aa.getConfCoeffs();
 
         assertEquals(1.0755, confCoeffs[0], 0.01);
-        assertEquals(0.82009, confCoeffs[1], 0.01);
-        assertEquals(0.89005, confCoeffs[2], 0.01);
+        assertEquals(0.8905, confCoeffs[1], 0.01);
+        assertEquals(0.82009, confCoeffs[2], 0.01);
         assertEquals(1.44905, confCoeffs[3], 0.01);
-        assertEquals(0.71155, confCoeffs[4], 0.01);
-        assertEquals(0.50619, confCoeffs[5], 0.01);
+        assertEquals(0.50619, confCoeffs[4], 0.01);
+        assertEquals(0.71155, confCoeffs[5], 0.01);
 
         aa = this.data.getAminoAcid('J');
         confCoeffs = aa.getConfCoeffs();
 
-        assertEquals(0.9203, confCoeffs[0], 0.01);
-        assertEquals(0.994, confCoeffs[1], 0.01);
-        assertEquals(0.84, confCoeffs[2], 0.01);
-        assertEquals(1.0938, confCoeffs[3], 0.01);
-        assertEquals(0.8508, confCoeffs[4], 0.01);
-        assertEquals(1.01037, confCoeffs[5], 0.01);
+        assertEquals(0.92038, confCoeffs[0], 0.01);
+        assertEquals(0.84004, confCoeffs[1], 0.01);
+        assertEquals(0.994, confCoeffs[2], 0.01);
+        assertEquals(1.1049, confCoeffs[3], 0.01);
+        assertEquals(1.2333, confCoeffs[4], 0.01);
+        assertEquals(0.62239, confCoeffs[5], 0.01);
     }
 }
