@@ -129,6 +129,7 @@ def compute_conf_preferences():
         cp_breakings[aa]["C"] = p_c_break / (aa_counts[aa] / aa_sum)
 
 
+
 def conf_class(aa, motif):
     if cp_breakings[aa][motif] >= 1 and cp_beginnings[aa][motif] < 1:
         return 0
@@ -183,11 +184,11 @@ def compute_ambiguous():
     # B, Z, J
     for m in ('H', 'E', 'C'):
         cp_beginnings["B"][m] = (cp_beginnings["N"][m] + cp_beginnings["D"][m]) / 2.0
-        cp_breakings["B"][m] = (cp_breakings["N"][m] + cp_beginnings["D"][m]) / 2.0
-        cp_beginnings["Z"][m] = (cp_beginnings["N"][m] + cp_beginnings["D"][m]) / 2.0
-        cp_breakings["Z"][m] = (cp_breakings["N"][m] + cp_beginnings["D"][m]) / 2.0
+        cp_breakings["B"][m] = (cp_breakings["N"][m] + cp_breakings["D"][m]) / 2.0
+        cp_beginnings["Z"][m] = (cp_beginnings["Q"][m] + cp_beginnings["E"][m]) / 2.0
+        cp_breakings["Z"][m] = (cp_breakings["Q"][m] + cp_breakings["E"][m]) / 2.0
         cp_beginnings["J"][m] = (cp_beginnings["L"][m] + cp_beginnings["I"][m]) / 2.0
-        cp_breakings["J"][m] = (cp_breakings["L"][m] + cp_beginnings["I"][m]) / 2.0
+        cp_breakings["J"][m] = (cp_breakings["L"][m] + cp_breakings["I"][m]) / 2.0
 
     for m in ('H', 'E', 'C'):
         cc["B"][m] = conf_class("B", m)
@@ -196,24 +197,19 @@ def compute_ambiguous():
 
 
 def print_results():
-#    for aa, states in cc.iteritems():
-#        print aa + " ",
-#        for motiv, conf_class in states.iteritems():
-#            print str(conf_class) + " ",
-#        print
-
     for aa, d in cp_beginnings.iteritems():
         print aa + " ",
-        for motiv, acc in d.iteritems():
-            print str(acc) + " ",
 
-        for motiv, acc in cp_breakings[aa].iteritems():
-            print str(acc) + " ",
+        for m in ('H', 'E', 'C'):
+            print str(d[m]) + " ",
+
+        for m in ('H', 'E', 'C'):
+            print str(cp_breakings[aa][m]) + " ",
         print
 
 
 
-# MAIN #
+    # MAIN #
 
 if __name__ == "__main__":
     compute_structural_transitions(sys.argv[1])
