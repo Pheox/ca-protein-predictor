@@ -43,6 +43,8 @@ public class SimConfig {
     private String dataCCPath;
     private String dataTestPath;
     private String statsPath;
+    private String psipredPath;
+    private String bestRulePath;
 
     // ea parameters
     private double mutProb;
@@ -93,6 +95,8 @@ public class SimConfig {
         this.dataCCPath = prop.getProperty("data_cc");
         this.dataTestPath = prop.getProperty("data_test");
         this.statsPath = prop.getProperty("stats");
+        this.psipredPath = prop.getProperty("psipred");
+        this.bestRulePath = prop.getProperty("best_rule");
 
         if (prop.getProperty("cv_folds") != null)
             this.cvFolds = Integer.parseInt(prop.getProperty("cv_folds"));
@@ -233,6 +237,14 @@ public class SimConfig {
         this.statsPath = statsPath;
     }
 
+    public String getPsipredPath(){
+        return this.psipredPath;
+    }
+
+    public void setPsipredPath(String psipredPath){
+        this.psipredPath = psipredPath;
+    }
+
     public String getDataPath(){
         return this.dataPath;
     }
@@ -263,6 +275,14 @@ public class SimConfig {
 
     public void setTestDataPath(String path){
         this.dataTestPath = path;
+    }
+
+    public String getBestRulePath(){
+        return this.bestRulePath;
+    }
+
+    public void setBestRulePath(String rulePath){
+        this.bestRulePath = rulePath;
     }
 
     public int getReliabClasses(){
