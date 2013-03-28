@@ -9,16 +9,20 @@ package cassp.data;
 
 import java.io.*;
 import java.util.*;
+import java.lang.StringBuilder;
 import org.apache.log4j.*;
 
 
 
 public class DataItem {
 
+    public static int PSIPRED_THRESHOLD = 3;
+
     private String aaSeq;
     private String sspSeq;
     private String predictedSeq;
     private double propsMeanDiff;
+    private ArrayList<Integer> reliabIndexes;
 
 
     public DataItem(){
@@ -35,6 +39,16 @@ public class DataItem {
 
     public int length(){
         return this.aaSeq.length();
+    }
+
+    public void repairPsipred(String predSeq){
+        for (int i = 0; i < this.length(); i++) {
+            if (this.reliabIndexes.get(i) < DataItem.PSIPRED_THRESHOLD){
+                StringBuilder seq = new StringBuilder(this.predictedSeq);
+                seq.setCharAt(i, predSeq.charAt(i));
+            }
+
+        }
     }
 
 
@@ -82,5 +96,13 @@ public class DataItem {
 
     public void setPropsMeanDiff(double meanDiff){
         this.propsMeanDiff = meanDiff;
+    }
+
+    public void setReliabIndexes(ArrayList<Integer> reliabIndexes){
+        this.reliabIndexes = reliabIndexes;
+    }
+
+    public ArrayList<Integer> getReliabIndexes(){
+        return this.reliabIndexes;
     }
 }
