@@ -8,6 +8,9 @@
 package cassp.ca.rules;
 
 
+import java.io.*;
+import java.util.*;
+
 import org.jgap.*;
 import org.jgap.data.*;
 import org.jgap.impl.*;
@@ -15,17 +18,21 @@ import org.jgap.xml.*;
 
 import cassp.*;
 import cassp.ca.*;
+import cassp.data.*;
 import cassp.config.*;
+
 
 
 /**
 * Abstract cellular automata rule.
 **/
-public abstract class CARule {
+public abstract class CARule implements Serializable{
 
     protected int steps;
     protected int neigh;
     protected double[] weights;
+
+    public HashMap<Character, AminoAcid> aminoAcids;
 
     public abstract int getSize();
     public abstract IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException;

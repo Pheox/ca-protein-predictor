@@ -8,6 +8,7 @@
 package cassp;
 
 
+import java.io.*;
 import java.util.*;
 
 import cassp.ea.*;
@@ -30,6 +31,7 @@ public class CASSP {
 
     private SimConfig config;
     private Data data;
+    private Data testData;
     private Data[] cvData;
     private CARule rule;
     private EAStats eaStats;
@@ -53,6 +55,7 @@ public class CASSP {
     public CARule train(){
         this.setupData();
         this.rule = this.trainRule(this.data);
+        this.saveRule();
         return this.rule;
     }
 
@@ -83,6 +86,7 @@ public class CASSP {
 
         try {
             rule = evolAlg.evolve();
+            rule.aminoAcids = data.getAminoAcids();
             this.eaStats = evolAlg.getStats();
         }
         catch (Exception e) {
@@ -97,9 +101,38 @@ public class CASSP {
     * @return accuracy of specified type (Q3 or SOV)
     */
     public double test(){
-        Data data = new Data(this.config.getTestDataPath());
-        this.testRule(data);
+        this.testData = new Data(this.config.getTestDataPath());
+        this.rule = this.loadRule();
+        this.testData.setAminoAcids(this.rule.aminoAcids);
+        this.testRule(this.testData);
 
+        return this.computeAccuracy(this.testData);
+    }
+
+
+    /**
+    *
+    */
+    public double testPsipred(){
+
+        Data data = new Data(this.config.getTestDataPath());
+        Psipred psipred = new Psipred(this.config.getPsipredPath());
+
+        // 1. run Psipred
+        for (DataItem dataItem: data.getData()){
+            psipred.predict(dataItem);
+        }
+
+        // 2. run CA if Psipred result is not reliable
+        for (DataItem dataItem: data.getData()){
+            dataItem.repairPsipred(this.predict(dataItem.getAaSeq()));
+        }
+
+        return this.computeAccuracy(data);
+    }
+
+
+    private double computeAccuracy(Data data){
         double accuracy = 0.0;
 
         if (this.config.getAccuracyType() == SimConfig.Q3)
@@ -128,7 +161,7 @@ public class CASSP {
         di.setAaSeq(aaSeq);
 
         CellularAutomaton ca = new CellularAutomaton(di, this.config);
-        ca.run(this.rule, this.data);
+        ca.run(this.rule, this.testData);
 
         return ca.getPredictedSeq();
     }
@@ -227,6 +260,45 @@ public class CASSP {
             this.config.getAccClasses()
         );
         this.accStats.parseStats(this.data, this.config.getAccuracyType());
+    }
+
+
+    /**
+    * Rule serialization.
+    */
+    public void saveRule(){
+        try{
+            FileOutputStream fileOut = new FileOutputStream(this.config.getBestRulePath());
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(this.rule);
+            out.close();
+            fileOut.close();
+        }catch(IOException i){
+            i.printStackTrace();
+        }
+    }
+
+
+
+    /**
+    * Rule deserialization.
+    */
+    public CARule loadRule(){
+
+        try{
+            FileInputStream fileIn = new FileInputStream(this.config.getBestRulePath());
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            this.rule = (CARule) in.readObject();
+            in.close();
+            fileIn.close();
+
+        }catch(IOException i){
+            i.printStackTrace();
+        }catch(ClassNotFoundException c){
+         System.out.println("Employee class not found");
+         c.printStackTrace();
+        }
+        return this.rule;
     }
 
 

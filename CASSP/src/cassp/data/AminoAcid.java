@@ -7,9 +7,11 @@
 
 package cassp.data;
 
+import java.io.*;
 
 
-public class AminoAcid {
+
+public class AminoAcid implements Serializable{
 
     private char abbrev;
 

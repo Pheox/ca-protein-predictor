@@ -37,26 +37,18 @@ public class Main {
         // simulator configuration
         SimConfig config = new SimConfig(Main.confPath);
 
-        // System API examples
+        // API demonstration
         CASSP simulator = new CASSP(config);
         simulator.train();
+        //simulator.predict("AZTKKAZZZZKKKTKC");
+        //simulator.loadRule();
+        //simulator.testPsipred();
+        simulator.test();
+
         //simulator.createEvolutionImage("obr.png");
-
-        double totalAcc = simulator.test();
-
-        simulator.computeAccuracyStats();
         simulator.createAccClassesImage("acc.png");
         simulator.createReliabImage("rel.png");
 
-
-
-
-
-        System.out.println("Accuracy: " + simulator.test());
-
-        simulator.predict("AZTKKAZZZZKKKTKC");
-
-        double cv_acc = simulator.crossValidate(10);
-        System.out.println("\ncv_acc: " + cv_acc);
+        //double cv_acc = simulator.crossValidate(10);
     }
 }
