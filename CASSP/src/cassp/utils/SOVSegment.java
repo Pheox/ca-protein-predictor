@@ -12,7 +12,9 @@ package cassp.utils;
 import java.lang.Math;
 
 
-
+/**
+* Class representing segment strucure needed for SOV accuracy computation.
+*/
 public class SOVSegment {
 
     /**

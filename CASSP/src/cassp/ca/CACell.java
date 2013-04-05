@@ -11,11 +11,13 @@ import cassp.*;
 import cassp.data.*;
 
 
-
+/**
+* Cell of cellular automaton.
+*/
 public class CACell{
 
     private AminoAcid aminoAcid;
-    private char motiv;
+    private char motif;
 
     private double helixProps;
     private double sheetProps;
@@ -32,27 +34,30 @@ public class CACell{
 
     public CACell(CACell cell){
         this.aminoAcid = cell.getAminoAcid();
-        this.motiv = cell.getMotiv();
+        this.motif = cell.getMotif();
         this.helixProps = cell.getHelixProps();
         this.sheetProps = cell.getSheetProps();
         this.coilProps = cell.getCoilProps();
     }
 
-
+    /**
+    * Computes protein secondary structure motif as a maximum
+    * of helix, sheet and coil propensities.
+    */
     public char computeMotif(){
         if (this.helixProps > this.sheetProps){
             if (this.helixProps > this.coilProps)
-                this.motiv = 'H';
+                this.motif = 'H';
             else
-                this.motiv = 'C';
+                this.motif = 'C';
         }
         else{
             if (this.coilProps < this.sheetProps)
-                this.motiv = 'E';
+                this.motif = 'E';
             else
-                this.motiv = 'C';
+                this.motif = 'C';
         }
-        return this.motiv;
+        return this.motif;
     }
 
     public String toString(){
@@ -62,7 +67,6 @@ public class CACell{
         s += "coil props: " + this.coilProps + "\n";
         return s;
     }
-
 
     /* Getters & setters */
 
@@ -94,7 +98,7 @@ public class CACell{
         this.coilProps = props;
     }
 
-    public char getMotiv(){
-        return this.motiv;
+    public char getMotif(){
+        return this.motif;
     }
 }

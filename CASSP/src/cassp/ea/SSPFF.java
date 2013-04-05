@@ -23,6 +23,9 @@ import cassp.ca.rules.*;
 
 
 
+/**
+* Secondary Structure Prediction Fitness Function.
+*/
 public class SSPFF extends FitnessFunction{
 
     static Logger logger = Logger.getLogger(SSPFF.class);
@@ -69,7 +72,8 @@ public class SSPFF extends FitnessFunction{
 
         if (this.config.getRuleID() == 1)
             rule = new CASimpleRule(this.config.getNeigh());
-        // else if (this.config.rule == 2) etc.
+        else if (this.config.getRuleID() == 2)
+            rule = new CAConformRule(this.config.getNeigh());
         else
             rule = new CASimpleRule(this.config.getNeigh());
 

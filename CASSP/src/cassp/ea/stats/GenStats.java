@@ -12,6 +12,9 @@ import org.apache.log4j.*;
 
 
 
+/**
+* Statistics of one generation of evolutionary algorithm.
+*/
 public class GenStats{
 
     static Logger logger = Logger.getLogger(GenStats.class);

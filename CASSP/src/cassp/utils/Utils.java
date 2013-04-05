@@ -17,9 +17,7 @@ import org.jgap.data.*;
 import cassp.data.*;
 
 
-/**
-*
-*/
+
 public class Utils {
 
     public static char[] aminoAcids = new char[] {
@@ -31,9 +29,14 @@ public class Utils {
         'B', 'Z', 'X', 'J'
     };
 
+    public static char[] allAminoAcids = new char[] {
+        'G', 'C', 'A', 'M', 'V', 'K', 'L', 'R', 'I', 'H',
+        'F', 'W', 'P', 'D', 'S', 'E', 'T', 'N', 'Y', 'Q',
+        'B', 'Z', 'X', 'J'
+    };
 
     public static double getMin(Population population){
-        double min = 1.0;
+        double min = 101.0;
 
         for (int i = 0; i < population.size(); i++) {
             double fitness = population.getChromosome(i).getFitnessValue();
@@ -67,9 +70,6 @@ public class Utils {
         return sum/population.size();
     }
 
-
-
-
     /**
     * Computes Q3 accuracy measure for actual Data object.
     * Q3 is ratio of a number of good predicted amino acids
@@ -89,7 +89,6 @@ public class Utils {
         return allCount > 0 ? (double) okCount/allCount : 0.0;
     }
 
-
     public static double q3(Data data, char motiv){
         double okCount  = 0.0;
         double allCount = 0.0;
@@ -104,13 +103,7 @@ public class Utils {
         return allCount > 0 ? (double) okCount/allCount : 0.0;
     }
 
-
-
-    /**
-    * TODO: assert that dataItem.predicted_seq exists!
-    */
     public static double[] q3(DataItem dataItem){
-        //
         int okCount = 0;
 
         for (int i = 0; i <  dataItem.length(); i++) {
@@ -120,10 +113,6 @@ public class Utils {
         return new double[] {(double) okCount/dataItem.length()*100, dataItem.length()};
     }
 
-
-    /**
-    * TODO: assert that dataItem.predicted_seq exists!
-    */
     public static double[] q3(DataItem dataItem, char motiv){
         int okCount = 0;
         int allCount = 0;
@@ -156,7 +145,6 @@ public class Utils {
         return norm > 0 ? sov/norm : 0.0;
     }
 
-
     public static double sov(Data data, char motiv){
         double sov = 0.0;
         int norm = 0;
@@ -169,7 +157,6 @@ public class Utils {
         return norm > 0 ? sov/norm : 0.0;
     }
 
-
     public static double[] sov(DataItem dataItem, char motiv){
 
         Map<SOVSegment, ArrayList<SOVSegment>> olSegments;
@@ -178,14 +165,9 @@ public class Utils {
 
         origSegments = getAllSegments(dataItem.getSspSeq(), motiv);
         predSegments = getAllSegments(dataItem.getPredSeq(), motiv);
-
-        System.out.println(origSegments);
-
         olSegments = getOverlappingSegments(origSegments, predSegments);
 
-        //dataItem.sovN = computeNormConstant(olSegments);
         double sovN = computeNormConstant(olSegments);
-
         double sumSOV = 0.0;
 
         for (Map.Entry<SOVSegment, ArrayList<SOVSegment>> entry: olSegments.entrySet()) {
@@ -203,13 +185,10 @@ public class Utils {
             }
         }
         double sov = sovN > 0 ? sumSOV/sovN*100 : 0.0;
-
         return new double[] {sov, sovN};
     }
 
-
     public static double[] sov(DataItem dataItem){
-
         char motiv;
 
         Map<SOVSegment, ArrayList<SOVSegment>> olSegments;
@@ -218,14 +197,9 @@ public class Utils {
 
         origSegments = getAllSegments(dataItem.getSspSeq());
         predSegments = getAllSegments(dataItem.getPredSeq());
-
-        System.out.println(origSegments);
-
         olSegments = getOverlappingSegments(origSegments, predSegments);
 
-        //dataItem.sovN = computeNormConstant(olSegments);
         double sovN = computeNormConstant(olSegments);
-
         double sumSOV = 0.0;
 
         for (Map.Entry<SOVSegment, ArrayList<SOVSegment>> entry: olSegments.entrySet()) {
@@ -243,7 +217,6 @@ public class Utils {
             }
         }
         double sov = sovN > 0 ? sumSOV/sovN*100 : 0.0;
-
         return new double[] {sov, sovN};
     }
 
@@ -270,7 +243,6 @@ public class Utils {
                 sumNOL += origSeg.length();
             else
                 sumOL += origSeg.length() * predSegs.size();
-
         }
         return sumOL + sumNOL;
     }
@@ -285,7 +257,6 @@ public class Utils {
 
         Map<SOVSegment, ArrayList<SOVSegment>> olSegments = new HashMap<SOVSegment, ArrayList<SOVSegment>>();
 
-
         for (SOVSegment orig: origSegments){
             olSegments.put(orig, new ArrayList<SOVSegment>());
 
@@ -298,12 +269,6 @@ public class Utils {
         return olSegments;
     }
 
-
-
-    /**
-    *
-    *
-    */
     private static ArrayList<SOVSegment> getAllSegments(String seq){
 
         int start = 0;
@@ -339,12 +304,6 @@ public class Utils {
         return segments;
     }
 
-
-
-    /**
-    * TODO: create tests for this !
-    *
-    */
     private static ArrayList<SOVSegment> getAllSegments(String seq, char motiv){
 
         int start = 0;

@@ -7,6 +7,7 @@
 
 package cassp.ca;
 
+
 import java.util.Arrays;
 
 import cassp.*;
@@ -25,17 +26,11 @@ public class CellularAutomaton {
     private SimConfig config;
 
 
-    /**
-    *
-    * @param dataItem
-    * @param config
-    */
     public CellularAutomaton(DataItem dataItem, SimConfig config) {
         this.dataItem = dataItem;
         this.cells = new CACell[this.dataItem.length()];
         this.config = config;
     }
-
 
     public CellularAutomaton(DataItem dataItem){
         this.dataItem = dataItem;
@@ -43,7 +38,12 @@ public class CellularAutomaton {
         this.config = new SimConfig();
     }
 
-
+    /**
+    * Run one step of cellular automaton (next configuration of all cells).
+    *
+    * @param rule Transition rule of cellular automaton.
+    * @param data Data object needed for amino acids properties.
+    */
     public String run(CARule rule, Data data){
 
         this.rule = rule;
@@ -78,7 +78,7 @@ public class CellularAutomaton {
     public String getPredictedSeq(){
         String seq = "";
         for (int i = 0; i < this.cells.length; i++ ) {
-            seq += this.cells[i].getMotiv();
+            seq += this.cells[i].getMotif();
         }
         return seq;
     }
@@ -89,7 +89,7 @@ public class CellularAutomaton {
 
 
     /**
-    * compute mean diffs between max and second highest props
+    * Compute mean diffs between max and second highest props.
     */
     public void computePropsMeanDiff(){
 

@@ -16,10 +16,13 @@ import org.apache.log4j.*;
 
 
 
+/**
+* Evolutionary algorithm statistics.
+*/
 public class EAStats{
 
-    static double MIN_Y_RANGE = 0.55;
-    static double MAX_Y_RANGE = 0.59;
+    static double MIN_Y_RANGE = 55;
+    static double MAX_Y_RANGE = 60;
 
     static Logger logger = Logger.getLogger(EAStats.class);
 
@@ -30,12 +33,13 @@ public class EAStats{
         this.generations = new ArrayList<GenStats>();
     }
 
-
     public void addGenStats(GenStats gs){
         this.generations.add(gs);
     }
 
-
+    /**
+    * Create PNG image of EA evolution with name <name> to directory <dir>.
+    */
     public void createImage(String dir, String name){
         // init jgnuplot
         Plot.setGnuplotExecutable("gnuplot");
@@ -47,7 +51,7 @@ public class EAStats{
         plot.setKey("right bottom box");
         plot.setXLabel("Generation");
         plot.setYLabel("Fitness");
-        plot.setRanges("[0:" + this.generations.size() + "] ["
+        plot.setRanges("[1:" + this.generations.size() + "] ["
             + EAStats.MIN_Y_RANGE + ":" + EAStats.MAX_Y_RANGE + "]");
 
         // create tmp file with data
@@ -58,7 +62,7 @@ public class EAStats{
             BufferedWriter bw = new BufferedWriter(fo);
 
             for (int i = 0; i < this.generations.size(); i++) {
-                bw.write(this.generations.get(i).getGeneration() + "\t");
+                bw.write((this.generations.get(i).getGeneration() + 1) + "\t");
                 bw.write(this.generations.get(i).getMean() + "\t");
                 bw.write(this.generations.get(i).getMax() + "\t");
                 bw.write(String.valueOf(this.generations.get(i).getMin()));
@@ -76,7 +80,6 @@ public class EAStats{
             "max", Style.LINES));
         plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:4 smooth bezier", Axes.NOT_SPECIFIED,
             "min", Style.LINES));
-
 
         // save image
         plot.setOutput(Terminal.PNG, dir + name, "640, 480");

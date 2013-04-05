@@ -17,7 +17,9 @@ import org.apache.log4j.*;
 import cassp.data.*;
 
 
-
+/**
+* Wrapper of PSIPRED (protein SSP predictor).
+*/
 public class Psipred{
 
     static Logger logger = Logger.getLogger(Psipred.class);
@@ -35,13 +37,11 @@ public class Psipred{
         this.reliabIndexes = new ArrayList<Integer>();
     }
 
-
     public void predict(DataItem dataItem){
         this.predict(dataItem.getAaSeq());
         dataItem.setPredSeq(this.sspSeq);
         dataItem.setReliabIndexes(this.reliabIndexes);
     }
-
 
     public String predict(String aaSeq){
 

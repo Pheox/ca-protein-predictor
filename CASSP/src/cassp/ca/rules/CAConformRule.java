@@ -108,7 +108,7 @@ public class CAConformRule extends CARule{
         cell.computeMotif();
     }
 
-    public double getMaxProps(double[] maxCoeffs){
+    public double getMaxPropsDiff(double[] maxCoeffs){
         return maxCoeffs[0]*this.neigh + maxCoeffs[1]*this.neigh*2;
     }
 

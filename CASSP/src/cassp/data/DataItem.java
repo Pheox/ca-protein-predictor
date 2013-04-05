@@ -7,6 +7,7 @@
 
 package cassp.data;
 
+
 import java.io.*;
 import java.util.*;
 import java.lang.StringBuilder;
@@ -14,8 +15,14 @@ import org.apache.log4j.*;
 
 
 
+/**
+* Represents one data item.
+*/
 public class DataItem {
 
+    /**
+    * Threshold of using PSIPRED.
+    */
     public static int PSIPRED_THRESHOLD = 3;
 
     private String aaSeq;
@@ -41,6 +48,9 @@ public class DataItem {
         return this.aaSeq.length();
     }
 
+    /**
+    * Repair CASSP prediction with PSIPRED prediction.
+    */
     public void repairPsipred(String predSeq){
         for (int i = 0; i < this.length(); i++) {
             if (this.reliabIndexes.get(i) < DataItem.PSIPRED_THRESHOLD){

@@ -10,7 +10,9 @@ package cassp.data;
 import java.io.*;
 
 
-
+/**
+* Class representing amino acid and its statistic properties.
+*/
 public class AminoAcid implements Serializable{
 
     private char abbrev;

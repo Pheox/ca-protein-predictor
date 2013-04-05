@@ -36,6 +36,7 @@ public class Main {
 
         // simulator configuration
         SimConfig config = new SimConfig(Main.confPath);
+        config.toFile("hello.config");
 
         // API demonstration
         CASSP simulator = new CASSP(config);
@@ -43,11 +44,12 @@ public class Main {
         //simulator.predict("AZTKKAZZZZKKKTKC");
         //simulator.loadRule();
         //simulator.testPsipred();
-        simulator.test();
+        System.out.println("Testing accuracy: " + simulator.test());
+        //simulator.test();
 
-        //simulator.createEvolutionImage("obr.png");
-        simulator.createAccClassesImage("acc.png");
-        simulator.createReliabImage("rel.png");
+        simulator.createEvolutionImage("evolution.png");
+        simulator.createAccClassesImage("accuracy.png");
+        simulator.createReliabImage("reliability.png");
 
         //double cv_acc = simulator.crossValidate(10);
     }

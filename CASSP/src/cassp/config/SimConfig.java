@@ -8,8 +8,9 @@
 
 package cassp.config;
 
+
 import java.io.*;
-import java.util.Properties;
+import java.util.*;
 
 
 
@@ -29,7 +30,6 @@ public class SimConfig {
     static public double CROSS_PROB = 0.75;
     static public int MAX_GEN = 10000;
     static public int POP = 100;
-
 
     // general
     private int cvFolds;
@@ -72,12 +72,15 @@ public class SimConfig {
         this.rule = SimConfig.RULE;
     }
 
-
     public SimConfig(String confPath){
         this.loadConfig(confPath);
     }
 
-
+    /**
+    * Load configuration file.
+    *
+    * @param confPath Path to configuration file.
+    */
     public void loadConfig(String confPath){
         Properties prop = new Properties();
         InputStream is = null;
@@ -154,6 +157,51 @@ public class SimConfig {
             this.rule = SimConfig.RULE;
     }
 
+    public String toString(){
+        String s = "#######################################\n";
+        s += "##     CASSP Configuration File      ##\n";
+        s += "#######################################\n\n";
+        s += "######  GENERAL  ######\n";
+        s += "# number of cross-validation folds, if 0 - no cross validation\n";
+        s += "# cv is computed from data in data path variable\n";
+        s += "cv_folds = " + this.cvFolds;
+        s += "# accuracy_type: 0 - Q3, 1 - SOV\n";
+        s += "accuracy_type = " + this.accuracyType + "\n\n";
+        s += "# acc_classes: 1 - n\n";
+        s += "acc_classes = " + this.accClasses + "\n\n";
+        s += "# reliab_classes: 1 - n\n";
+        s += "reliab_classes = " + this.reliabClasses + "\n\n";
+        s += "######  DATA PATHS  ######\n\n";
+        s += "data = " + this.dataPath + "\n";
+        s += "data_cf = " + this.dataCFPath + "\n";
+        s += "data_cc = " + this.dataCCPath + "\n";
+        s += "data_test = " + this.dataTestPath + "\n\n";
+        s += "stats = " + this.statsPath + "\n\n";
+        s += "psipred = " + this.psipredPath + "\n";
+        s += "best_rule = " + this.bestRulePath + "\n\n";
+        s += "###### EVOLUTIONARY ALGORITHM ######\n\n";
+        s += "pop = " + this.pop + "\n";
+        s += "p_mut = " + this.mutProb + "\n";
+        s += "p_cross = " + this.crossProb + "\n";
+        s += "max_gen = " + this.maxGen + "\n\n";
+        s += "##### CELLULAR AUTOMATON #####\n\n";
+        s += "max_steps = " + this.maxSteps + "\n";
+        s += "neigh = " + this.neigh + "\n\n";
+        s += "# rule: 1 - simple, 2 - cf + cc\n";
+        s += "rule = " + this.rule + "\n";
+        return s;
+    }
+
+    public void toFile(String path){
+        try{
+            FileWriter fstream = new FileWriter(path);
+            BufferedWriter out = new BufferedWriter(fstream);
+            out.write(this.toString());
+            out.close();
+        }catch (Exception e){
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
 
     /* Getters & setters */
 

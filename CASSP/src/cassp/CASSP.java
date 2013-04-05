@@ -52,11 +52,16 @@ public class CASSP {
     * Training to find out the fittest rule.
     * @return Best rule.
     */
-    public CARule train(){
+    public double train(){
         this.setupData();
-        this.rule = this.trainRule(this.data);
+        double accuracy = 0.0;
+
+        if (this.config.getCVFolds() > 0)
+            accuracy = this.crossValidate(this.config.getCVFolds());
+        else
+            this.rule = this.trainRule(this.data);
         this.saveRule();
-        return this.rule;
+        return accuracy;
     }
 
 
@@ -86,7 +91,7 @@ public class CASSP {
 
         try {
             rule = evolAlg.evolve();
-            rule.aminoAcids = data.getAminoAcids();
+            rule.setAminoAcids(data.getAminoAcids());
             this.eaStats = evolAlg.getStats();
         }
         catch (Exception e) {
@@ -103,7 +108,7 @@ public class CASSP {
     public double test(){
         this.testData = new Data(this.config.getTestDataPath());
         this.rule = this.loadRule();
-        this.testData.setAminoAcids(this.rule.aminoAcids);
+        this.testData.setAminoAcids(this.rule.getAminoAcids());
         this.testRule(this.testData);
 
         return this.computeAccuracy(this.testData);
@@ -177,9 +182,6 @@ public class CASSP {
         if (folds < 1) return -1;
 
         // structures creation + data splitting
-        this.data = new Data(this.config.getDataPath());
-        this.data.loadChouFasman(this.config.getDataCFPath());
-
         this.cvData = new Data[folds];
         for (int i = 0; i < folds; i++) {
             this.cvData[i] = new Data();
@@ -255,7 +257,7 @@ public class CASSP {
     */
     public void computeAccuracyStats(){
         this.accStats = new AccuracyStats(
-            this.rule.getMaxProps(new double[]{this.data.getMaxCF(), this.data.getMaxCC()}),
+            this.rule.getMaxPropsDiff(new double[]{this.data.getMaxCF(), this.data.getMaxCC()}),
             this.config.getReliabClasses(),
             this.config.getAccClasses()
         );

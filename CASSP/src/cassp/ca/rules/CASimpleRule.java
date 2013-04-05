@@ -7,6 +7,7 @@
 
 package cassp.ca.rules;
 
+
 import org.jgap.*;
 import org.jgap.data.*;
 import org.jgap.impl.*;
@@ -20,7 +21,9 @@ import cassp.config.*;
 import cassp.ca.rules.*;
 
 
-
+/**
+* Rule based only on Chou-Fasman coefficients and corresponding motiv propensities.
+*/
 public class CASimpleRule extends CARule{
 
     // boundary conditions
@@ -37,7 +40,6 @@ public class CASimpleRule extends CARule{
     public int getSize(){
         return 1 + 2*neigh + 1;
     }
-
 
     public IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException{
         Gene[] sampleGenes = new Gene[this.getSize()];
@@ -93,7 +95,7 @@ public class CASimpleRule extends CARule{
         cell.computeMotif();
     }
 
-    public double getMaxProps(double[] maxCoeffs){
+    public double getMaxPropsDiff(double[] maxCoeffs){
         return maxCoeffs[0]*this.neigh;
     }
 }

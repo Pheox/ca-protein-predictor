@@ -75,7 +75,7 @@ public class AccuracyStats {
         this.accuracyClassesNumber = accuracyClassesNumber;
 
         this.reliabClasses = new double[this.reliabClassesNumber];
-        this.accuracyClasses = new double[this.accuracyClassesNumber];
+        this.accuracyClasses = new double[this.accuracyClassesNumber + 1];
     }
 
 
@@ -105,9 +105,8 @@ public class AccuracyStats {
         this.computeAccClasses(data, accuracyType);
     }
 
-
     /**
-    * How to normalize properly?
+    * Reliability classes computation.
     *
     */
     public void computeReliabClasses(Data data, int accuracyType){
@@ -136,7 +135,7 @@ public class AccuracyStats {
 
 
     /**
-    *
+    * Accuracy classes computation.
     */
     public void computeAccClasses(Data data, int accuracyType){
         for (DataItem di: data.getData()) {
@@ -150,7 +149,8 @@ public class AccuracyStats {
 
 
     /**
-    *
+    * Creates PNG image with reliability classes accuracies with name <name>
+    * to directory <dir>.
     */
     public void createReliabImage(String dir, String name){
         // init jgnuplot

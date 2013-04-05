@@ -34,6 +34,9 @@ Notes:
 
 
 
+/**
+* Secondary Structure Prediction Evolutionary Algorithm.
+*/
 public class SSPEA {
 
     static Logger logger = Logger.getLogger(SSPEA.class);
@@ -47,7 +50,6 @@ public class SSPEA {
         this.config = config;
         this.stats = new EAStats();
     }
-
 
     public CARule evolve() throws Exception{
 
@@ -81,6 +83,7 @@ public class SSPEA {
             // filling GenStats object
             GenStats gs = new GenStats();
             gs.setMax(Utils.getMax(genotype.getPopulation()));
+            logger.info(Utils.getMax(genotype.getPopulation()));
             gs.setMin(Utils.getMin(genotype.getPopulation()));
             gs.setMean(Utils.getMean(genotype.getPopulation()));
             gs.setGeneration(i);
@@ -90,11 +93,11 @@ public class SSPEA {
          return rule.fromChromosome(genotype.getFittestChromosome());
     }
 
-
     private CARule setRule(){
         if (this.config.getRuleID() == 1)
             return new CASimpleRule(this.config.getNeigh());
-        // else if (this.config.rule == 2) etc.
+        else if (this.config.getRuleID() == 2)
+            return new CAConformRule(this.config.getNeigh());
         else
             return new CASimpleRule(this.config.getNeigh());
     }
