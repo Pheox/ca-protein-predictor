@@ -12,6 +12,8 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 import static org.junit.Assert.assertEquals;
 
+import java.io.*;
+
 import cassp.utils.*;
 import cassp.data.Data;
 import cassp.data.DataItem;
@@ -76,5 +78,30 @@ public class TestUtils extends TestCase {
         assertEquals(58.5714, Utils.sov(this.simpleData, 'C'), 0.001);
     }
 
+    public void testRemoveTXTFiles(){
+        String[] fileNames = {
+            "./src/cassp/tests/1.txt",
+            "./src/cassp/tests/1.1.txt",
+            "./src/cassp/tests/1.1.txt.1"
+        };
 
+        try{
+            for (String fileName : fileNames) {
+                File f = new File(fileName);
+                f.createNewFile();
+            }
+        }catch(IOException ioe){
+            System.out.println("Error while creating a new empty file :" + ioe);
+        }
+
+        Utils.removeTXTFiles("./src/cassp/tests/");
+
+        File f = new File("./src/cassp/tests/1.txt");
+        assertEquals(false, f.exists());
+        f = new File("./src/cassp/tests/1.1.txt");
+        assertEquals(false, f.exists());
+        f = new File("./src/cassp/tests/1.1.txt.1");
+        assertEquals(true, f.exists());
+        f.delete();
+    }
 }

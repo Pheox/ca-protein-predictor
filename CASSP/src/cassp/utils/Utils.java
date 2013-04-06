@@ -340,4 +340,22 @@ public class Utils {
         }
         return segments;
     }
+
+    /**
+    * Removes all .txt files.
+    *
+    * @param dir directory in which .txt files are deleted
+    */
+    public static void removeTXTFiles(String dir){
+        File folder = new File(dir);
+        File[] files = folder.listFiles( new FilenameFilter() {
+            public boolean accept( final File dir, final String name ) {
+                return name.matches(".*\\.txt");
+            }
+        });
+        for (File file : files){
+            if (!file.delete())
+                System.err.println( "Can't remove " + file.getAbsolutePath() );
+        }
+    }
 }
