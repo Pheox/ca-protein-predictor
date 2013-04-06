@@ -8,6 +8,7 @@
 
 package cassp.config;
 
+import org.kohsuke.args4j.Option;
 
 import java.io.*;
 import java.util.*;
@@ -32,29 +33,61 @@ public class SimConfig {
     static public int POP = 100;
 
     // general
+    @Option(name="-cv",usage="Sets a number of cross-validation folds")
     private int cvFolds;
+
+    @Option(name="-acc_type",usage="Sets a accuracy computation type")
     private int accuracyType;
+
+    @Option(name="-rc",usage="Sets a number of reliability classes")
     private int reliabClasses;
+
+    @Option(name="-ac",usage="Sets a number of accuracy classes")
     private int accClasses;
 
     // data paths
+    @Option(name="-d",usage="Sets a data path")
     private String dataPath;
+
+    @Option(name="-cf",usage="Sets a path to chou-fasman coefficients")
     private String dataCFPath;
+
+    @Option(name="-cc",usage="Sets a path to conformation coefficients")
     private String dataCCPath;
+
+    @Option(name="-dt",usage="Sets a path to test data")
     private String dataTestPath;
+
+    @Option(name="-sp",usage="Sets a path to directory for statistic stuff")
     private String statsPath;
+
+    @Option(name="-pp",usage="Sets a path to PSIPRED executable")
     private String psipredPath;
+
+    @Option(name="-rp",usage="Sets a path of best trained rule")
     private String bestRulePath;
 
     // ea parameters
+    @Option(name="-mut",usage="Sets mutation probability")
     private double mutProb;
+
+    @Option(name="-cross",usage="Sets crossover probability")
     private double crossProb;
+
+    @Option(name="-mg",usage="Sets max generations")
     private int maxGen;
+
+    @Option(name="-pop",usage="Sets a population size")
     private int pop;
 
     // ca parameters
+    @Option(name="-steps",usage="Sets max CA steps")
     private int maxSteps;
+
+    @Option(name="-neigh",usage="Sets CA neighborhood")
     private int neigh;
+
+    @Option(name="-rule",usage="Sets a rule type")
     private int rule;
 
 
