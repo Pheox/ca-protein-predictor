@@ -227,6 +227,7 @@ public class CASSP {
         if (this.accStats == null)
             this.computeAccuracyStats();
         this.eaStats.createImage(this.config.getStatsPath(), name);
+        Utils.removeTXTFiles(this.config.getStatsPath());
     }
 
 
@@ -238,6 +239,7 @@ public class CASSP {
         if (this.accStats == null)
             this.computeAccuracyStats();
         this.accStats.createReliabImage(this.config.getStatsPath(), name);
+        Utils.removeTXTFiles(this.config.getStatsPath());
     }
 
 
@@ -249,6 +251,7 @@ public class CASSP {
         if (this.accStats == null)
             this.computeAccuracyStats();
         this.accStats.createAccClassesImage(this.config.getStatsPath(), name);
+        Utils.removeTXTFiles(this.config.getStatsPath());
     }
 
 
