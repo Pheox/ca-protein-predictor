@@ -48,7 +48,7 @@ public class TestConfig extends TestCase {
         assertEquals("../data/chou_fasman/rs_126.cf", this.config.getDataCFPath());
         assertEquals("../data/conf_classes/rs_126.cc", this.config.getDataCCPath());
         assertEquals("../data/final/pdb_vyber.data", this.config.getTestDataPath());
-        assertEquals("../experiments/", this.config.getStatsPath());
+        assertEquals("./src/cassp/tests/", this.config.getStatsPath());
 
         assertEquals(3, this.config.getPop());
         assertEquals(0.05, this.config.getMutProb());
