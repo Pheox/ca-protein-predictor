@@ -10,6 +10,8 @@ package cassp;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.CmdLineException;
 
 import java.io.*;
 import java.util.Properties;
@@ -22,7 +24,6 @@ import cassp.config.*;
  * Main class
  */
 public class Main {
-
     static Logger logger = Logger.getLogger(Main.class);
 
     // configuration paths
@@ -30,22 +31,27 @@ public class Main {
     static String logPath = "./src/cassp/config/log.config";
 
     public static void main(String[] args) {
-
         // logger configuration
         PropertyConfigurator.configure(Main.logPath);
 
         // simulator configuration
         SimConfig config = new SimConfig(Main.confPath);
-        config.toFile("hello.config");
+        // command line arguments have higher priority
+        CmdLineParser parser = new CmdLineParser(config);
 
-        // API demonstration
+        try{
+            parser.parseArgument(args);
+        }catch(CmdLineException e){
+            parser.printUsage(System.err);
+            System.exit(2);
+        }
+
         CASSP simulator = new CASSP(config);
-        simulator.train();
-        //simulator.predict("AZTKKAZZZZKKKTKC");
         //simulator.loadRule();
+        simulator.train();
+
         //simulator.testPsipred();
-        System.out.println("Testing accuracy: " + simulator.test());
-        //simulator.test();
+        //System.out.println("Testing accuracy: " + simulator.test());
 
         simulator.createEvolutionImage("evolution.png");
         simulator.createAccClassesImage("accuracy.png");
