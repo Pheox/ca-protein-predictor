@@ -370,6 +370,7 @@ public class Data {
     /**
     * Computes Chou-Fasman coefficients.
     */
+    @SuppressWarnings("unchecked")
     public void computeChouFasman(){
         // conformation states of all amino acids
         HashMap<Character, ArrayList> cs = new HashMap<Character, ArrayList>();
