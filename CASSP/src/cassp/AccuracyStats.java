@@ -153,6 +153,15 @@ public class AccuracyStats {
     * to directory <dir>.
     */
     public void createReliabImage(String dir, String name){
+        File d = new File(dir);
+        try{
+            dir = d.getCanonicalPath();
+        }catch (IOException e){
+            System.err.println(e);
+        }
+
+        String path = dir + "/" + name;
+
         // init jgnuplot
         Plot.setGnuplotExecutable("gnuplot");
         Plot.setPlotDirectory(dir);
@@ -188,7 +197,7 @@ public class AccuracyStats {
             "Mean: " + this.totalAccuracy, Style.POINTS));
 
         // save image
-        plot.setOutput(Terminal.PNG, dir + name, "640, 480");
+        plot.setOutput(Terminal.PNG, path, "640, 480");
         try{
             plot.plot();
         }catch (Exception e){
@@ -202,6 +211,14 @@ public class AccuracyStats {
     *
     */
     public void createAccClassesImage(String dir, String name){
+        File d = new File(dir);
+        try{
+            dir = d.getCanonicalPath();
+        }catch (IOException e){
+            System.err.println(e);
+        }
+        String path = dir + "/" + name;
+
         // init jgnuplot
         Plot.setGnuplotExecutable("gnuplot");
         Plot.setPlotDirectory(dir);
@@ -235,7 +252,7 @@ public class AccuracyStats {
             "Mean: " + this.totalAccuracy, Style.BOXES));
 
         // save image
-        plot.setOutput(Terminal.PNG, dir + name, "640, 480");
+        plot.setOutput(Terminal.PNG, path, "640, 480");
         try{
             plot.plot();
         }catch (Exception e){

@@ -41,6 +41,14 @@ public class EAStats{
     * Create PNG image of EA evolution with name <name> to directory <dir>.
     */
     public void createImage(String dir, String name){
+        File d = new File(dir);
+        try{
+            dir = d.getCanonicalPath();
+        }catch (IOException e){
+            System.err.println(e);
+        }
+        String path = dir + "/" + name;
+
         // init jgnuplot
         Plot.setGnuplotExecutable("gnuplot");
         Plot.setPlotDirectory(dir);
@@ -82,7 +90,7 @@ public class EAStats{
             "min", Style.LINES));
 
         // save image
-        plot.setOutput(Terminal.PNG, dir + name, "640, 480");
+        plot.setOutput(Terminal.PNG, path, "640, 480");
         try{
             plot.plot();
         }catch (Exception e){
