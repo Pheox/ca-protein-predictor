@@ -289,19 +289,16 @@ public class CASSP {
     * Rule deserialization.
     */
     public CARule loadRule(){
-
         try{
             FileInputStream fileIn = new FileInputStream(this.config.getBestRulePath());
             ObjectInputStream in = new ObjectInputStream(fileIn);
             this.rule = (CARule) in.readObject();
             in.close();
             fileIn.close();
-
         }catch(IOException i){
             i.printStackTrace();
         }catch(ClassNotFoundException c){
-         System.out.println("Employee class not found");
-         c.printStackTrace();
+            c.printStackTrace();
         }
         return this.rule;
     }
