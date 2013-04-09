@@ -36,6 +36,7 @@ public class AccuracyStats {
 
     static Logger logger = Logger.getLogger(AccuracyStats.class);
 
+    private int accuracyType;
     private double totalAccuracy;
     private double accuracyH;
     private double accuracyE;
@@ -84,6 +85,7 @@ public class AccuracyStats {
     * Computation of all stats.
     */
     public void parseStats(Data data, int accuracyType){
+        this.accuracyType = accuracyType;
 
         if (accuracyType == SimConfig.Q3){
             this.totalAccuracy = Utils.q3(data);
@@ -171,7 +173,10 @@ public class AccuracyStats {
         plot.setTitle("Mean accuracy dependance on reliability index");
         plot.unsetKey();
         plot.setXLabel("Reliability index");
-        plot.setYLabel("Q3[%]");
+        if (this.accuracyType == SimConfig.Q3)
+            plot.setYLabel("Q3");
+        else if (this.accuracyType == SimConfig.SOV)
+            plot.setYLabel("SOV");
         plot.setYRange("0", "100");
 
         // create tmp file with data
@@ -227,7 +232,10 @@ public class AccuracyStats {
         Plot plot = new Plot();
         plot.setTitle("Histogram for accuracy classes");
         plot.setKey("right top box");
-        plot.setXLabel("Q3 [%]");
+        if (this.accuracyType == SimConfig.Q3)
+            plot.setXLabel("Q3");
+        else if (this.accuracyType == SimConfig.SOV)
+            plot.setXLabel("SOV");
         plot.setYLabel("Number");
         plot.setRanges("[0:100]");
 
