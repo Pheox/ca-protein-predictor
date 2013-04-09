@@ -47,11 +47,12 @@ public class Main {
         }
 
         CASSP simulator = new CASSP(config);
+        System.out.println(config.toString());
         //simulator.loadRule();
         simulator.train();
 
         //simulator.testPsipred();
-        //System.out.println("Testing accuracy: " + simulator.test());
+        //logger.info("Testing accuracy: " + simulator.test());
 
         simulator.createEvolutionImage("evolution.png");
         simulator.createAccClassesImage("accuracy.png");

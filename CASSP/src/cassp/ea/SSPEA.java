@@ -67,7 +67,7 @@ public class SSPEA {
         conf.setFitnessFunction(ff);
         CARule rule = this.setRule();
 
-        IChromosome sampleChromosome = rule.toChromosome(conf, this.config);
+        IChromosome sampleChromosome = rule.initChromosome(conf, this.config.getMaxSteps());
 
         conf.setSampleChromosome(sampleChromosome);
         conf.setPopulationSize(this.config.getPop());

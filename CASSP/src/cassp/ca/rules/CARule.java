@@ -42,9 +42,15 @@ public abstract class CARule implements Serializable{
     public abstract int getSize();
 
     /**
-    * Create a EA chromosome.
+    * Init an EA chromosome.
     */
-    public abstract IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException;
+    public abstract IChromosome initChromosome(Configuration conf, int steps);
+
+
+    /**
+    * Create an EA chromosome.
+    */
+    public abstract IChromosome toChromosome(Configuration conf, int steps);
 
     /**
     * Create a rule from EA chromosome.

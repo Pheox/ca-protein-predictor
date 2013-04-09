@@ -41,16 +41,34 @@ public class CASimpleRule extends CARule{
         return 1 + 2*neigh + 1;
     }
 
-    public IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException{
+    public IChromosome initChromosome(Configuration conf, int maxSteps){
         Gene[] sampleGenes = new Gene[this.getSize()];
+        IChromosome chromosome = null;
 
-        sampleGenes[0] = new IntegerGene(conf, 0, config.getMaxSteps());
+        try{
+            sampleGenes[0] = new IntegerGene(conf, 0, maxSteps);
+
+            for (int i = 1; i-1 < (this.neigh*2 + 1); i++) {
+                sampleGenes[i] = new DoubleGene(conf, 0, 1);
+            }
+            chromosome = new Chromosome(conf, sampleGenes);
+        } catch (InvalidConfigurationException e){
+            System.out.println(e);
+        }
+
+        return chromosome;
+    }
+
+    public IChromosome toChromosome(Configuration conf, int maxSteps){
+
+        IChromosome chrom = this.initChromosome(conf, maxSteps);
+        chrom.getGene(0).setAllele(this.steps);
 
         for (int i = 1; i-1 < (this.neigh*2 + 1); i++) {
-            sampleGenes[i] = new DoubleGene(conf, 0, 1);
+            chrom.getGene(i).setAllele(this.weights[i-1]);
         }
-        IChromosome sampleChromosome = new Chromosome(conf, sampleGenes);
-        return sampleChromosome;
+
+        return chrom;
     }
 
     public CASimpleRule fromChromosome(IChromosome chromosome){

@@ -39,23 +39,43 @@ public class CAConformRule extends CARule{
         this.neigh = neigh;
     }
 
-    public IChromosome toChromosome(Configuration conf, SimConfig config) throws InvalidConfigurationException{
+    public IChromosome initChromosome(Configuration conf, int maxSteps){
         Gene[] genes = new Gene[this.getSize()];
+        IChromosome chromosome = null;
 
-        // steps
-        genes[0] = new IntegerGene(conf, 0, config.getMaxSteps());
+        try{
+            // steps
+            genes[0] = new IntegerGene(conf, 0, maxSteps);
 
-        // alpha & beta & gamma
-        genes[1] = new DoubleGene(conf, 0, 1);
-        genes[2] = new DoubleGene(conf, 0, 1);
-        genes[3] = new DoubleGene(conf, 0, 1);
+            // alpha & beta & gamma
+            genes[1] = new DoubleGene(conf, 0, 1);
+            genes[2] = new DoubleGene(conf, 0, 1);
+            genes[3] = new DoubleGene(conf, 0, 1);
 
-        // weights
-        for (int i = 4; i - 1 < (this.neigh*2 + 1); i++) {
-            genes[i] = new DoubleGene(conf, 0, 1);
+            // weights
+            for (int i = 4; i - 4 < (this.neigh*2 + 1); i++) {
+                genes[i] = new DoubleGene(conf, 0, 1);
+            }
+            chromosome = new Chromosome(conf, genes);
+        } catch (InvalidConfigurationException e){
+            System.out.println(e);
         }
-        IChromosome chromosome = new Chromosome(conf, genes);
+
         return chromosome;
+    }
+
+    public IChromosome toChromosome(Configuration conf, int maxSteps){
+        IChromosome chrom = this.initChromosome(conf, maxSteps);
+        chrom.getGene(0).setAllele(this.steps);
+        chrom.getGene(1).setAllele(this.alpha);
+        chrom.getGene(2).setAllele(this.beta);
+        chrom.getGene(3).setAllele(this.gamma);
+
+        for (int i = 4; i - 4 < (this.neigh*2 + 1); i++) {
+            chrom.getGene(i).setAllele(this.weights[i - 4]);
+        }
+
+        return chrom;
     }
 
     public CAConformRule fromChromosome(IChromosome chromosome){
@@ -64,11 +84,12 @@ public class CAConformRule extends CARule{
         this.steps = ((Integer) chromosome.getGene(0).getAllele()).intValue();
         this.alpha = ((Double) chromosome.getGene(1).getAllele()).doubleValue();
         this.beta = ((Double) chromosome.getGene(2).getAllele()).doubleValue();
+        this.gamma = ((Double) chromosome.getGene(3).getAllele()).doubleValue();
 
         this.weights = new double[this.neigh*2 + 1];
 
-        for (int i = 3; i < chromosome.size(); i++) {
-            this.weights[i - 1] = ((Double) chromosome.getGene(i).getAllele()).doubleValue();
+        for (int i = 4; i < chromosome.size(); i++) {
+            this.weights[i - 4] = ((Double) chromosome.getGene(i).getAllele()).doubleValue();
         }
         return this;
     }
