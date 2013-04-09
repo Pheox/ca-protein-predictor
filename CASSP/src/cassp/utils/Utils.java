@@ -140,7 +140,7 @@ public class Utils {
         for (DataItem di: data.getData()) {
             double[] result = Utils.sov(di);
             norm += result[1];
-            sov += result[0]*norm;
+            sov += result[0] * result[1];
         }
         return norm > 0 ? sov/norm : 0.0;
     }
