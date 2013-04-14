@@ -329,24 +329,28 @@ public class Data {
             = new HashMap<Character, HashMap<Character, Integer>>();
 
         this.initCCStructures(aaCounts, st, begs, breaks, cpBegs, cpBreaks, cc);
-
         this.countBegsBreaks(aaCounts, st, begs, breaks);
-
         this.computeCP(aaCounts, begs, breaks, cpBegs, cpBreaks);
-
         this.computeCPAmbiguous(cpBegs, cpBreaks, cc);
-
 
         for (char aminoAcid: Utils.allAminoAcids) {
             AminoAcid amino = this.aminoAcids.get(aminoAcid);
-            amino.setConfCoeffs(new double[]{
+
+            double coeffs[] = new double[]{
                 cpBegs.get(aminoAcid).get('H'),
                 cpBegs.get(aminoAcid).get('E'),
                 cpBegs.get(aminoAcid).get('C'),
                 cpBreaks.get(aminoAcid).get('H'),
                 cpBreaks.get(aminoAcid).get('E'),
                 cpBreaks.get(aminoAcid).get('C')
-            });
+            };
+
+            for (int i = 0; i < coeffs.length; i++) {
+                if (coeffs[i] > this.maxCC)
+                    this.maxCC = coeffs[i];
+            }
+
+            amino.setConfCoeffs(coeffs);
         }
     }
 
@@ -502,6 +506,13 @@ public class Data {
             amino.setCFH(Math.floor((Double) ambiguous_cf.get(entry.getKey()).get(0) * 100));
             amino.setCFE(Math.floor((Double) ambiguous_cf.get(entry.getKey()).get(1) * 100));
             amino.setCFC(Math.floor((Double) ambiguous_cf.get(entry.getKey()).get(2) * 100));
+
+            if (amino.getCFH() > this.maxCF)
+                this.maxCF = amino.getCFH();
+            if (amino.getCFE() > this.maxCF)
+                this.maxCF = amino.getCFE();
+            if (amino.getCFC() > this.maxCF)
+                this.maxCF = amino.getCFC();
         }
     }
 
@@ -555,7 +566,6 @@ public class Data {
 
 
      public void loadConformCoeffs(String filePath){
-
         try{
             FileInputStream fstream = new FileInputStream(filePath);
             DataInputStream in = new DataInputStream(fstream);
