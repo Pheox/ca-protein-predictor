@@ -11,6 +11,8 @@ package cassp;
 import java.io.*;
 import java.util.*;
 
+import org.apache.log4j.Logger;
+
 import cassp.ea.*;
 import cassp.ca.*;
 import cassp.data.*;
@@ -28,6 +30,8 @@ import cassp.ca.rules.*;
 * @see Data
 */
 public class CASSP {
+
+    static Logger logger = Logger.getLogger(CASSP.class);
 
     private SimConfig config;
     private Data data;
@@ -150,7 +154,7 @@ public class CASSP {
 
     private void testRule(Data testData){
         for (DataItem di: testData.getData()){
-            di.setPredSeq(this.predict(di.getAaSeq()));
+            this.predict(di);
         }
     }
 
@@ -169,6 +173,20 @@ public class CASSP {
         ca.run(this.rule, this.testData);
 
         return ca.getPredictedSeq();
+    }
+
+
+    /**
+    * Secondary structure prediction of DataItem object
+    * containing amino acid sequence.
+    *
+    * @param di data item
+    * @return predicted secondary structure sequence
+    */
+    public String predict(DataItem di){
+        CellularAutomaton ca = new CellularAutomaton(di, this.config);
+        ca.run(this.rule, this.testData);
+        return di.getPredSeq();
     }
 
 
@@ -224,6 +242,11 @@ public class CASSP {
     * @param name file name of created image
     */
     public void createEvolutionImage(String name){
+        if (this.data == null){
+            logger.warn("No training was performed!");
+            return;
+        }
+
         if (this.accStats == null)
             this.computeAccuracyStats();
         this.eaStats.createImage(this.config.getStatsPath(), name);
@@ -236,8 +259,20 @@ public class CASSP {
     * @param name file name of created image
     */
     public void createReliabImage(String name){
+        if (this.testData == null){
+            if (this.data == null)
+                logger.warn("No training or testing was performed!.");
+                return;
+        }
+        else{
+            this.data = this.testData;
+            this.data.computeConformCoeffs();
+            this.data.computeChouFasman();
+        }
+
         if (this.accStats == null)
             this.computeAccuracyStats();
+
         this.accStats.createReliabImage(this.config.getStatsPath(), name);
         Utils.removeTXTFiles(this.config.getStatsPath());
     }
@@ -248,6 +283,18 @@ public class CASSP {
     * @param name file name of created image
     */
     public void createAccClassesImage(String name){
+        if (this.testData == null){
+            if (this.data == null)
+                logger.warn("No training or testing was performed!.");
+                return;
+        }
+        else{
+            this.data = this.testData;
+            this.data.computeConformCoeffs();
+            this.data.computeChouFasman();
+        }
+
+
         if (this.accStats == null)
             this.computeAccuracyStats();
         this.accStats.createAccClassesImage(this.config.getStatsPath(), name);
