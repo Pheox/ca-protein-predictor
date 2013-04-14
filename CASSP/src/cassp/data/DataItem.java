@@ -57,7 +57,6 @@ public class DataItem {
                 StringBuilder seq = new StringBuilder(this.predictedSeq);
                 seq.setCharAt(i, predSeq.charAt(i));
             }
-
         }
     }
 

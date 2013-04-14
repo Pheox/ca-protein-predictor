@@ -67,8 +67,9 @@ public class CellularAutomaton {
             }
         }
         this.computePropsMeanDiff();
+        this.dataItem.setPredSeq(this.getPredictedSeq());
 
-        return this.getPredictedSeq();
+        return this.dataItem.getPredSeq();
     }
 
 
@@ -99,7 +100,6 @@ public class CellularAutomaton {
             double[] sortedProps = this.sortProps(this.cells[i]);
             diffSum += sortedProps[2] - sortedProps[1];
         }
-
         this.dataItem.setPropsMeanDiff(diffSum/this.cells.length);
     }
 
