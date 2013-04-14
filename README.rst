@@ -39,12 +39,8 @@ Tests
 .. image:: ./diagrams/dp_model.jpg
 
 
-
-TODO 25 - 31. 3. 2013
-=====================
-- report - complete EA chapter
-- report - CA chapter
-- base experiments
+`Experiments <http://www.stud.fit.vutbr.cz/~xbriga00/dp/exps/>`_
+================================================================
 
 
 NOTES
