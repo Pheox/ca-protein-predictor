@@ -260,9 +260,10 @@ public class CASSP {
     */
     public void createReliabImage(String name){
         if (this.testData == null){
-            if (this.data == null)
+            if (this.data == null){
                 logger.warn("No training or testing was performed!.");
                 return;
+            }
         }
         else{
             this.data = this.testData;
@@ -284,16 +285,16 @@ public class CASSP {
     */
     public void createAccClassesImage(String name){
         if (this.testData == null){
-            if (this.data == null)
+            if (this.data == null){
                 logger.warn("No training or testing was performed!.");
                 return;
+            }
         }
         else{
             this.data = this.testData;
             this.data.computeConformCoeffs();
             this.data.computeChouFasman();
         }
-
 
         if (this.accStats == null)
             this.computeAccuracyStats();
