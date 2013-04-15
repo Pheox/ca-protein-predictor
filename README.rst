@@ -42,6 +42,8 @@ Tests
 `Experiments <http://www.stud.fit.vutbr.cz/~xbriga00/dp/exps/>`_
 ================================================================
 
+.. image:: ./diagrams/psipred_time.jpg
+
 
 NOTES
 =====
