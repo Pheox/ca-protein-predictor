@@ -123,6 +123,47 @@ public class CASSP {
     *
     */
     public double testPsipred(){
+        Data data = new Data(this.config.getTestDataPath());
+        Psipred psipred = new Psipred(this.config.getPsipredPath());
+
+        try{
+            FileWriter fstream = new FileWriter(this.config.getTestDataPath() + ".pred");
+            BufferedWriter out = new BufferedWriter(fstream);
+            out.write("serus\n\n");
+
+            // run only PSIPRED
+            for (DataItem dataItem: data.getData()){
+                psipred.predict(dataItem);
+                out.write(dataItem.getAaSeq() + "\n");
+                out.write(dataItem.getSspSeq() + "\n");
+                out.write(dataItem.getPredSeq() + "\n\n");
+            }
+            out.close();
+        }catch (Exception e){
+            logger.error("Error: " + e.getMessage());
+        }
+
+        return this.computeAccuracy(data);
+    }
+
+
+
+    /**
+    * 1. CASSP prediction
+    * 2. Psipred prediction (based on thrashold)
+    */
+    public double testCASSPPsipred(){
+        // TODO
+        return 0.0;
+    }
+
+
+    /**
+    * 1. Psipred prediction
+    * 2. CASSP prediction (based on thresh)
+    */
+    public double testPsipredCASSP(){
+        // TODO
 
         Data data = new Data(this.config.getTestDataPath());
         Psipred psipred = new Psipred(this.config.getPsipredPath());
@@ -134,11 +175,11 @@ public class CASSP {
 
         // 2. run CA if Psipred result is not reliable
         for (DataItem dataItem: data.getData()){
-            dataItem.repairPsipred(this.predict(dataItem.getAaSeq()));
+            dataItem.repairPsipred(this.predict(dataItem.getAaSeq()), this.config.getThreshold());
         }
-
         return this.computeAccuracy(data);
     }
+
 
 
     private double computeAccuracy(Data data){
