@@ -49,11 +49,11 @@ public class DataItem {
     }
 
     /**
-    * Repair CASSP prediction with PSIPRED prediction.
+    * Repair prediction.
     */
-    public void repairPsipred(String predSeq){
+    public void repairPsipred(String predSeq, int threshold){
         for (int i = 0; i < this.length(); i++) {
-            if (this.reliabIndexes.get(i) < DataItem.PSIPRED_THRESHOLD){
+            if (this.reliabIndexes.get(i) < threshold){
                 StringBuilder seq = new StringBuilder(this.predictedSeq);
                 seq.setCharAt(i, predSeq.charAt(i));
             }
