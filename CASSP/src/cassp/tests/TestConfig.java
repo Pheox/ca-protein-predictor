@@ -44,6 +44,7 @@ public class TestConfig extends TestCase {
         assertEquals(0, this.config.getAccuracyType());
         assertEquals(100, this.config.getAccClasses());
         assertEquals(100, this.config.getReliabClasses());
+        assertEquals(4, this.config.getThreshold());
         assertEquals("../data/final/rs_126.data", this.config.getDataPath());
         assertEquals("../data/chou_fasman/rs_126.cf", this.config.getDataCFPath());
         assertEquals("../data/conf_classes/rs_126.cc", this.config.getDataCCPath());

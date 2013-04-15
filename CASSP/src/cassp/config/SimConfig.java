@@ -23,6 +23,7 @@ public class SimConfig {
     static public int CV_FOLDS = 3;
     static public int ACCURACY_TYPE = 0; // Q3
     static public int RELIAB_CLASSES = 10;
+    static public int THRESHOLD = 4;
     static public int ACC_CLASSES = 10;
     static public int MAX_STEPS = 10;
     static public int NEIGH = 3;
@@ -90,12 +91,20 @@ public class SimConfig {
     @Option(name="-rule",usage="Sets a rule type")
     private int rule;
 
+    // 0 - train, 1 - test, 2 - psipred only
+    @Option(name="-mode",usage="Sets system mode")
+    private int mode;
+
+    @Option(name="-tresh",usage="Sets prediction repairing threshold")
+    private int threshold;
+
 
     public SimConfig(){
         this.cvFolds = SimConfig.CV_FOLDS;
         this.accuracyType = SimConfig.ACCURACY_TYPE;
         this.reliabClasses = SimConfig.RELIAB_CLASSES;
         this.accClasses = SimConfig.ACC_CLASSES;
+        this.threshold = SimConfig.THRESHOLD;
         this.mutProb = SimConfig.MUT_PROB;
         this.crossProb = SimConfig.CROSS_PROB;
         this.maxGen = SimConfig.MAX_GEN;
@@ -153,6 +162,11 @@ public class SimConfig {
             this.accClasses = Integer.parseInt(prop.getProperty("acc_classes"));
         else
             this.accClasses = SimConfig.ACC_CLASSES;
+
+        if (prop.getProperty("threshold") != null)
+            this.threshold = Integer.parseInt(prop.getProperty("threshold"));
+        else
+            this.threshold = SimConfig.THRESHOLD;
 
         if (prop.getProperty("p_mut") != null)
             this.mutProb = Double.valueOf(prop.getProperty("p_mut"));
@@ -380,5 +394,21 @@ public class SimConfig {
 
     public void setAccClasses(int accClasses){
         this.accClasses = accClasses;
+    }
+
+    public int getMode(){
+        return this.mode;
+    }
+
+    public void setMode(int mode){
+        this.mode = mode;
+    }
+
+    public int getThreshold(){
+        return this.threshold;
+    }
+
+    public void setThreshold(int threshold){
+        this.threshold = threshold;
     }
 }
