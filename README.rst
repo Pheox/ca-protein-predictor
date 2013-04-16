@@ -44,6 +44,16 @@ Tests
 
 .. image:: ./diagrams/psipred_time.jpg
 
+* PSIPRED results
+
+ ========== ======  ======
+ Dataset     Q3     SOV
+ ========== ======  ======
+ rs_126     81.857  70.220
+ cb_513     81.101  69.291
+ pdb_vyber  79.905  69.165
+ ========== ======  ======
+
 
 NOTES
 =====
