@@ -57,7 +57,8 @@ public class CASSP {
     * @return Best rule.
     */
     public double train(){
-        this.setupData();
+        this.setupTrainData();
+
         double accuracy = 0.0;
 
         if (this.config.getCVFolds() > 0)
@@ -69,9 +70,14 @@ public class CASSP {
     }
 
 
+
     // load data and load/compute neccessary coefficients
-    private void setupData(){
-        this.data = new Data(this.config.getDataPath());
+    private void setupTrainData(){
+        if (this.config.getTrainMode() == SimConfig.TRAIN_MODE_PC){
+            this.config.setReliabClasses(10);
+        }
+
+        this.data = new Data(this.config.getDataPath(), this.config.getTrainMode());
 
         // get Chou-Fasman coefficients
         String cfPath = this.config.getDataCFPath();
@@ -87,6 +93,20 @@ public class CASSP {
         else
             this.data.computeConformCoeffs();
     }
+
+    private void setupTestData(){
+        if (this.config.getTestMode() == SimConfig.TEST_MODE_PC){
+            this.config.setReliabClasses(10);
+        }
+        this.testData = new Data(this.config.getTestDataPath(), this.config.getTestMode());
+
+        // get Chou-Fasman coefficients
+        this.testData.computeChouFasman();
+
+        // get conformation coefficients
+        this.testData.computeConformCoeffs();
+    }
+
 
 
     private CARule trainRule(Data data){
@@ -110,7 +130,8 @@ public class CASSP {
     * @return accuracy of specified type (Q3 or SOV)
     */
     public double test(){
-        this.testData = new Data(this.config.getTestDataPath());
+        this.setupTestData();
+
         this.rule = this.loadRule();
         this.testData.setAminoAcids(this.rule.getAminoAcids());
         this.testRule(this.testData);
@@ -123,20 +144,20 @@ public class CASSP {
     *
     */
     public double testPsipred(){
-        Data data = new Data(this.config.getTestDataPath());
+        Data data = new Data(this.config.getTestDataPath(), this.config.getTestMode());
         Psipred psipred = new Psipred(this.config.getPsipredPath());
 
         try{
             FileWriter fstream = new FileWriter(this.config.getTestDataPath() + ".pred");
             BufferedWriter out = new BufferedWriter(fstream);
-            out.write("serus\n\n");
 
             // run only PSIPRED
             for (DataItem dataItem: data.getData()){
                 psipred.predict(dataItem);
                 out.write(dataItem.getAaSeq() + "\n");
                 out.write(dataItem.getSspSeq() + "\n");
-                out.write(dataItem.getPredSeq() + "\n\n");
+                out.write(dataItem.getPredSeq() + "\n");
+                out.write(dataItem.getReliabIndexesStr() + "\n\n");
             }
             out.close();
         }catch (Exception e){
@@ -153,8 +174,24 @@ public class CASSP {
     * 2. Psipred prediction (based on thrashold)
     */
     public double testCASSPPsipred(){
-        // TODO
-        return 0.0;
+
+        this.testData = new Data(this.config.getTestDataPath(), this.config.getTestMode());
+        Psipred psipred = new Psipred(this.config.getPsipredPath());
+
+        // 1. run CA
+        for (DataItem dataItem: this.data.getData()){
+            this.predict(dataItem);
+        }
+
+        // 2. run Psipred
+        for (DataItem dataItem: data.getData()){dataItem.repairPrediction(
+                dataItem.getPsipredSeq(),
+                this.config.getThreshold(),
+                this.config.getRepairType()
+            );
+        }
+
+        return this.computeAccuracy(data);
     }
 
 
@@ -163,19 +200,21 @@ public class CASSP {
     * 2. CASSP prediction (based on thresh)
     */
     public double testPsipredCASSP(){
-        // TODO
+        // path to psipred data file? rs_126, cb_513, pdb_vyber
 
-        Data data = new Data(this.config.getTestDataPath());
+        Data data = new Data(this.config.getTestDataPath(), this.config.getTestMode());
         Psipred psipred = new Psipred(this.config.getPsipredPath());
+
+        // load PSIPRED data - save as variable in
 
         // 1. run Psipred
         for (DataItem dataItem: data.getData()){
-            psipred.predict(dataItem);
+            //dataItem.setPsipredAsPredSeq();
         }
 
         // 2. run CA if Psipred result is not reliable
         for (DataItem dataItem: data.getData()){
-            dataItem.repairPsipred(this.predict(dataItem.getAaSeq()), this.config.getThreshold());
+            //dataItem.repairPrediction(this.predict(dataItem.getAaSeq()), this.config.getThreshold());
         }
         return this.computeAccuracy(data);
     }
@@ -212,8 +251,9 @@ public class CASSP {
 
         CellularAutomaton ca = new CellularAutomaton(di, this.config);
         ca.run(this.rule, this.testData);
+        di.setPredSeq(ca.getPredSeq());
 
-        return ca.getPredictedSeq();
+        return di.getPredSeq();
     }
 
 
@@ -227,6 +267,17 @@ public class CASSP {
     public String predict(DataItem di){
         CellularAutomaton ca = new CellularAutomaton(di, this.config);
         ca.run(this.rule, this.testData);
+        ca.computePropsMeanDiff();
+
+        ca.computeReliabIndexes(
+            this.rule.computeMaxPropsDiff(new double[]{
+                this.testData.getMaxCF(),
+                this.testData.getMaxCC()
+            })
+        );
+
+        di.setPredSeq(ca.getPredSeq());
+        di.setReliabIndexes(ca.getReliabIndexes());
         return di.getPredSeq();
     }
 
@@ -289,9 +340,10 @@ public class CASSP {
         }
 
         if (this.accStats == null)
-            this.computeAccuracyStats();
+            this.computeAccuracyStats(this.data);
         this.eaStats.createImage(this.config.getStatsPath(), name);
         Utils.removeTXTFiles(this.config.getStatsPath());
+        this.accStats = null;
     }
 
 
@@ -300,6 +352,8 @@ public class CASSP {
     * @param name file name of created image
     */
     public void createReliabImage(String name){
+        Data imageData = this.data;
+
         if (this.testData == null){
             if (this.data == null){
                 logger.warn("No training or testing was performed!.");
@@ -307,13 +361,14 @@ public class CASSP {
             }
         }
         else{
-            this.data = this.testData;
-            this.data.computeConformCoeffs();
-            this.data.computeChouFasman();
+            imageData = this.testData;
+            imageData.computeConformCoeffs();
+            imageData.computeChouFasman();
         }
 
-        if (this.accStats == null)
-            this.computeAccuracyStats();
+        if (this.accStats == null){
+            this.computeAccuracyStats(imageData);
+        }
 
         this.accStats.createReliabImage(this.config.getStatsPath(), name);
         Utils.removeTXTFiles(this.config.getStatsPath());
@@ -325,6 +380,8 @@ public class CASSP {
     * @param name file name of created image
     */
     public void createAccClassesImage(String name){
+        Data imageData = this.data;
+
         if (this.testData == null){
             if (this.data == null){
                 logger.warn("No training or testing was performed!.");
@@ -332,13 +389,13 @@ public class CASSP {
             }
         }
         else{
-            this.data = this.testData;
-            this.data.computeConformCoeffs();
-            this.data.computeChouFasman();
+            imageData = this.testData;
+            imageData.computeConformCoeffs();
+            imageData.computeChouFasman();
         }
 
         if (this.accStats == null)
-            this.computeAccuracyStats();
+            this.computeAccuracyStats(imageData);
         this.accStats.createAccClassesImage(this.config.getStatsPath(), name);
         Utils.removeTXTFiles(this.config.getStatsPath());
     }
@@ -347,13 +404,13 @@ public class CASSP {
     /**
     * Computes all neccessary statistics.
     */
-    public void computeAccuracyStats(){
+    public void computeAccuracyStats(Data data){
         this.accStats = new AccuracyStats(
-            this.rule.getMaxPropsDiff(new double[]{this.data.getMaxCF(), this.data.getMaxCC()}),
+            this.rule.computeMaxPropsDiff(new double[]{data.getMaxCF(), data.getMaxCC()}),
             this.config.getReliabClasses(),
             this.config.getAccClasses()
         );
-        this.accStats.parseStats(this.data, this.config.getAccuracyType());
+        this.accStats.parseStats(data, this.config.getAccuracyType());
     }
 
 

@@ -13,6 +13,7 @@ import java.util.*;
 import java.lang.StringBuilder;
 import org.apache.log4j.*;
 
+import cassp.config.*;
 
 
 /**
@@ -27,8 +28,11 @@ public class DataItem {
 
     private String aaSeq;
     private String sspSeq;
+    private String psipredSeq;
     private String predictedSeq;
     private double propsMeanDiff;
+    private int meanReliabIndex;
+    private String reliabIndexesStr;
     private ArrayList<Integer> reliabIndexes;
 
 
@@ -36,12 +40,16 @@ public class DataItem {
         this.aaSeq = "";
         this.sspSeq = "";
         this.predictedSeq = "";
+        this.psipredSeq = "";
+        this.reliabIndexesStr = "";
     }
 
     public DataItem(String aa, String ssp, String pred){
         this.aaSeq = aa;
         this.sspSeq =ssp;
         this.predictedSeq = pred;
+        this.psipredSeq = "";
+        this.reliabIndexesStr = "";
     }
 
     public int length(){
@@ -51,11 +59,20 @@ public class DataItem {
     /**
     * Repair prediction.
     */
-    public void repairPsipred(String predSeq, int threshold){
-        for (int i = 0; i < this.length(); i++) {
-            if (this.reliabIndexes.get(i) < threshold){
+    public void repairPrediction(String predSeq, int threshold, int repairType){
+        if (repairType == SimConfig.REPAIR_PROTEIN){
+            if (this.meanReliabIndex < threshold){
+                this.predictedSeq = predSeq;
+            }
+        }
+        else if (repairType == SimConfig.REPAIR_RESIDUE){
+            for (int i = 0; i < this.length(); i++) {
                 StringBuilder seq = new StringBuilder(this.predictedSeq);
-                seq.setCharAt(i, predSeq.charAt(i));
+
+                if (this.reliabIndexes.get(i) < threshold){
+                    seq.setCharAt(i, predSeq.charAt(i));
+                }
+                this.predictedSeq = seq.toString();
             }
         }
     }
@@ -91,6 +108,14 @@ public class DataItem {
         return this.predictedSeq;
     }
 
+    public void setPsipredSeq(String psipredSeq){
+        this.psipredSeq = psipredSeq;
+    }
+
+    public String getPsipredSeq(){
+        return this.psipredSeq;
+    }
+
     public char getPredAt(int index){
         return this.predictedSeq.charAt(index);
     }
@@ -111,7 +136,24 @@ public class DataItem {
         this.reliabIndexes = reliabIndexes;
     }
 
+    public void setReliabIndexes(String riStr, ArrayList<Integer> reliabIndexes){
+        this.reliabIndexesStr = riStr;
+        this.reliabIndexes = reliabIndexes;
+    }
+
     public ArrayList<Integer> getReliabIndexes(){
         return this.reliabIndexes;
+    }
+
+    public String getReliabIndexesStr(){
+        return this.reliabIndexesStr;
+    }
+
+    public void setPsipredAsPredSeq(){
+        this.predictedSeq = this.psipredSeq;
+    }
+
+    public void setMeanReliabIndex(int index){
+        this.meanReliabIndex = index;
     }
 }

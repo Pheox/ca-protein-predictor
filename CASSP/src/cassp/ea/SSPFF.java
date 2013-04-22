@@ -32,6 +32,7 @@ public class SSPFF extends FitnessFunction{
 
     private SimConfig config;
     private Data data;
+    private int mode;
 
     /**
     * What is the best initialization?
@@ -39,6 +40,7 @@ public class SSPFF extends FitnessFunction{
     public SSPFF(Data data, SimConfig config){
         this.data = data;
         this.config = config;
+        this.mode = config.getTrainMode();
     }
 
 
@@ -54,9 +56,48 @@ public class SSPFF extends FitnessFunction{
 
         CARule rule  = this.createRule(chromosome);
 
-        for (DataItem di : this.data.getData()){
-            CellularAutomaton ca = new CellularAutomaton(di, this.config);
-            di.setPredSeq(ca.run(rule, this.data));
+        if (this.mode == SimConfig.TRAIN_MODE_CP){
+            for (DataItem dataItem : this.data.getData()){
+                CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
+                ca.run(rule, this.data);
+                ca.computePropsMeanDiff();
+                ca.computeReliabIndexes(
+                    rule.computeMaxPropsDiff(new double[]{this.data.getMaxCF(), this.data.getMaxCC()})
+                );
+
+                dataItem.setPredSeq(ca.getPredSeq());
+                dataItem.setReliabIndexes(ca.getReliabIndexes());
+
+                dataItem.repairPrediction(
+                    dataItem.getPsipredSeq(),
+                    this.config.getThreshold(),
+                    this.config.getRepairType()
+                );
+            }
+        }
+        else if (this.mode == SimConfig.TRAIN_MODE_PC){
+            for (DataItem dataItem : this.data.getData()){
+                dataItem.setPsipredAsPredSeq();
+
+
+                CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
+
+                ca.run(rule, this.data);
+                ca.computePsipredPropsMeanDiff();
+
+                dataItem.repairPrediction(
+                    ca.getPredSeq(),
+                    this.config.getThreshold(),
+                    this.config.getRepairType()
+                );
+            }
+        }
+        else if (this.mode == SimConfig.TRAIN_MODE_NORMAL){
+            for (DataItem dataItem : this.data.getData()){
+                CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
+                ca.run(rule, this.data);
+                dataItem.setPredSeq(ca.getPredSeq());
+            }
         }
 
         if (this.config.getAccuracyType() == SimConfig.Q3)

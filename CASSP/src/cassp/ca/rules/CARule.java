@@ -33,6 +33,7 @@ public abstract class CARule implements Serializable{
     protected int steps;
     protected int neigh;
     protected double[] weights;
+    protected double maxPropsDiff;
 
     private HashMap<Character, AminoAcid> aminoAcids;
 
@@ -76,7 +77,7 @@ public abstract class CARule implements Serializable{
    *
    * @param maxCoeffs Max coefficients (maxCoeffs[0] is max CF, maxCoeffs[1] is max CC).
    */
-    public abstract double getMaxPropsDiff(double[] maxCoeffs);
+    public abstract double computeMaxPropsDiff(double[] maxCoeffs);
 
 
     /* Getters & setters */

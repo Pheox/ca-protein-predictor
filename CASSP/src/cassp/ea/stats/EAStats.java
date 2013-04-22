@@ -21,7 +21,7 @@ import org.apache.log4j.*;
 */
 public class EAStats{
 
-    static double MIN_Y_RANGE = 50;
+    static double MIN_Y_RANGE = 40;
     static double MAX_Y_RANGE = 60;
 
     static Logger logger = Logger.getLogger(EAStats.class);

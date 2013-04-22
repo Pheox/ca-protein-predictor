@@ -27,6 +27,7 @@ public class Psipred{
     private String progPath;
     private double diff;
     private String sspSeq;
+    private String reliabIndexesStr;
     private ArrayList<Integer> reliabIndexes;
 
 
@@ -40,7 +41,7 @@ public class Psipred{
     public void predict(DataItem dataItem){
         this.predict(dataItem.getAaSeq());
         dataItem.setPredSeq(this.sspSeq);
-        dataItem.setReliabIndexes(this.reliabIndexes);
+        dataItem.setReliabIndexes(this.reliabIndexesStr, this.reliabIndexes);
     }
 
     public String predict(String aaSeq){
@@ -61,7 +62,7 @@ public class Psipred{
             bw.close();
         }
         catch (IOException e){
-            logger.error("\n" + e);
+            logger.error(e);
         }
 
         this.runPsipred(tmpFile.getAbsolutePath());
@@ -69,10 +70,8 @@ public class Psipred{
         this.cleanUp(fileName);
 
         tmpFile.deleteOnExit();
-        System.out.println(this.sspSeq);
         return this.sspSeq;
     }
-
 
     private void runPsipred(String tmpFile){
         try{
@@ -84,10 +83,9 @@ public class Psipred{
             proc.waitFor();
         }
         catch(Exception e){
-            logger.error("\n" + e);
+            logger.error(e);
         }
     }
-
 
     private void cleanUp(String fileName){
         for (String ext: new String[]{"ss", "ss2", "horiz"}) {
@@ -96,7 +94,6 @@ public class Psipred{
                 file.delete();
         }
     }
-
 
     private void parseResultFile(String resultFile){
         String result = "";
@@ -115,17 +112,20 @@ public class Psipred{
             System.err.println("Error: " + e.getMessage());
         }
 
-        Pattern pattern = Pattern.compile(".*Conf:\\s(\\d+)\\s*Pred:\\s([HEC]+)\\s*AA:\\s([A-Z]+).*");
+        Pattern pattern = Pattern.compile("[^:]*Conf:\\s(\\d+)\\s*Pred:\\s([HEC]+)\\s*AA:\\s([A-Z]+)");
         Matcher match = pattern.matcher(result);
 
-        if (match.matches()){
-            String reliabIndexesStr = match.group(1);
-            this.sspSeq = match.group(2);
+        String reliabIndexesStr = "";
 
-            // process reliability indexes
-            for (int i = 0; i < reliabIndexesStr.length(); i++) {
-                this.reliabIndexes.add(Character.getNumericValue(reliabIndexesStr.charAt(i)));
-            }
+        this.sspSeq = "";
+        while (match.find()){
+            reliabIndexesStr += match.group(1);
+            this.sspSeq += match.group(2);
+        }
+        this.reliabIndexesStr = reliabIndexesStr;
+
+        for (int i = 0; i < reliabIndexesStr.length(); i++) {
+            this.reliabIndexes.add(Character.getNumericValue(reliabIndexesStr.charAt(i)));
         }
     }
 }

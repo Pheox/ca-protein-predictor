@@ -49,19 +49,12 @@ public class Main {
         CASSP simulator = new CASSP(config);
         System.out.println(config.toString());
 
-        if (config.getMode() == 0){
-            // training mode
-            simulator.train();
-        }
-        else if (config.getMode() == 1){
-            // testing mode
-            simulator.loadRule();
-            logger.info("Testing accuracy: " + simulator.test());
-        }
-        else if (config.getMode() == 2){
-            // psipred mode
-            simulator.testPsipred();
-        }
+        simulator.train();
+        //simulator.computeAccuracyStats();
+        simulator.loadRule();
+
+        double acc = simulator.test();
+        logger.info("Test accuracy: " + acc);
 
         simulator.createEvolutionImage("evolution.png");
         simulator.createAccClassesImage("accuracy.png");

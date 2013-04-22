@@ -113,7 +113,8 @@ public class CASimpleRule extends CARule{
         cell.computeMotif();
     }
 
-    public double getMaxPropsDiff(double[] maxCoeffs){
-        return maxCoeffs[0]*this.neigh;
+    public double computeMaxPropsDiff(double[] maxCoeffs){
+        this.maxPropsDiff = maxCoeffs[0]*this.neigh;
+        return this.maxPropsDiff;
     }
 }

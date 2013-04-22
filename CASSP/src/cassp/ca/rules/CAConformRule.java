@@ -129,8 +129,9 @@ public class CAConformRule extends CARule{
         cell.computeMotif();
     }
 
-    public double getMaxPropsDiff(double[] maxCoeffs){
-        return maxCoeffs[0]*this.neigh + maxCoeffs[1]*this.neigh*2;
+    public double computeMaxPropsDiff(double[] maxCoeffs){
+        this.maxPropsDiff = maxCoeffs[0]*this.neigh + maxCoeffs[1]*this.neigh*2;
+        return this.maxPropsDiff;
     }
 
     public int getSize(){

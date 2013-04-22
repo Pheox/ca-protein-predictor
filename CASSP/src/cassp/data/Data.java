@@ -17,6 +17,9 @@ import org.apache.log4j.*;
 
 import cassp.*;
 import cassp.utils.*;
+import cassp.config.*;
+import cassp.exceptions.*;
+
 
 
 /**
@@ -32,6 +35,8 @@ public class Data {
     private double maxCF;
     private double maxCC;
 
+    private int mode;
+
 
     /**
     * Constructor 1 - initializes structures
@@ -41,18 +46,26 @@ public class Data {
         this.initAminoAcids();
         this.maxCF = -1;
         this.maxCC = -1;
+        this.mode = 0; // normal
     }
 
     /**
     * Constructor 2 - initializes strucures + loads data
     * @param filePath path to data file
     */
-    public Data(String filePath){
+    public Data(String filePath, int mode){
         this.data = new ArrayList<DataItem>();
+        this.mode = mode;
         this.initAminoAcids();
-        this.loadData(filePath);
+
+        if (this.mode == SimConfig.TRAIN_MODE_NORMAL)
+            this.loadData(filePath);
+        else if (this.mode == SimConfig.TRAIN_MODE_CP || this.mode == SimConfig.TRAIN_MODE_PC)
+            this.loadDataPsipred(filePath);
+
         this.maxCF = -1;
         this.maxCC = -1;
+        this.mode = 0; // normal
     }
 
     private void initAminoAcids(){
@@ -78,8 +91,55 @@ public class Data {
     *
     * @param filePath path to data file
     */
-    public void loadData(String filePath){
+    public void loadDataPsipred(String filePath){
+        // TODO: kontrola formatu! + throwing custom vynimky ?
 
+        try{
+            FileInputStream fstream = new FileInputStream(filePath);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+            String aaSeq;
+            String sspSeq;
+            String psipredSeq;
+            String reliabSeq;
+
+            while ((aaSeq = br.readLine()) != null)   {
+                sspSeq = br.readLine();
+                psipredSeq = br.readLine();
+                reliabSeq = br.readLine();
+                br.readLine();
+
+                DataItem di = new DataItem();
+                di.setAaSeq(aaSeq);
+                di.setSspSeq(sspSeq);
+                di.setPsipredSeq(psipredSeq);
+
+                if (aaSeq.length() != sspSeq.length() || sspSeq.length() != psipredSeq.length()
+                    || psipredSeq.length() != reliabSeq.length() || aaSeq.length() == 0)
+                    throw new CASSPException("Bad input data format.");
+
+                ArrayList<Integer> reliabIndexes = new ArrayList<Integer>();
+
+                for (int i = 0; i < reliabSeq.length(); i++) {
+                    reliabIndexes.add(Character.getNumericValue(reliabSeq.charAt(i)));
+                }
+                di.setReliabIndexes(reliabSeq, reliabIndexes);
+                this.add(di);
+            }
+
+            in.close();
+        }catch(CASSPException e){
+            logger.error(e.getMessage());
+            System.exit(1);
+        }catch(Exception e){
+            logger.error(e.getMessage());
+        }
+
+        logger.info("dataset length: " + this.data.size());
+    }
+
+    public void loadData(String filePath){
         try{
             FileInputStream fstream = new FileInputStream(filePath);
             DataInputStream in = new DataInputStream(fstream);
@@ -92,6 +152,9 @@ public class Data {
                 sspSeq = br.readLine();
                 br.readLine();
 
+                if (aaSeq.length() != sspSeq.length() || aaSeq.length() == 0)
+                    throw new CASSPException("Bad input data format.");
+
                 DataItem di = new DataItem();
                 di.setAaSeq(aaSeq);
                 di.setSspSeq(sspSeq);
@@ -99,14 +162,15 @@ public class Data {
             }
 
             in.close();
+        }catch (CASSPException e){
+            logger.error(e.getMessage());
+            System.exit(1);
         }catch (Exception e){
-            System.err.println("Error: " + e.getMessage());
+            logger.error(e.getMessage());
         }
 
         logger.info("dataset length: " + this.data.size());
     }
-
-
 
 
     private void initCCStructures(HashMap<Character, Integer> aaCounts,
