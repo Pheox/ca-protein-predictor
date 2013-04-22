@@ -8,6 +8,8 @@
 package cassp.ca.rules;
 
 
+import java.util.*;
+
 import org.jgap.*;
 import org.jgap.data.*;
 import org.jgap.impl.*;
@@ -17,6 +19,7 @@ import org.apache.log4j.*;
 
 import cassp.*;
 import cassp.ca.*;
+import cassp.data.*;
 import cassp.config.*;
 import cassp.ca.rules.*;
 
@@ -32,9 +35,10 @@ public class CASimpleRule extends CARule{
     public static int BOUNDARY_C = 300;
 
 
-    public CASimpleRule(int neigh){
+    public CASimpleRule(int neigh, HashMap<Character, AminoAcid> aminoAcids){
         this.steps = 1;
         this.neigh = neigh;
+        this.aminoAcids = aminoAcids;
     }
 
     public int getSize(){

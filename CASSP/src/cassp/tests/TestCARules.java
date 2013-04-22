@@ -65,14 +65,14 @@ public class TestCARules extends TestCase {
         this.data.loadChouFasman("./src/cassp/tests/test.cf");
         this.ca = new CellularAutomaton(di, this.config);
 
-        this.simpleRule = new CASimpleRule(1);
+        this.simpleRule = new CASimpleRule(1, this.data.getAminoAcids());
         this.simpleRule.setSteps(1);
 
         double[] weights = new double[3];
         weights[0] = 1; weights[1] = 1; weights[2] = 1;
 
         this.simpleRule.setWeights(weights);
-        String seq = this.ca.run(this.simpleRule, this.data);
+        String seq = this.ca.run(this.simpleRule);
 
         assertEquals(seq, "CEC");
         assertEquals(93.333, this.ca.getCell(1).getHelixProps(), 0.1);
@@ -89,7 +89,7 @@ public class TestCARules extends TestCase {
         this.data.loadConformCoeffs("./src/cassp/tests/test.cc");
         this.ca = new CellularAutomaton(di, this.config);
 
-        this.conformRule = new CAConformRule(1);
+        this.conformRule = new CAConformRule(1, this.data.getAminoAcids());
         this.conformRule.setSteps(1);
 
         double[] weights = new double[3];
@@ -101,7 +101,7 @@ public class TestCARules extends TestCase {
         this.conformRule.setGamma(1);
 
 
-        String seq = this.ca.run(this.conformRule, this.data);
+        String seq = this.ca.run(this.conformRule);
         assertEquals("CCC", seq);
 
         assertEquals(2.245, this.ca.getCell(0).getHelixProps(), 0.1);
@@ -128,7 +128,7 @@ public class TestCARules extends TestCase {
             System.out.println(e);
         }
 
-        this.simpleRule = new CASimpleRule(1);
+        this.simpleRule = new CASimpleRule(1, this.data.getAminoAcids());
         this.simpleRule.setSteps(2);
         this.simpleRule.setWeights(new double[]{0.1, 0.2, 0.3});
         IChromosome chrom = this.simpleRule.toChromosome(conf, 5);
@@ -138,7 +138,7 @@ public class TestCARules extends TestCase {
         assertEquals(0.2, ((Double) chrom.getGene(2).getAllele()).doubleValue());
         assertEquals(0.3, ((Double) chrom.getGene(3).getAllele()).doubleValue());
 
-        CASimpleRule newRule = new CASimpleRule(1);
+        CASimpleRule newRule = new CASimpleRule(1, this.data.getAminoAcids());
         newRule.fromChromosome(chrom);
 
         assertEquals(2, newRule.getSteps());
@@ -158,7 +158,7 @@ public class TestCARules extends TestCase {
             System.out.println(e);
         }
 
-        this.conformRule = new CAConformRule(1);
+        this.conformRule = new CAConformRule(1, this.data.getAminoAcids());
         this.conformRule.setSteps(2);
         this.conformRule.setAlpha(0.11);
         this.conformRule.setBeta(0.12);
@@ -175,7 +175,7 @@ public class TestCARules extends TestCase {
         assertEquals(0.2, ((Double) chrom.getGene(5).getAllele()).doubleValue());
         assertEquals(0.3, ((Double) chrom.getGene(6).getAllele()).doubleValue());
 
-        CAConformRule newRule = new CAConformRule(1);
+        CAConformRule newRule = new CAConformRule(1, this.data.getAminoAcids());
         newRule.fromChromosome(chrom);
 
         assertEquals(2, newRule.getSteps());

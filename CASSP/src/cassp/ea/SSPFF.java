@@ -59,7 +59,7 @@ public class SSPFF extends FitnessFunction{
         if (this.mode == SimConfig.TRAIN_MODE_CP){
             for (DataItem dataItem : this.data.getData()){
                 CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
-                ca.run(rule, this.data);
+                ca.run(rule);
                 ca.computePropsMeanDiff();
                 ca.computeReliabIndexes(
                     rule.computeMaxPropsDiff(new double[]{this.data.getMaxCF(), this.data.getMaxCC()})
@@ -79,10 +79,9 @@ public class SSPFF extends FitnessFunction{
             for (DataItem dataItem : this.data.getData()){
                 dataItem.setPsipredAsPredSeq();
 
-
                 CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
 
-                ca.run(rule, this.data);
+                ca.run(rule);
                 ca.computePsipredPropsMeanDiff();
 
                 dataItem.repairPrediction(
@@ -95,7 +94,7 @@ public class SSPFF extends FitnessFunction{
         else if (this.mode == SimConfig.TRAIN_MODE_NORMAL){
             for (DataItem dataItem : this.data.getData()){
                 CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
-                ca.run(rule, this.data);
+                ca.run(rule);
                 dataItem.setPredSeq(ca.getPredSeq());
             }
         }
@@ -112,13 +111,12 @@ public class SSPFF extends FitnessFunction{
         CARule rule;
 
         if (this.config.getRuleID() == 1)
-            rule = new CASimpleRule(this.config.getNeigh());
+            rule = new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());
         else if (this.config.getRuleID() == 2)
-            rule = new CAConformRule(this.config.getNeigh());
+            rule = new CAConformRule(this.config.getNeigh(), this.data.getAminoAcids());
         else
-            rule = new CASimpleRule(this.config.getNeigh());
+            rule = new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());
 
         return rule.fromChromosome(chromosome);
     }
 }
-

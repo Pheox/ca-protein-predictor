@@ -57,12 +57,12 @@ public class CellularAutomaton {
     * @param rule Transition rule of cellular automaton.
     * @param data Data object needed for amino acids properties.
     */
-    public String run(CARule rule, Data data){
+    public String run(CARule rule){
 
         this.rule = rule;
         // cells initialization
         for (int i = 0; i < this.dataItem.length(); i++){
-            this.cells[i] = new CACell(data.getAminoAcid(this.dataItem.getAaAt(i)));
+            this.cells[i] = new CACell(rule.getAminoAcid(this.dataItem.getAaAt(i)));
         }
 
         for (int s = 0; s < this.rule.getSteps(); s++) {

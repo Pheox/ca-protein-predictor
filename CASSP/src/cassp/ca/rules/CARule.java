@@ -35,7 +35,7 @@ public abstract class CARule implements Serializable{
     protected double[] weights;
     protected double maxPropsDiff;
 
-    private HashMap<Character, AminoAcid> aminoAcids;
+    protected HashMap<Character, AminoAcid> aminoAcids;
 
     /**
     * Get size of chromosome created from rule elements.
@@ -116,5 +116,9 @@ public abstract class CARule implements Serializable{
 
     public HashMap<Character, AminoAcid> getAminoAcids(){
         return this.aminoAcids;
+    }
+
+    public AminoAcid getAminoAcid(char aa){
+        return this.aminoAcids.get(aa);
     }
 }

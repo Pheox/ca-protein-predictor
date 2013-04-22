@@ -7,6 +7,9 @@
 
 package cassp.ca.rules;
 
+
+import java.util.*;
+
 import org.jgap.*;
 import org.jgap.data.*;
 import org.jgap.impl.*;
@@ -16,6 +19,7 @@ import org.apache.log4j.*;
 
 import cassp.*;
 import cassp.ca.*;
+import cassp.data.*;
 import cassp.config.*;
 import cassp.ca.rules.*;
 
@@ -31,12 +35,13 @@ public class CAConformRule extends CARule{
     private double gamma;
 
 
-    public CAConformRule(int neigh){
+    public CAConformRule(int neigh, HashMap<Character, AminoAcid> aminoAcids){
         this.alpha = 0.0;
         this.beta = 0.0;
         this.gamma = 0.0;
         this.steps = 0;
         this.neigh = neigh;
+        this.aminoAcids = aminoAcids;
     }
 
     public IChromosome initChromosome(Configuration conf, int maxSteps){

@@ -95,11 +95,11 @@ public class SSPEA {
 
     private CARule setRule(){
         if (this.config.getRuleID() == 1)
-            return new CASimpleRule(this.config.getNeigh());
+            return new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());
         else if (this.config.getRuleID() == 2)
-            return new CAConformRule(this.config.getNeigh());
+            return new CAConformRule(this.config.getNeigh(), this.data.getAminoAcids());
         else
-            return new CASimpleRule(this.config.getNeigh());
+            return new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());
     }
 
 
