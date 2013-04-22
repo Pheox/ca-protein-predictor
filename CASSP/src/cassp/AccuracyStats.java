@@ -19,10 +19,6 @@ import cassp.config.*;
 
 
 /**
-*
-* WARNING: reliability index almost factor 2 too large for single sequences - PHDsec
-* PHD: http://www.rostlab.org/papers/1996_phd/paper.html
-*
 * Prediction strength - the difference between the output unit with highest value (winner unit)
 * and the output unit with the next highest value.
 * This difference is used to define a reliability index for the prediction of each residue
@@ -64,7 +60,6 @@ public class AccuracyStats {
         this.accuracyClasses = new double[this.accuracyClassesNumber];
     }
 
-
     public AccuracyStats(double maxProps, int reliabClassesNumber, int accuracyClassesNumber){
         this.maxProps = maxProps;
 
@@ -78,7 +73,6 @@ public class AccuracyStats {
         this.reliabClasses = new double[this.reliabClassesNumber];
         this.accuracyClasses = new double[this.accuracyClassesNumber + 1];
     }
-
 
     /**
     *
@@ -116,7 +110,7 @@ public class AccuracyStats {
         int[] counts = new int[this.reliabClassesNumber];
 
         for (DataItem di: data.getData()) {
-            int index = (int)Math.round(di.getPropsMeanDiff()/this.maxProps*this.reliabClassesNumber);
+            int index = (int) Math.round(di.getPropsMeanDiff()/this.maxProps*this.reliabClassesNumber);
 
             if (accuracyType == SimConfig.Q3){
                 double[] q3 = Utils.q3(di);
@@ -135,7 +129,6 @@ public class AccuracyStats {
         }
     }
 
-
     /**
     * Accuracy classes computation.
     */
@@ -147,8 +140,6 @@ public class AccuracyStats {
                 this.accuracyClasses[(int)Math.round(Utils.sov(di)[0]/100*this.accuracyClassesNumber)] += 1;
         }
     }
-
-
 
     /**
     * Creates PNG image with reliability classes accuracies with name <name>
@@ -163,7 +154,6 @@ public class AccuracyStats {
         }
 
         String path = dir + "/" + name;
-
         // init jgnuplot
         Plot.setGnuplotExecutable("gnuplot");
         Plot.setPlotDirectory(dir);
@@ -195,7 +185,7 @@ public class AccuracyStats {
             bw.close();
         }
         catch (IOException e){
-            logger.error("\n" + e);
+            logger.error(e);
         }
 
         plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:2 ", Axes.NOT_SPECIFIED,
@@ -206,11 +196,10 @@ public class AccuracyStats {
         try{
             plot.plot();
         }catch (Exception e){
-            logger.error("\n" + e);
+            logger.error(e);
         }
         tmpFile.deleteOnExit();
     }
-
 
     /**
     *
@@ -220,7 +209,7 @@ public class AccuracyStats {
         try{
             dir = d.getCanonicalPath();
         }catch (IOException e){
-            System.err.println(e);
+            logger.error(e);
         }
         String path = dir + "/" + name;
 
@@ -253,7 +242,7 @@ public class AccuracyStats {
             bw.close();
         }
         catch (IOException e){
-            logger.error("\n" + e);
+            logger.error(e);
         }
 
         plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:2", Axes.NOT_SPECIFIED,

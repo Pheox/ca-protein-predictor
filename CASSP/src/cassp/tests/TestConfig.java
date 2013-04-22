@@ -45,10 +45,15 @@ public class TestConfig extends TestCase {
         assertEquals(100, this.config.getAccClasses());
         assertEquals(100, this.config.getReliabClasses());
         assertEquals(4, this.config.getThreshold());
+        assertEquals(0, this.config.getTrainMode());
+        assertEquals(0, this.config.getTestMode());
+        assertEquals(0, this.config.getRepairType());
+
         assertEquals("../data/final/rs_126.data", this.config.getDataPath());
+        assertEquals("../data/final/pdb_vyber.data", this.config.getTestDataPath());
+
         assertEquals("../data/chou_fasman/rs_126.cf", this.config.getDataCFPath());
         assertEquals("../data/conf_classes/rs_126.cc", this.config.getDataCCPath());
-        assertEquals("../data/final/pdb_vyber.data", this.config.getTestDataPath());
         assertEquals("./src/cassp/tests/", this.config.getStatsPath());
 
         assertEquals(3, this.config.getPop());

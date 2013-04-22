@@ -77,7 +77,7 @@ public class CellularAutomaton {
             }
         }
         this.predSeq = this.getPredictedSeq();
-        return this.dataItem.getPredSeq();
+        return this.predSeq;
     }
 
     /**
