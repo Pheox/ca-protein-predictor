@@ -128,4 +128,8 @@ public class Psipred{
             this.reliabIndexes.add(Character.getNumericValue(reliabIndexesStr.charAt(i)));
         }
     }
+
+    public ArrayList<Integer> getReliabIndexes(){
+        return this.reliabIndexes;
+    }
 }

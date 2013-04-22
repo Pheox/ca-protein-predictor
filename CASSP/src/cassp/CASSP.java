@@ -40,6 +40,7 @@ public class CASSP {
     private CARule rule;
     private EAStats eaStats;
     private AccuracyStats accStats;
+    private Psipred psipred;
 
 
     /**
@@ -49,6 +50,7 @@ public class CASSP {
     public CASSP(SimConfig config){
         this.config = config;
         this.accStats = null;
+        this.psipred =  new Psipred(this.config.getPsipredPath());
     }
 
 
@@ -246,13 +248,58 @@ public class CASSP {
     * @return predicted secondary structure sequence
     */
     public String predict(String aaSeq){
+
+
         DataItem di = new DataItem();
         di.setAaSeq(aaSeq);
 
-        CellularAutomaton ca = new CellularAutomaton(di, this.config);
-        ca.run(this.rule, this.testData);
-        di.setPredSeq(ca.getPredSeq());
+        if (this.config.getTestMode() == SimConfig.TEST_MODE_CP){
+            CellularAutomaton ca = new CellularAutomaton(di, this.config);
+            ca.run(this.rule);
+            ca.computePropsMeanDiff();
+            ca.computeReliabIndexes(
+                rule.computeMaxPropsDiff(
+                    new double[]{this.testData.getMaxCF(), this.testData.getMaxCC()}
+                )
+            );
 
+            di.setPredSeq(ca.getPredSeq());
+            di.setReliabIndexes(ca.getReliabIndexes());
+
+            // PSIPRED repairing
+            String psipredSeq = di.getPsipredSeq();
+
+            if (psipredSeq.length() == 0){
+                psipredSeq = this.psipred.predict(di.getAaSeq());
+            }
+
+            di.repairPrediction(
+                psipredSeq,
+                this.config.getThreshold(),
+                this.config.getRepairType()
+            );
+        }
+        else if (this.config.getTestMode() == SimConfig.TEST_MODE_PC){
+            di.setPsipredSeq(this.psipred.predict(di.getAaSeq()));
+            di.setReliabIndexes(this.psipred.getReliabIndexes());
+
+            di.setPsipredAsPredSeq();
+
+            CellularAutomaton ca = new CellularAutomaton(di, this.config);
+            ca.run(this.rule);
+            ca.computePsipredPropsMeanDiff();
+
+            di.repairPrediction(
+                ca.getPredSeq(),
+                this.config.getThreshold(),
+                this.config.getRepairType()
+            );
+        }
+        else if (this.config.getTestMode() == SimConfig.TEST_MODE_NORMAL){
+                CellularAutomaton ca = new CellularAutomaton(di, this.config);
+                ca.run(this.rule);
+                di.setPredSeq(ca.getPredSeq());
+        }
         return di.getPredSeq();
     }
 
@@ -265,19 +312,44 @@ public class CASSP {
     * @return predicted secondary structure sequence
     */
     public String predict(DataItem di){
-        CellularAutomaton ca = new CellularAutomaton(di, this.config);
-        ca.run(this.rule, this.testData);
-        ca.computePropsMeanDiff();
 
-        ca.computeReliabIndexes(
-            this.rule.computeMaxPropsDiff(new double[]{
-                this.testData.getMaxCF(),
-                this.testData.getMaxCC()
-            })
-        );
+        if (this.config.getTestMode() == SimConfig.TEST_MODE_CP){
+            CellularAutomaton ca = new CellularAutomaton(di, this.config);
+            ca.run(this.rule);
+            ca.computePropsMeanDiff();
+            ca.computeReliabIndexes(
+                rule.computeMaxPropsDiff(
+                    new double[]{this.testData.getMaxCF(), this.testData.getMaxCC()}
+                )
+            );
 
-        di.setPredSeq(ca.getPredSeq());
-        di.setReliabIndexes(ca.getReliabIndexes());
+            di.setPredSeq(ca.getPredSeq());
+            di.setReliabIndexes(ca.getReliabIndexes());
+
+            di.repairPrediction(
+                di.getPsipredSeq(),
+                this.config.getThreshold(),
+                this.config.getRepairType()
+            );
+        }
+        else if (this.config.getTestMode() == SimConfig.TEST_MODE_PC){
+                di.setPsipredAsPredSeq();
+                CellularAutomaton ca = new CellularAutomaton(di, this.config);
+
+                ca.run(this.rule);
+                ca.computePsipredPropsMeanDiff();
+
+                di.repairPrediction(
+                    ca.getPredSeq(),
+                    this.config.getThreshold(),
+                    this.config.getRepairType()
+                );
+        }
+        else if (this.config.getTestMode() == SimConfig.TEST_MODE_NORMAL){
+                CellularAutomaton ca = new CellularAutomaton(di, this.config);
+                ca.run(this.rule);
+                di.setPredSeq(ca.getPredSeq());
+        }
         return di.getPredSeq();
     }
 
