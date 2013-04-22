@@ -20,6 +20,17 @@ public class SimConfig {
     static public int Q3 = 0;
     static public int SOV = 1;
 
+    static public int TRAIN_MODE_NORMAL = 0;
+    static public int TRAIN_MODE_CP = 1;
+    static public int TRAIN_MODE_PC = 2;
+
+    static public int TEST_MODE_NORMAL = 0;
+    static public int TEST_MODE_CP = 1;
+    static public int TEST_MODE_PC = 2;
+
+    static public int REPAIR_PROTEIN = 0;
+    static public int REPAIR_RESIDUE = 1;
+
     static public int CV_FOLDS = 3;
     static public int ACCURACY_TYPE = 0; // Q3
     static public int RELIAB_CLASSES = 10;
@@ -91,12 +102,20 @@ public class SimConfig {
     @Option(name="-rule",usage="Sets a rule type")
     private int rule;
 
-    // 0 - train, 1 - test, 2 - psipred only
-    @Option(name="-mode",usage="Sets system mode")
-    private int mode;
-
     @Option(name="-tresh",usage="Sets prediction repairing threshold")
     private int threshold;
+
+    // 0 - normal, 1 - CASSP + PSIPRED, 2 - PSIPRED + CASSP
+    @Option(name="-train_mode",usage="Sets training mode")
+    private int trainMode;
+
+    // 0 - normal, 1 - CASSP + PSIPRED, 2 - PSIPRED + CASSP
+    @Option(name="-test_mode",usage="Sets testing mode")
+    private int testMode;
+
+    // 0 - protein, 1 - amino acid
+    @Option(name="-repair",usage="Sets type of predicted aa repairing.")
+    private int repair;
 
 
     public SimConfig(){
@@ -112,6 +131,9 @@ public class SimConfig {
         this.maxSteps = SimConfig.MAX_STEPS;
         this.neigh = SimConfig.NEIGH;
         this.rule = SimConfig.RULE;
+        this.trainMode = SimConfig.TRAIN_MODE_NORMAL;
+        this.testMode = SimConfig.TEST_MODE_NORMAL;
+        this.repair = SimConfig.REPAIR_RESIDUE;
     }
 
     public SimConfig(String confPath){
@@ -202,9 +224,25 @@ public class SimConfig {
             this.rule = Integer.parseInt(prop.getProperty("rule"));
         else
             this.rule = SimConfig.RULE;
+
+        if (prop.getProperty("train_mode") != null)
+            this.trainMode = Integer.parseInt(prop.getProperty("train_mode"));
+        else
+            this.trainMode = SimConfig.TRAIN_MODE_NORMAL;
+
+        if (prop.getProperty("test_mode") != null)
+            this.testMode = Integer.parseInt(prop.getProperty("test_mode"));
+        else
+            this.testMode = SimConfig.TEST_MODE_NORMAL;
+
+        if (prop.getProperty("repair") != null)
+            this.repair = Integer.parseInt(prop.getProperty("repair"));
+        else
+            this.repair = SimConfig.REPAIR_RESIDUE;
     }
 
     public String toString(){
+        // TODO ! - needs update
         String s = "#######################################\n";
         s += "##     CASSP Configuration File      ##\n";
         s += "#######################################\n\n";
@@ -218,6 +256,14 @@ public class SimConfig {
         s += "acc_classes = " + this.accClasses + "\n\n";
         s += "# reliab_classes: 1 - n\n";
         s += "reliab_classes = " + this.reliabClasses + "\n\n";
+        s += "threshold = " + this.threshold + "\n\n";
+        s += "# 0 - normal, 1 - CASSP + PSIPRED, 2 - PSIPRED + CASSP\n";
+        s += "train_mode = " + this.trainMode + "\n\n";
+        s += "# 0 - normal, 1 - CASSP + PSIPRED, 2 - PSIPRED + CASSP\n";
+        s += "test_mode = " + this.testMode + "\n\n";
+        s += "# 0 - protein, 1 - residues\n";
+        s += "repair = " + this.repair + "\n\n";
+
         s += "######  DATA PATHS  ######\n\n";
         s += "data = " + this.dataPath + "\n";
         s += "data_cf = " + this.dataCFPath + "\n";
@@ -226,6 +272,7 @@ public class SimConfig {
         s += "stats = " + this.statsPath + "\n\n";
         s += "psipred = " + this.psipredPath + "\n";
         s += "best_rule = " + this.bestRulePath + "\n\n";
+
         s += "###### EVOLUTIONARY ALGORITHM ######\n\n";
         s += "pop = " + this.pop + "\n";
         s += "p_mut = " + this.mutProb + "\n";
@@ -396,12 +443,20 @@ public class SimConfig {
         this.accClasses = accClasses;
     }
 
-    public int getMode(){
-        return this.mode;
+    public int getTrainMode(){
+        return this.trainMode;
     }
 
-    public void setMode(int mode){
-        this.mode = mode;
+    public void setTrainMode(int trainMode){
+        this.trainMode = trainMode;
+    }
+
+    public int getTestMode(){
+        return this.testMode;
+    }
+
+    public void setTestMode(int testMode){
+        this.testMode = testMode;
     }
 
     public int getThreshold(){
@@ -410,5 +465,13 @@ public class SimConfig {
 
     public void setThreshold(int threshold){
         this.threshold = threshold;
+    }
+
+    public int getRepairType(){
+        return this.repair;
+    }
+
+    public void setRepairType(int repairType){
+        this.repair = repairType;
     }
 }
