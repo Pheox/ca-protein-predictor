@@ -170,59 +170,6 @@ public class CASSP {
     }
 
 
-
-    /**
-    * 1. CASSP prediction
-    * 2. Psipred prediction (based on thrashold)
-    */
-    public double testCASSPPsipred(){
-
-        this.testData = new Data(this.config.getTestDataPath(), this.config.getTestMode());
-        Psipred psipred = new Psipred(this.config.getPsipredPath());
-
-        // 1. run CA
-        for (DataItem dataItem: this.data.getData()){
-            this.predict(dataItem);
-        }
-
-        // 2. run Psipred
-        for (DataItem dataItem: data.getData()){dataItem.repairPrediction(
-                dataItem.getPsipredSeq(),
-                this.config.getThreshold(),
-                this.config.getRepairType()
-            );
-        }
-
-        return this.computeAccuracy(data);
-    }
-
-
-    /**
-    * 1. Psipred prediction
-    * 2. CASSP prediction (based on thresh)
-    */
-    public double testPsipredCASSP(){
-        // path to psipred data file? rs_126, cb_513, pdb_vyber
-
-        Data data = new Data(this.config.getTestDataPath(), this.config.getTestMode());
-        Psipred psipred = new Psipred(this.config.getPsipredPath());
-
-        // load PSIPRED data - save as variable in
-
-        // 1. run Psipred
-        for (DataItem dataItem: data.getData()){
-            //dataItem.setPsipredAsPredSeq();
-        }
-
-        // 2. run CA if Psipred result is not reliable
-        for (DataItem dataItem: data.getData()){
-            //dataItem.repairPrediction(this.predict(dataItem.getAaSeq()), this.config.getThreshold());
-        }
-        return this.computeAccuracy(data);
-    }
-
-
-
     private double computeAccuracy(Data data){
         double accuracy = 0.0;
 
@@ -248,7 +195,10 @@ public class CASSP {
     * @return predicted secondary structure sequence
     */
     public String predict(String aaSeq){
-
+        if (this.rule == null){
+            logger.error("No rule trained or loaded!");
+            return "";
+        }
 
         DataItem di = new DataItem();
         di.setAaSeq(aaSeq);
@@ -295,7 +245,8 @@ public class CASSP {
                 this.config.getRepairType()
             );
         }
-        else if (this.config.getTestMode() == SimConfig.TEST_MODE_NORMAL){
+        else if (this.config.getTestMode() == SimConfig.TEST_MODE_NORMAL ||
+            this.config.getTestMode() == SimConfig.NO_TESTING){
                 CellularAutomaton ca = new CellularAutomaton(di, this.config);
                 ca.run(this.rule);
                 di.setPredSeq(ca.getPredSeq());
@@ -513,10 +464,10 @@ public class CASSP {
             this.rule = (CARule) in.readObject();
             in.close();
             fileIn.close();
-        }catch(IOException i){
-            i.printStackTrace();
-        }catch(ClassNotFoundException c){
-            c.printStackTrace();
+        }catch(IOException e){
+            logger.error(e.getMessage());
+        }catch(ClassNotFoundException e){
+            logger.error(e.getMessage());
         }
         return this.rule;
     }
