@@ -53,12 +53,24 @@ public class SSPEA {
 
     public CARule evolve() throws Exception{
 
+        // mutacia je gaussovska so smerodatnou odchylkou 0.1 - ako sa mutuju integer geny,
+        // ?????
+        // geneticke operatory sa vraj vykonavaju v poradi akom boli do conf. zadane
+
+        // ake poradie gen. operatorov ??
+
         // EA configuration
         Configuration.reset();
         Configuration conf = new DefaultConfiguration();
         //conf.addGeneticOperator(new MutationOperator(conf, (int) (1/this.config.p_mut)));
+        //conf.addGeneticOperator(new GaussianMutationOperator(conf, 0.1d));
         conf.addGeneticOperator(new GaussianMutationOperator(conf, 0.1d));
         conf.addGeneticOperator(new CrossoverOperator(conf, this.config.getCrossProb()));
+        // turnaj funguje nasledovne: najlepsi sa vyberie s pravdepodobnostou p,
+        // druhy najlepsi s pravd. p*(1-p), treti s pravd. p*(1-p)*(1-p) etc.
+
+        // individuals selection
+        //conf.addNaturalSelector(new TournamentSelector(conf, 2, 1.0d), false);
         conf.addNaturalSelector(new TournamentSelector(conf, 2, 1.0d), false);
 
         conf.setPreservFittestIndividual(true);

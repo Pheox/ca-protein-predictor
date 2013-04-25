@@ -153,7 +153,8 @@ public class AccuracyStats {
             System.err.println(e);
         }
 
-        String path = dir + "/" + name;
+        String pngPath = dir + "/" + name + ".png";
+        String txtPath = dir + "/" + name + ".txt";
         // init jgnuplot
         Plot.setGnuplotExecutable("gnuplot");
         Plot.setPlotDirectory(dir);
@@ -169,11 +170,8 @@ public class AccuracyStats {
             plot.setYLabel("SOV");
         plot.setYRange("0", "100");
 
-        // create tmp file with data
-        File tmpFile = null;
         try{
-            tmpFile = File.createTempFile("temp",".tmp");
-            FileWriter fo = new FileWriter(tmpFile);
+            FileWriter fo = new FileWriter(txtPath);
             BufferedWriter bw = new BufferedWriter(fo);
 
             for (int i = 0; i < this.reliabClasses.length; i++) {
@@ -188,17 +186,16 @@ public class AccuracyStats {
             logger.error(e);
         }
 
-        plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:2 ", Axes.NOT_SPECIFIED,
+        plot.pushGraph(new Graph(txtPath, "1:2 ", Axes.NOT_SPECIFIED,
             "Mean: " + this.totalAccuracy, Style.POINTS));
 
         // save image
-        plot.setOutput(Terminal.PNG, path, "640, 480");
+        plot.setOutput(Terminal.PNG, pngPath, "640, 480");
         try{
             plot.plot();
         }catch (Exception e){
             logger.error(e);
         }
-        tmpFile.deleteOnExit();
     }
 
     /**
@@ -211,7 +208,8 @@ public class AccuracyStats {
         }catch (IOException e){
             logger.error(e);
         }
-        String path = dir + "/" + name;
+        String pngPath = dir + "/" + name + ".png";
+        String txtPath = dir + "/" + name + ".txt";
 
         // init jgnuplot
         Plot.setGnuplotExecutable("gnuplot");
@@ -228,11 +226,8 @@ public class AccuracyStats {
         plot.setYLabel("Number");
         plot.setRanges("[0:100]");
 
-        // create tmp file with data
-        File tmpFile = null;
         try{
-            tmpFile = File.createTempFile("temp",".tmp");
-            FileWriter fo = new FileWriter(tmpFile);
+            FileWriter fo = new FileWriter(txtPath);
             BufferedWriter bw = new BufferedWriter(fo);
 
             for (int i = 0; i < this.accuracyClasses.length; i++) {
@@ -245,16 +240,15 @@ public class AccuracyStats {
             logger.error(e);
         }
 
-        plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:2", Axes.NOT_SPECIFIED,
+        plot.pushGraph(new Graph(txtPath, "1:2", Axes.NOT_SPECIFIED,
             "Mean: " + this.totalAccuracy, Style.BOXES));
 
         // save image
-        plot.setOutput(Terminal.PNG, path, "640, 480");
+        plot.setOutput(Terminal.PNG, pngPath, "640, 480");
         try{
             plot.plot();
         }catch (Exception e){
             logger.error("\n" + e);
         }
-        tmpFile.deleteOnExit();
     }
 }
