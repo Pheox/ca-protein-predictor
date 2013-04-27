@@ -23,13 +23,15 @@ public class CACell{
     private double sheetProps;
     private double coilProps;
 
+    private boolean dirtyFlag;
+
 
     public CACell(AminoAcid aa){
         this.aminoAcid = aa;
         this.helixProps = this.aminoAcid.getCFH();
         this.sheetProps = this.aminoAcid.getCFE();
         this.coilProps = this.aminoAcid.getCFC();
-        this.computeMotif();
+        this.dirtyFlag = true;
     }
 
     public CACell(CACell cell){
@@ -38,6 +40,7 @@ public class CACell{
         this.helixProps = cell.getHelixProps();
         this.sheetProps = cell.getSheetProps();
         this.coilProps = cell.getCoilProps();
+        this.dirtyFlag = false;
     }
 
     /**
@@ -57,6 +60,7 @@ public class CACell{
             else
                 this.motif = 'C';
         }
+        this.dirtyFlag = false;
         return this.motif;
     }
 
@@ -79,6 +83,7 @@ public class CACell{
     }
 
     public void setHelixProps(double props){
+        this.dirtyFlag = true;
         this.helixProps = props;
     }
 
@@ -87,6 +92,7 @@ public class CACell{
     }
 
     public void setSheetProps(double props){
+        this.dirtyFlag = true;
         this.sheetProps = props;
     }
 
@@ -95,10 +101,12 @@ public class CACell{
     }
 
     public void setCoilProps(double props){
+        this.dirtyFlag = true;
         this.coilProps = props;
     }
 
     public char getMotif(){
+        if (this.dirtyFlag) this.computeMotif();
         return this.motif;
     }
 }
