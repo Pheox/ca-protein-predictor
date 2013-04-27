@@ -81,6 +81,7 @@ public class SSPFF extends FitnessFunction{
 
                 CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
                 ca.run(rule);
+                dataItem.computeMeanReliabIndex();
 
                 dataItem.repairPrediction(
                     ca.getPredSeq(),

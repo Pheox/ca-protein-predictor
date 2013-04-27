@@ -143,6 +143,10 @@ public class CellularAutomaton {
         this.dataItem.setMeanReliabIndex(this.meanReliabIndex);
     }
 
+    public void computePsipredMeanReliabIndex(){
+        System.out.println(this.reliabIndexes);
+    }
+
 
     public String getPredSeq(){
         return this.predSeq;

@@ -156,4 +156,12 @@ public class DataItem {
     public void setMeanReliabIndex(int index){
         this.meanReliabIndex = index;
     }
+
+    public void computeMeanReliabIndex(){
+        double sum = 0.0;
+        for (int i = 0; i < this.reliabIndexes.size();i++) {
+            sum += this.reliabIndexes.get(i);
+        }
+        this.meanReliabIndex = (int) Math.floor(sum/this.reliabIndexes.size());
+    }
 }

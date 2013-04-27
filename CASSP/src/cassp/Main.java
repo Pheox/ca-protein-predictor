@@ -75,7 +75,6 @@ public class Main {
             simulator.createReliabImage("reliability_test");
         }
 
-
         String toPredict = config.getToPredict();
 
         if (toPredict != null){
@@ -91,5 +90,7 @@ public class Main {
             }
             logger.info("predicted: \n" + predicted);
         }
+
+        System.exit(0);
     }
 }
