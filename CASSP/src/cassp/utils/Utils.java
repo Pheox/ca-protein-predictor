@@ -10,6 +10,7 @@ package cassp.utils;
 
 import java.io.*;
 import java.util.*;
+import java.lang.Math.*;
 
 import org.jgap.*;
 import org.jgap.data.*;
@@ -105,12 +106,13 @@ public class Utils {
 
     public static double[] q3(DataItem dataItem){
         int okCount = 0;
+        int diLength = dataItem.length();
 
-        for (int i = 0; i <  dataItem.length(); i++) {
+        for (int i = 0; i <  diLength; i++) {
             if (dataItem.getSspAt(i) == dataItem.getPredAt(i))
                 okCount++;
         }
-        return new double[] {(double) okCount/dataItem.length()*100, dataItem.length()};
+        return new double[] {(double) okCount/diLength*100, diLength};
     }
 
     public static double[] q3(DataItem dataItem, char motiv){
@@ -346,16 +348,25 @@ public class Utils {
     *
     * @param dir directory in which .txt files are deleted
     */
-    public static void removeTXTFiles(String dir){
+    public static void removeJGnuplotTXTFiles(String dir){
         File folder = new File(dir);
         File[] files = folder.listFiles( new FilenameFilter() {
             public boolean accept( final File dir, final String name ) {
-                return name.matches(".*\\.txt");
+                return name.matches(".*plt\\.txt");
             }
         });
         for (File file : files){
             if (!file.delete())
                 System.err.println( "Can't remove " + file.getAbsolutePath() );
         }
+    }
+
+    /**
+    * Returns value of Normal/Gaussian distribution for <x>.
+    */
+    public static double gauss(double mean, double deviation, double x){
+        double exp = (x - mean)*(x - mean)*(-1)/(2*deviation*deviation);
+        double denom = deviation * Math.sqrt(2*Math.PI);
+        return Math.exp(exp)/denom;
     }
 }
