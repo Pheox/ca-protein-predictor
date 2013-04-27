@@ -33,6 +33,7 @@ public abstract class CARule implements Serializable{
     protected int steps;
     protected int neigh;
     protected double[] weights;
+    protected int weightsLength;
     protected double maxPropsDiff;
 
     protected HashMap<Character, AminoAcid> aminoAcids;
@@ -65,11 +66,12 @@ public abstract class CARule implements Serializable{
     * @param cell Cell which next state is computed.
     * @param c Index of actual state.
     */
-    public abstract void nextState(CACell[] cells, CACell cell, int c);
+    public abstract char nextState(CACell[] cells, CACell cell, int c);
 
 
     public int getWeightsLength(){
-        return this.weights.length;
+        //return this.weights.length;
+        return this.weightsLength;
     }
 
    /**
@@ -78,6 +80,7 @@ public abstract class CARule implements Serializable{
    * @param maxCoeffs Max coefficients (maxCoeffs[0] is max CF, maxCoeffs[1] is max CC).
    */
     public abstract double computeMaxPropsDiff(double[] maxCoeffs);
+
 
 
     /* Getters & setters */

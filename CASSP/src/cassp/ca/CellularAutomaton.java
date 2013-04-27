@@ -21,6 +21,7 @@ import cassp.ca.rules.*;
 public class CellularAutomaton {
 
     private CACell[] cells;
+    private int cellsLength;
     private DataItem dataItem;
     private CARule rule;
     private SimConfig config;
@@ -34,6 +35,7 @@ public class CellularAutomaton {
     public CellularAutomaton(DataItem dataItem, SimConfig config) {
         this.dataItem = dataItem;
         this.cells = new CACell[this.dataItem.length()];
+        this.cellsLength = this.cells.length;
         this.config = config;
         this.predSeq = "";
         this.reliabIndexes = new ArrayList<Integer>();
@@ -44,6 +46,7 @@ public class CellularAutomaton {
     public CellularAutomaton(DataItem dataItem){
         this.dataItem = dataItem;
         this.cells = new CACell[this.dataItem.length()];
+        this.cellsLength = this.cells.length;
         this.config = new SimConfig();
         this.predSeq = "";
         this.reliabIndexes = new ArrayList<Integer>();
@@ -58,25 +61,31 @@ public class CellularAutomaton {
     * @param data Data object needed for amino acids properties.
     */
     public String run(CARule rule){
-
         this.rule = rule;
+        int diLength = this.dataItem.length();
+
         // cells initialization
-        for (int i = 0; i < this.dataItem.length(); i++){
+        for (int i = 0; i < diLength; i++){
             this.cells[i] = new CACell(rule.getAminoAcid(this.dataItem.getAaAt(i)));
         }
 
-        for (int s = 0; s < this.rule.getSteps(); s++) {
+        int ruleSteps = this.rule.getSteps();
+
+        for (int s = 0; s < ruleSteps; s++) {
             // cells array copy
-            CACell[] tmpCells = new CACell[this.cells.length];
-            for (int u = 0; u < this.cells.length; u++) {
+            CACell[] tmpCells = new CACell[this.cellsLength];
+            for (int u = 0; u < this.cellsLength; u++) {
                 tmpCells[u] = new CACell(this.cells[u]);
             }
             // next states computation
-            for (int c = 0; c < this.cells.length; c++ ) {
+            for (int c = 0; c < this.cellsLength; c++ ) {
                 rule.nextState(tmpCells, this.cells[c], c);
             }
         }
-        this.predSeq = this.getPredictedSeq();
+
+        for (int i = 0; i < this.cellsLength; i++ ) {
+            this.predSeq += this.cells[i].getMotif();
+        }
         return this.predSeq;
     }
 
@@ -84,11 +93,7 @@ public class CellularAutomaton {
     * Returns predicted sequence taken from cells in final CA configuration.
     */
     public String getPredictedSeq(){
-        String seq = "";
-        for (int i = 0; i < this.cells.length; i++ ) {
-            seq += this.cells[i].getMotif();
-        }
-        return seq;
+        return this.predSeq;
     }
 
     public CACell getCell(int index){
@@ -136,19 +141,6 @@ public class CellularAutomaton {
         this.meanReliabIndex = (int) Math.round(this.dataItem.getPropsMeanDiff()/
             maxProps*this.config.getReliabClasses());
         this.dataItem.setMeanReliabIndex(this.meanReliabIndex);
-    }
-
-    public void computePsipredPropsMeanDiff(){
-        double sum = 0.0;
-        this.reliabIndexes = this.dataItem.getReliabIndexes();
-
-        for (int i = 0; i < this.cells.length; i++) {
-            sum += this.reliabIndexes.get(i);
-        }
-        this.dataItem.setPropsMeanDiff(sum/this.cells.length);
-        this.dataItem.setMeanReliabIndex(
-            (int) Math.round(this.dataItem.getPropsMeanDiff())
-        );
     }
 
 
