@@ -45,27 +45,39 @@ public class TestCASSP extends TestCase {
 
     public void testEvolutionImageCreation(){
         this.simulator.train();
-        this.simulator.createEvolutionImage("evolution.png");
+        this.simulator.createEvolutionImage("evolution");
 
         File f = new File(this.config.getStatsPath() + "evolution.png");
+        assertEquals(true, f.exists());
+        f.delete();
+
+        f = new File(this.config.getStatsPath() + "evolution.txt");
         assertEquals(true, f.exists());
         f.delete();
     }
 
     public void testAccClassesImageCreation(){
         this.simulator.train();
-        this.simulator.createAccClassesImage("accuracy.png");
+        this.simulator.createAccClassesImage("accuracy");
 
         File f = new File(this.config.getStatsPath() + "accuracy.png");
+        assertEquals(true, f.exists());
+        f.delete();
+
+        f = new File(this.config.getStatsPath() + "accuracy.txt");
         assertEquals(true, f.exists());
         f.delete();
     }
 
     public void testReliabImageCreation(){
         this.simulator.train();
-        this.simulator.createReliabImage("reliability.png");
+        this.simulator.createReliabImage("reliability");
 
         File f = new File(this.config.getStatsPath() + "reliability.png");
+        assertEquals(true, f.exists());
+        f.delete();
+
+        f = new File(this.config.getStatsPath() + "reliability.txt");
         assertEquals(true, f.exists());
         f.delete();
     }

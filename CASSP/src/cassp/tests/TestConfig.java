@@ -56,13 +56,15 @@ public class TestConfig extends TestCase {
         assertEquals("../data/conf_classes/rs_126.cc", this.config.getDataCCPath());
         assertEquals("./src/cassp/tests/", this.config.getStatsPath());
 
-        assertEquals(3, this.config.getPop());
+        assertEquals(2, this.config.getPop());
         assertEquals(0.05, this.config.getMutProb());
         assertEquals(0.5, this.config.getCrossProb());
-        assertEquals(5, this.config.getMaxGen());
+        assertEquals(2, this.config.getMaxGen());
+
+        assertEquals(0.1, this.config.getMutDev());
 
         assertEquals(3, this.config.getMaxSteps());
         assertEquals(1, this.config. getNeigh());
-        assertEquals(1, this.config.getRuleID());
+        assertEquals(0, this.config.getRule());
     }
 }

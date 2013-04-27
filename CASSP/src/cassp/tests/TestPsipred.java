@@ -43,16 +43,16 @@ public class TestPsipred extends TestCase {
     }
 
     public void testPredictString(){
-        assertEquals("CHHHHHHHHHHHHHHHHHC", this.psipred.predict("AAAAAAAAAAAAAAAAAAA"));
+        assertEquals("CCCCC", this.psipred.predict("AAAAA"));
     }
 
     public void testPredictDataItem(){
         DataItem dataItem = new DataItem();
-        dataItem.setAaSeq("AAAAAAAAAAAAAAAAAAA");
+        dataItem.setAaSeq("AAAAA");
         this.psipred.predict(dataItem);
-        assertEquals("CHHHHHHHHHHHHHHHHHC", dataItem.getPredSeq());
+        assertEquals("CCCCC", dataItem.getPredSeq());
 
-        int[] predIndexes = new int[]{9, 5, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 3, 9};
+        int[] predIndexes = new int[]{9, 2, 1, 2, 8};
         ArrayList<Integer> indexes = dataItem.getReliabIndexes();
 
         for (int i = 0; i < indexes.size(); i++) {

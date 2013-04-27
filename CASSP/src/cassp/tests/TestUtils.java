@@ -78,10 +78,10 @@ public class TestUtils extends TestCase {
         assertEquals(58.5714, Utils.sov(this.simpleData, 'C'), 0.001);
     }
 
-    public void testRemoveTXTFiles(){
+    public void testRemoveJGnuplotTXTFiles(){
         String[] fileNames = {
-            "./src/cassp/tests/1.txt",
-            "./src/cassp/tests/1.1.txt",
+            "./src/cassp/tests/1plt.txt",
+            "./src/cassp/tests/1.1plt.txt",
             "./src/cassp/tests/1.1.txt.1"
         };
 
@@ -94,12 +94,16 @@ public class TestUtils extends TestCase {
             System.out.println("Error while creating a new empty file :" + ioe);
         }
 
-        Utils.removeTXTFiles("./src/cassp/tests/");
+        Utils.removeJGnuplotTXTFiles("./src/cassp/tests/");
 
-        File f = new File("./src/cassp/tests/1.txt");
+        File f = new File("./src/cassp/tests/1plt.txt");
         assertEquals(false, f.exists());
-        f = new File("./src/cassp/tests/1.1.txt");
+        f.delete();
+
+        f = new File("./src/cassp/tests/1.1plt.txt");
         assertEquals(false, f.exists());
+        f.delete();
+
         f = new File("./src/cassp/tests/1.1.txt.1");
         assertEquals(true, f.exists());
         f.delete();

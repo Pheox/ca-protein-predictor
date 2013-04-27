@@ -57,11 +57,47 @@ public class TestCARules extends TestCase {
         this.ca = null;
     }
 
+    public void testSimpleRuleSize(){
+        this.simpleRule = new CASimpleRule(1, this.data.getAminoAcids());
+        assertEquals(4, this.simpleRule.getSize());
+
+        this.simpleRule.setNeigh(10);
+        assertEquals(22, this.simpleRule.getSize());
+    }
+
+    public void testConformRuleSize(){
+        this.conformRule = new CAConformRule(1, this.data.getAminoAcids());
+        assertEquals(7, this.conformRule.getSize());
+
+        this.conformRule.setNeigh(10);
+        assertEquals(25, this.conformRule.getSize());
+    }
+
+    public void testSimpleMaxPropsDiff(){
+        this.data.loadChouFasman("./src/cassp/tests/test.cf");
+
+        this.simpleRule = new CASimpleRule(2, this.data.getAminoAcids());
+        double maxDiff = this.simpleRule.computeMaxPropsDiff(new double[]{this.data.getMaxCF()});
+        assertEquals(1200.0, maxDiff);
+    }
+
+    public void testConformMaxPropsDiff(){
+        this.data.loadChouFasman("./src/cassp/tests/test.cf");
+        this.data.loadConformCoeffs("./src/cassp/tests/test.cc");
+
+        this.conformRule = new CAConformRule(2, this.data.getAminoAcids());
+        double maxDiff = this.conformRule.computeMaxPropsDiff(
+            new double[]{this.data.getMaxCF(), this.data.getMaxCC()}
+        );
+        assertEquals(1212.013, maxDiff, 0.01);
+    }
+
+
     public void testSimpleRuleNeigh1(){
         this.config.setNeigh(1);
 
         di.setAaSeq("CRM");
-        data.add(di);
+        this.data.add(di);
         this.data.loadChouFasman("./src/cassp/tests/test.cf");
         this.ca = new CellularAutomaton(di, this.config);
 
@@ -74,7 +110,7 @@ public class TestCARules extends TestCase {
         this.simpleRule.setWeights(weights);
         String seq = this.ca.run(this.simpleRule);
 
-        assertEquals(seq, "CEC");
+        assertEquals("CEC", seq);
         assertEquals(93.333, this.ca.getCell(1).getHelixProps(), 0.1);
         assertEquals(156.666, this.ca.getCell(1).getSheetProps(), 0.1);
         assertEquals(116.666, this.ca.getCell(1).getCoilProps(), 0.1);
