@@ -9,6 +9,7 @@ package cassp.ca.rules;
 
 
 import java.util.*;
+import java.text.*;
 
 import org.jgap.*;
 import org.jgap.data.*;
@@ -20,6 +21,7 @@ import org.apache.log4j.*;
 import cassp.*;
 import cassp.ca.*;
 import cassp.data.*;
+import cassp.utils.*;
 import cassp.config.*;
 import cassp.ca.rules.*;
 
@@ -30,9 +32,52 @@ import cassp.ca.rules.*;
 */
 public class CAConformRule extends CARule{
 
+    static Logger logger = Logger.getLogger(CAConformRule.class);
+
     private double alpha;
     private double beta;
     private double gamma;
+
+
+        public static Genotype initGenotypeGauss(Configuration conf){
+        Genotype genotype = null;
+        IChromosome sampleChromosome = conf.getSampleChromosome();
+
+        try{
+            Population pop = new Population(conf, conf.getPopulationSize());
+
+            for (int i = 0; i < conf.getPopulationSize(); i++) {
+
+                Gene[] sampleGenes = sampleChromosome.getGenes();
+                Gene[] newGenes = new Gene[sampleGenes.length];
+                RandomGenerator generator = conf.getRandomGenerator();
+
+                for (int j = 0; j < newGenes.length; j++) {
+                    newGenes[j] = sampleGenes[j].newGene();
+                }
+
+                for (int j = 0; j < 4; j++) {
+                    newGenes[j].setToRandomValue(generator);
+                }
+
+                // weights init
+                int center = (newGenes.length - 4)/2;
+                for (int j = 4; j < newGenes.length; j++) {
+                    double diff = Math.abs(center - (j - 4));
+                    newGenes[j].setAllele(Utils.gauss(0, 0.399, diff/center*0.399*3));
+                }
+
+                IChromosome chrom = Chromosome.randomInitialChromosome(conf);
+                chrom.setGenes(newGenes);
+                pop.addChromosome(chrom);
+            }
+            genotype = new Genotype(conf, pop);
+        }catch (InvalidConfigurationException e){
+            logger.error(e.getMessage());
+        }
+
+        return genotype;
+    }
 
 
     public CAConformRule(int neigh, HashMap<Character, AminoAcid> aminoAcids){
@@ -41,6 +86,7 @@ public class CAConformRule extends CARule{
         this.gamma = 0.0;
         this.steps = 0;
         this.neigh = neigh;
+        this.weightsLength = neigh*2 + 1;
         this.aminoAcids = aminoAcids;
     }
 
@@ -50,20 +96,21 @@ public class CAConformRule extends CARule{
 
         try{
             // steps
-            genes[0] = new IntegerGene(conf, 0, maxSteps);
+            genes[0] = new MyIntegerGene(conf, 0, maxSteps);
 
             // alpha & beta & gamma
-            genes[1] = new DoubleGene(conf, 0, 1);
-            genes[2] = new DoubleGene(conf, 0, 1);
-            genes[3] = new DoubleGene(conf, 0, 1);
+            genes[1] = new MyDoubleGene(conf, 0.0, 1.0);
+            genes[2] = new MyDoubleGene(conf, 0.0, 1.0);
+            genes[3] = new MyDoubleGene(conf, 0.0, 1.0);
 
             // weights
             for (int i = 4; i - 4 < (this.neigh*2 + 1); i++) {
-                genes[i] = new DoubleGene(conf, 0, 1);
+                genes[i] = new MyDoubleGene(conf, 0.0, 1.0);
             }
+
             chromosome = new Chromosome(conf, genes);
         } catch (InvalidConfigurationException e){
-            System.out.println(e);
+            logger.error(e.getMessage());
         }
 
         return chromosome;
@@ -99,7 +146,7 @@ public class CAConformRule extends CARule{
         return this;
     }
 
-    public void nextState(CACell[] cells, CACell cell, int c){
+    public char nextState(CACell[] cells, CACell cell, int c){
         double sumH = 0;
         double sumE = 0;
         double sumC = 0;
@@ -107,7 +154,7 @@ public class CAConformRule extends CARule{
 
         for (int o = c - this.neigh; o <= c + this.neigh; o++) {
 
-            int weightIndex = o - c + this.getWeightsLength()/2;
+            int weightIndex = o - c + this.weightsLength/2;
             sumWeights += this.weights[weightIndex];
 
             if ((o < 0) || (o > cells.length - 1)){
@@ -131,16 +178,17 @@ public class CAConformRule extends CARule{
             this.beta*confCoeffs[1] +  this.gamma*confCoeffs[4]);
         cell.setCoilProps(this.alpha*sumC/sumWeights +
             this.beta*confCoeffs[2] +  this.gamma*confCoeffs[5]);
-        cell.computeMotif();
+        //cell.computeMotif();
+        return cell.getMotif();
     }
 
     public double computeMaxPropsDiff(double[] maxCoeffs){
-        this.maxPropsDiff = maxCoeffs[0]*this.neigh + maxCoeffs[1]*this.neigh*2;
+        this.maxPropsDiff = maxCoeffs[0]*(2*this.neigh + 1) + maxCoeffs[1]*(this.neigh*2 + 1);
         return this.maxPropsDiff;
     }
 
     public int getSize(){
-        return 1 + 2*neigh + 1 + 3;
+        return 1 + 3 + (2*this.neigh + 1);
     }
 
     public void setAlpha(double alpha){
@@ -165,5 +213,23 @@ public class CAConformRule extends CARule{
 
     public double getGamma(){
         return this.gamma;
+    }
+
+    public String toString(){
+        DecimalFormat df = new DecimalFormat("#.####");
+
+        String s = "\nSteps: " + this.steps + "\n";
+        s += "Neigh: " + this.neigh + "\n";
+        s += "Alpha: " + this.alpha + "\n";
+        s += "Beta: " + this.beta + "\n";
+        s += "Gamma: " + this.gamma + "\n";
+        s += "Weights: ";
+
+        for (int i = 0; i < this.weights.length; i++) {
+            s += df.format(this.weights[i]) + "\t";
+        }
+        s += "\n";
+
+        return s;
     }
 }

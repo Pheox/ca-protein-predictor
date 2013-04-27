@@ -9,6 +9,7 @@ package cassp.ca.rules;
 
 
 import java.util.*;
+import java.text.*;
 
 import org.jgap.*;
 import org.jgap.data.*;
@@ -20,6 +21,7 @@ import org.apache.log4j.*;
 import cassp.*;
 import cassp.ca.*;
 import cassp.data.*;
+import cassp.utils.*;
 import cassp.config.*;
 import cassp.ca.rules.*;
 
@@ -29,15 +31,55 @@ import cassp.ca.rules.*;
 */
 public class CASimpleRule extends CARule{
 
+    static Logger logger = Logger.getLogger(CASimpleRule.class);
+
     // boundary conditions
     public static int BOUNDARY_H = 0;
     public static int BOUNDARY_E = 0;
     public static int BOUNDARY_C = 300;
 
 
+    public static Genotype initGenotypeGauss(Configuration conf){
+        Genotype genotype = null;
+        IChromosome sampleChromosome = conf.getSampleChromosome();
+
+        try{
+            Population pop = new Population(conf, conf.getPopulationSize());
+
+            for (int i = 0; i < conf.getPopulationSize(); i++) {
+
+                Gene[] sampleGenes = sampleChromosome.getGenes();
+                Gene[] newGenes = new Gene[sampleGenes.length];
+                RandomGenerator generator = conf.getRandomGenerator();
+
+                for (int j = 0; j < newGenes.length; j++) {
+                    newGenes[j] = sampleGenes[j].newGene();
+                }
+                newGenes[0].setToRandomValue(generator);
+
+                // weights init
+                int center = newGenes.length/2;
+                for (int j = 1; j < newGenes.length; j++) {
+                    double diff = Math.abs(center - j);
+                    newGenes[j].setAllele(Utils.gauss(0, 0.399, diff/center*0.399*3));
+                }
+
+                IChromosome chrom = Chromosome.randomInitialChromosome(conf);
+                chrom.setGenes(newGenes);
+                pop.addChromosome(chrom);
+            }
+            genotype = new Genotype(conf, pop);
+        }catch (InvalidConfigurationException e){
+            logger.error(e.getMessage());
+        }
+
+        return genotype;
+    }
+
     public CASimpleRule(int neigh, HashMap<Character, AminoAcid> aminoAcids){
         this.steps = 1;
         this.neigh = neigh;
+        this.weightsLength = neigh*2 + 1;
         this.aminoAcids = aminoAcids;
     }
 
@@ -50,14 +92,14 @@ public class CASimpleRule extends CARule{
         IChromosome chromosome = null;
 
         try{
-            sampleGenes[0] = new IntegerGene(conf, 0, maxSteps);
+            sampleGenes[0] = new MyIntegerGene(conf, 0, maxSteps);
 
             for (int i = 1; i-1 < (this.neigh*2 + 1); i++) {
-                sampleGenes[i] = new DoubleGene(conf, 0, 1);
+                sampleGenes[i] = new MyDoubleGene(conf, 0.0, 1.0);
             }
             chromosome = new Chromosome(conf, sampleGenes);
         } catch (InvalidConfigurationException e){
-            System.out.println(e);
+            logger.error(e.getMessage());
         }
 
         return chromosome;
@@ -87,18 +129,19 @@ public class CASimpleRule extends CARule{
         return this;
     }
 
-    public void nextState(CACell[] cells, CACell cell, int c){
+    public char nextState(CACell[] cells, CACell cell, int c){
         double sumH = 0;
         double sumE = 0;
         double sumC = 0;
         double sumWeights = 0;
+        int cellsLength = cells.length;
 
         for (int o = c - this.neigh; o <= c + this.neigh; o++) {
 
-            int weightIndex = o - c + this.getWeightsLength()/2;
+            int weightIndex = o - c + this.weightsLength/2;
             sumWeights += this.weights[weightIndex];
 
-            if ((o < 0) || (o > cells.length - 1)){
+            if ((o < 0) || (o > cellsLength - 1)){
                 // boundary cells
                 sumH += this.weights[weightIndex]*CASimpleRule.BOUNDARY_H;
                 sumE += this.weights[weightIndex]*CASimpleRule.BOUNDARY_E;
@@ -114,11 +157,25 @@ public class CASimpleRule extends CARule{
         cell.setHelixProps(sumH/sumWeights);
         cell.setSheetProps(sumE/sumWeights);
         cell.setCoilProps(sumC/sumWeights);
-        cell.computeMotif();
+        return cell.getMotif();
     }
 
     public double computeMaxPropsDiff(double[] maxCoeffs){
-        this.maxPropsDiff = maxCoeffs[0]*this.neigh;
+        this.maxPropsDiff = maxCoeffs[0]*(2*this.neigh + 1);
         return this.maxPropsDiff;
+    }
+
+    public String toString(){
+        DecimalFormat df = new DecimalFormat("#.####");
+
+        String s = "\nSteps: " + this.steps + "\n";
+        s += "Neigh: " + this.neigh + "\n";
+        s += "Weights: ";
+        for (int i = 0; i < this.weights.length; i++) {
+            s += df.format(this.weights[i]) + "\t";
+        }
+        s += "\n";
+
+        return s;
     }
 }
