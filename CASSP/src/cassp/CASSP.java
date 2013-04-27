@@ -62,11 +62,7 @@ public class CASSP {
         this.setupTrainData();
 
         double accuracy = 0.0;
-
-        if (this.config.getCVFolds() > 0)
-            accuracy = this.crossValidate(this.config.getCVFolds());
-        else
-            this.rule = this.trainRule(this.data);
+        this.rule = this.trainRule(this.data);
         this.saveRule();
         return accuracy;
     }
@@ -189,6 +185,31 @@ public class CASSP {
 
 
     /**
+    * Predict all sequences in a File <f>.
+    * Sequences are separated by end of line.
+    **/
+    public String predict(File f){
+        // open a file
+        String result = "";
+
+        try{
+            FileInputStream fstream = new FileInputStream(f.getAbsolutePath());
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String strLine;
+
+            while ((strLine = br.readLine()) != null){
+                result += this.predict(strLine) + "\n";
+            }
+            in.close();
+        }catch (Exception e){
+            logger.error(e.getMessage());
+        }
+        return result;
+    }
+
+
+    /**
     * Secondary structure prediction of amino acid sequence.
     *
     * @param aaSeq amino acid sequence
@@ -237,7 +258,7 @@ public class CASSP {
 
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
             ca.run(this.rule);
-            ca.computePsipredPropsMeanDiff();
+            //ca.computePsipredPropsMeanDiff();
 
             di.repairPrediction(
                 ca.getPredSeq(),
@@ -288,7 +309,6 @@ public class CASSP {
                 CellularAutomaton ca = new CellularAutomaton(di, this.config);
 
                 ca.run(this.rule);
-                ca.computePsipredPropsMeanDiff();
 
                 di.repairPrediction(
                     ca.getPredSeq(),
@@ -313,6 +333,10 @@ public class CASSP {
     */
     public double crossValidate(int folds){
         if (folds < 1) return -1;
+
+        // setup data ofc - zobrat train data
+        this.setupTrainData();
+
 
         // structures creation + data splitting
         this.cvData = new Data[folds];
@@ -345,9 +369,12 @@ public class CASSP {
                 acc_sum += Utils.q3(testData);
             else if (this.config.getAccuracyType() == SimConfig.SOV)
                 acc_sum += Utils.sov(testData);
+
+            // get best rule accuracy
         }
 
         // average accuracy
+        System.out.println("finito: " + acc_sum/folds);
         return  acc_sum/folds;
     }
 
@@ -365,7 +392,7 @@ public class CASSP {
         if (this.accStats == null)
             this.computeAccuracyStats(this.data);
         this.eaStats.createImage(this.config.getStatsPath(), name);
-        Utils.removeTXTFiles(this.config.getStatsPath());
+        Utils.removeJGnuplotTXTFiles(this.config.getStatsPath());
         this.accStats = null;
     }
 
@@ -376,6 +403,12 @@ public class CASSP {
     */
     public void createReliabImage(String name){
         Data imageData = this.data;
+
+        if (this.config.getTrainMode() == SimConfig.TRAIN_MODE_PC ||
+            this.config.getTestMode() == SimConfig.TEST_MODE_PC){
+            logger.warn("Reliability index image for mode PSIPRED + CASSP is not supported!");
+            return;
+        }
 
         if (this.testData == null){
             if (this.data == null){
@@ -394,7 +427,7 @@ public class CASSP {
         }
 
         this.accStats.createReliabImage(this.config.getStatsPath(), name);
-        Utils.removeTXTFiles(this.config.getStatsPath());
+        Utils.removeJGnuplotTXTFiles(this.config.getStatsPath());
     }
 
 
@@ -420,7 +453,7 @@ public class CASSP {
         if (this.accStats == null)
             this.computeAccuracyStats(imageData);
         this.accStats.createAccClassesImage(this.config.getStatsPath(), name);
-        Utils.removeTXTFiles(this.config.getStatsPath());
+        Utils.removeJGnuplotTXTFiles(this.config.getStatsPath());
     }
 
 

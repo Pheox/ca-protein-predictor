@@ -16,6 +16,7 @@ import org.kohsuke.args4j.CmdLineException;
 import java.io.*;
 import java.util.Properties;
 
+import cassp.utils.*;
 import cassp.config.*;
 
 
@@ -29,6 +30,7 @@ public class Main {
     // configuration paths
     static String confPath = "./src/cassp/config/test.config";
     static String logPath = "./src/cassp/config/log.config";
+
 
     public static void main(String[] args) {
         // logger configuration
@@ -49,17 +51,45 @@ public class Main {
         CASSP simulator = new CASSP(config);
         System.out.println(config.toString());
 
-        simulator.train();
-        //simulator.computeAccuracyStats();
-        simulator.loadRule();
 
-        double acc = simulator.test();
-        logger.info("Test accuracy: " + acc);
+        if (config.getCVFolds() > 1){
+            simulator.crossValidate(config.getCVFolds());
+            //simulator.createEvolutionImage("evolution_best_rule");
+            //simulator.createAccClassesImage("accuracy_best_rule");
+            //simulator.createReliabImage("reliability_best_rule");
+        }
 
-        simulator.createEvolutionImage("evolution.png");
-        simulator.createAccClassesImage("accuracy.png");
-        simulator.createReliabImage("reliability.png");
+        if (config.getTrainMode() != SimConfig.NO_TRAINING &&
+                config.getCVFolds() <= 1){
+            simulator.train();
+            simulator.createEvolutionImage("evolution");
+            simulator.createAccClassesImage("accuracy_train");
+            simulator.createReliabImage("reliability_train");
+        }
 
-        //double cv_acc = simulator.crossValidate(10);
+        if (config.getTestMode() != SimConfig.NO_TESTING){
+            simulator.loadRule();
+            double acc = simulator.test();
+            logger.info("Test accuracy: " + acc);
+            simulator.createAccClassesImage("accuracy_test");
+            simulator.createReliabImage("reliability_test");
+        }
+
+
+        String toPredict = config.getToPredict();
+
+        if (toPredict != null){
+            simulator.loadRule();
+            String predicted = null;
+
+            File f = new File(toPredict);
+            if (f.exists()) {
+                predicted = simulator.predict(f);
+            }
+            else{
+                predicted = simulator.predict(toPredict);
+            }
+            logger.info("predicted: \n" + predicted);
+        }
     }
 }
