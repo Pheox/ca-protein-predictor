@@ -46,6 +46,7 @@ public class SimConfig {
     static public double MUT_DEV = 0.1;
     static public double CROSS_PROB = 0.75;
     static public int MAX_GEN = 10000;
+    static public int NO_CHANGE = 1000;
     static public int POP = 100;
 
     // general
@@ -127,6 +128,9 @@ public class SimConfig {
     @Option(name="-to_predict",usage="To predict a amino acid sequence or sequence in a file.")
     private String toPredict;
 
+    @Option(name="-no_change",usage="End EA when no change in x generations.")
+    private int noChange;
+
 
     public SimConfig(){
         this.cvFolds = SimConfig.CV_FOLDS;
@@ -145,6 +149,7 @@ public class SimConfig {
         this.testMode = SimConfig.TEST_MODE_NORMAL;
         this.repair = SimConfig.REPAIR_RESIDUE;
         this.mutDev = SimConfig.MUT_DEV;
+        this.noChange = SimConfig.NO_CHANGE;
         this.toPredict = "";
     }
 
@@ -257,6 +262,11 @@ public class SimConfig {
             this.mutDev = Double.valueOf(prop.getProperty("mut_dev"));
         else
             this.mutDev = SimConfig.MUT_DEV;
+
+        if (prop.getProperty("no_change") != null)
+            this.noChange = Integer.parseInt(prop.getProperty("no_change"));
+        else
+            this.noChange = SimConfig.NO_CHANGE;
     }
 
     public String toString(){
@@ -297,6 +307,7 @@ public class SimConfig {
         s += "mut_dev = " + this.mutDev + "\n";
         s += "p_cross = " + this.crossProb + "\n";
         s += "max_gen = " + this.maxGen + "\n";
+        s += "no_change = " + this.noChange + "\n\n";
 
         s += "##### CELLULAR AUTOMATON #####\n\n";
         s += "max_steps = " + this.maxSteps + "\n";
@@ -509,5 +520,13 @@ public class SimConfig {
 
     public void setToPredict(String toPredict){
         this.toPredict = toPredict;
+    }
+
+    public int getNoChangeEAEnd(){
+        return this.noChange;
+    }
+
+    public void setNoChangeEAEnd(int noChange){
+        this.noChange = noChange;
     }
 }

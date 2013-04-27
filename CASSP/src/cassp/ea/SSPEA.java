@@ -52,7 +52,7 @@ public class SSPEA {
     public SSPEA(SimConfig config, Data data){
         this.data = data;
         this.config = config;
-        this.stats = new EAStats();
+        this.stats = new EAStats(config.getNoChangeEAEnd());
     }
 
     public CARule evolve() throws Exception{
@@ -106,6 +106,9 @@ public class SSPEA {
             gs.setMean(Utils.getMean(genotype.getPopulation()));
             gs.setGeneration(i);
             this.stats.addGenStats(gs);
+
+            if (this.stats.isConverged())
+                break;
          }
 
          return rule.fromChromosome(genotype.getFittestChromosome());

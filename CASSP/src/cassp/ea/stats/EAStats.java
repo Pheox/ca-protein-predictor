@@ -24,14 +24,34 @@ public class EAStats{
     static Logger logger = Logger.getLogger(EAStats.class);
 
     private ArrayList<GenStats> generations;
+    private int convergLength;
+    private int noChange;
+    private boolean converged = false;
 
-
-    public EAStats(){
+    public EAStats(int convergLength){
         this.generations = new ArrayList<GenStats>();
+        this.convergLength = convergLength;
+        this.noChange = 0;
+        this.converged = false;
     }
 
     public void addGenStats(GenStats gs){
+        if (this.noChange == 0)
+            this.noChange++;
+        else{
+            if (this.generations.get(this.generations.size() - 1).getMax() == gs.getMax())
+                this.noChange++;
+            else
+                this.noChange = 0;
+        }
+
         this.generations.add(gs);
+        if (this.noChange >= this.convergLength)
+            this.converged = true;
+    }
+
+    public boolean isConverged(){
+        return this.converged;
     }
 
     /**

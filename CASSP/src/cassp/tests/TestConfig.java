@@ -60,6 +60,7 @@ public class TestConfig extends TestCase {
         assertEquals(0.05, this.config.getMutProb());
         assertEquals(0.5, this.config.getCrossProb());
         assertEquals(2, this.config.getMaxGen());
+        assertEquals(100, this.config.getNoChangeEAEnd());
 
         assertEquals(0.1, this.config.getMutDev());
 
