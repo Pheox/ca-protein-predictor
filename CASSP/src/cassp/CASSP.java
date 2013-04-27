@@ -10,6 +10,7 @@ package cassp;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 import org.apache.log4j.Logger;
 
@@ -32,6 +33,7 @@ import cassp.ca.rules.*;
 public class CASSP {
 
     static Logger logger = Logger.getLogger(CASSP.class);
+    private static final ExecutorService validations = Executors.newCachedThreadPool();
 
     private SimConfig config;
     private Data data;
@@ -258,7 +260,6 @@ public class CASSP {
 
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
             ca.run(this.rule);
-            //ca.computePsipredPropsMeanDiff();
 
             di.repairPrediction(
                 ca.getPredSeq(),
@@ -337,7 +338,6 @@ public class CASSP {
         // setup data ofc - zobrat train data
         this.setupTrainData();
 
-
         // structures creation + data splitting
         this.cvData = new Data[folds];
         for (int i = 0; i < folds; i++) {
@@ -349,33 +349,75 @@ public class CASSP {
             this.cvData[i % folds].add(this.data.get(i));
         }
 
-        // training & testing "folds" times
-        double acc_sum = 0.0;
+        // all validations
+        Collection<Callable<CARule>> tasks = new ArrayList<Callable<CARule>>();
+
+
+        // mapping rules to data
+        final HashMap<CARule, Data> rulesData = new HashMap<CARule, Data>();
 
         for (int i = 0; i < folds; i++) {
             // merge data parts
-            Data mergedData = new Data();
-            Data testData = cvData[i];
+            final Data mergedData = new Data();
+            final Data testData = cvData[i];
 
             for (int j = 0; j < folds; j++) {
                 if (j != i)
                     mergedData.merge(cvData[j]);
             }
 
-            this.rule = this.trainRule(mergedData);
-            this.testRule(testData);
-
-            if (this.config.getAccuracyType() == SimConfig.Q3)
-                acc_sum += Utils.q3(testData);
-            else if (this.config.getAccuracyType() == SimConfig.SOV)
-                acc_sum += Utils.sov(testData);
-
-            // get best rule accuracy
+            tasks.add(new Callable<CARule>(){
+                public CARule call(){
+                    CARule rule = trainRule(mergedData);
+                    rulesData.put(rule, testData);
+                    return rule;
+                }
+            });
         }
 
-        // average accuracy
-        System.out.println("finito: " + acc_sum/folds);
-        return  acc_sum/folds;
+        List<Future<CARule>> rules = null;
+        try{
+            rules = validations.invokeAll(tasks);
+        }catch (InterruptedException e){
+            logger.error(e.getMessage());
+        }
+
+        CARule bestRule = null;
+        double accSum = 0.0;
+        double bestAcc = 0.0;
+
+        for (Future<CARule> rule : rules) {
+            // find out and save best rule
+            try{
+                this.rule = rule.get();
+            }catch (InterruptedException e){
+                logger.error(e.getMessage());
+            }catch (ExecutionException e){
+                logger.error(e.getMessage());
+            }
+
+            Data testData = rulesData.get(this.rule);
+            this.testRule(testData);
+
+            double acc = 0.0;
+
+            if (this.config.getAccuracyType() == SimConfig.Q3)
+                acc = Utils.q3(testData);
+            else if (this.config.getAccuracyType() == SimConfig.SOV)
+                acc = Utils.sov(testData);
+
+            accSum += acc;
+
+            if (acc > bestAcc){
+                bestAcc = acc;
+                bestRule = this.rule;
+            }
+        }
+        this.rule = bestRule;
+        this.saveRule();
+
+        System.out.println("finito: " + accSum/folds);
+        return  accSum/folds;
     }
 
 
