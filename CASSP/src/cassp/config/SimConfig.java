@@ -20,10 +20,12 @@ public class SimConfig {
     static public int Q3 = 0;
     static public int SOV = 1;
 
+    static public int NO_TRAINING = -1;
     static public int TRAIN_MODE_NORMAL = 0;
     static public int TRAIN_MODE_CP = 1;
     static public int TRAIN_MODE_PC = 2;
 
+    static public int NO_TESTING = -1;
     static public int TEST_MODE_NORMAL = 0;
     static public int TEST_MODE_CP = 1;
     static public int TEST_MODE_PC = 2;
@@ -38,8 +40,10 @@ public class SimConfig {
     static public int ACC_CLASSES = 10;
     static public int MAX_STEPS = 10;
     static public int NEIGH = 3;
-    static public int RULE = 1;
+    static public int RULE_SIMPLE = 0;
+    static public int RULE_CONFORM = 1;
     static public double MUT_PROB = 0.03;
+    static public double MUT_DEV = 0.1;
     static public double CROSS_PROB = 0.75;
     static public int MAX_GEN = 10000;
     static public int POP = 100;
@@ -117,6 +121,12 @@ public class SimConfig {
     @Option(name="-repair",usage="Sets type of predicted aa repairing.")
     private int repair;
 
+    @Option(name="-mut_dev",usage="Sets standard deviation of gaussian mutation.")
+    private double mutDev;
+
+    @Option(name="-to_predict",usage="To predict a amino acid sequence or sequence in a file.")
+    private String toPredict;
+
 
     public SimConfig(){
         this.cvFolds = SimConfig.CV_FOLDS;
@@ -130,10 +140,12 @@ public class SimConfig {
         this.pop = SimConfig.POP;
         this.maxSteps = SimConfig.MAX_STEPS;
         this.neigh = SimConfig.NEIGH;
-        this.rule = SimConfig.RULE;
+        this.rule = SimConfig.RULE_SIMPLE;
         this.trainMode = SimConfig.TRAIN_MODE_NORMAL;
         this.testMode = SimConfig.TEST_MODE_NORMAL;
         this.repair = SimConfig.REPAIR_RESIDUE;
+        this.mutDev = SimConfig.MUT_DEV;
+        this.toPredict = "";
     }
 
     public SimConfig(String confPath){
@@ -164,6 +176,7 @@ public class SimConfig {
         this.statsPath = prop.getProperty("stats");
         this.psipredPath = prop.getProperty("psipred");
         this.bestRulePath = prop.getProperty("best_rule");
+        this.toPredict = prop.getProperty("to_predict");
 
         if (prop.getProperty("cv_folds") != null)
             this.cvFolds = Integer.parseInt(prop.getProperty("cv_folds"));
@@ -223,22 +236,27 @@ public class SimConfig {
         if (prop.getProperty("rule") != null)
             this.rule = Integer.parseInt(prop.getProperty("rule"));
         else
-            this.rule = SimConfig.RULE;
+            this.rule = SimConfig.RULE_SIMPLE;
 
         if (prop.getProperty("train_mode") != null)
             this.trainMode = Integer.parseInt(prop.getProperty("train_mode"));
         else
-            this.trainMode = SimConfig.TRAIN_MODE_NORMAL;
+            this.trainMode = SimConfig.NO_TRAINING;
 
         if (prop.getProperty("test_mode") != null)
             this.testMode = Integer.parseInt(prop.getProperty("test_mode"));
         else
-            this.testMode = SimConfig.TEST_MODE_NORMAL;
+            this.testMode = SimConfig.NO_TESTING;
 
         if (prop.getProperty("repair") != null)
             this.repair = Integer.parseInt(prop.getProperty("repair"));
         else
             this.repair = SimConfig.REPAIR_RESIDUE;
+
+        if (prop.getProperty("mut_dev") != null)
+            this.mutDev = Double.valueOf(prop.getProperty("mut_dev"));
+        else
+            this.mutDev = SimConfig.MUT_DEV;
     }
 
     public String toString(){
@@ -276,8 +294,10 @@ public class SimConfig {
         s += "###### EVOLUTIONARY ALGORITHM ######\n\n";
         s += "pop = " + this.pop + "\n";
         s += "p_mut = " + this.mutProb + "\n";
+        s += "mut_dev = " + this.mutDev + "\n";
         s += "p_cross = " + this.crossProb + "\n";
-        s += "max_gen = " + this.maxGen + "\n\n";
+        s += "max_gen = " + this.maxGen + "\n";
+
         s += "##### CELLULAR AUTOMATON #####\n\n";
         s += "max_steps = " + this.maxSteps + "\n";
         s += "neigh = " + this.neigh + "\n\n";
@@ -363,11 +383,11 @@ public class SimConfig {
         this.neigh = neigh;
     }
 
-    public int getRuleID(){
+    public int getRule(){
         return this.rule;
     }
 
-    public void setRuleID(int id){
+    public void setRule(int id){
         this.rule = id;
     }
 
@@ -473,5 +493,21 @@ public class SimConfig {
 
     public void setRepairType(int repairType){
         this.repair = repairType;
+    }
+
+    public double getMutDev(){
+        return this.mutDev;
+    }
+
+    public void setMutDev(double mutDev){
+        this.mutDev = mutDev;
+    }
+
+    public String getToPredict(){
+        return this.toPredict;
+    }
+
+    public void setToPredict(String toPredict){
+        this.toPredict = toPredict;
     }
 }
