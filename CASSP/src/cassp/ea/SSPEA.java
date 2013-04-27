@@ -8,11 +8,14 @@
 package cassp.ea;
 
 import java.io.*;
+import java.util.*;
 
 import org.jgap.*;
 import org.jgap.data.*;
 import org.jgap.impl.*;
 import org.jgap.xml.*;
+import org.jgap.event.*;
+import org.jgap.util.*;
 import org.w3c.dom.*;
 import org.apache.log4j.*;
 
@@ -30,6 +33,7 @@ import cassp.ea.stats.*;
 Notes:
 - default mutation rate - 1/12 (1/X)
 - default crossover rate - 35 % from pop size
+- http://vyuka.martinpilat.com/2011/11/09/eva-5-cviceni-realna-funkce-ii-operatory/
 */
 
 
@@ -52,42 +56,44 @@ public class SSPEA {
     }
 
     public CARule evolve() throws Exception{
-
-        // mutacia je gaussovska so smerodatnou odchylkou 0.1 - ako sa mutuju integer geny,
-        // ?????
-        // geneticke operatory sa vraj vykonavaju v poradi akom boli do conf. zadane
-
-        // ake poradie gen. operatorov ??
-
         // EA configuration
         Configuration.reset();
-        Configuration conf = new DefaultConfiguration();
-        //conf.addGeneticOperator(new MutationOperator(conf, (int) (1/this.config.p_mut)));
-        //conf.addGeneticOperator(new GaussianMutationOperator(conf, 0.1d));
-        conf.addGeneticOperator(new GaussianMutationOperator(conf, 0.1d));
+        Configuration conf = new Configuration("conf");
+        conf.setBreeder(new GABreeder());
+
+        RandomGenerator rg = new GaussianRndGenerator(this.config.getMutDev());
+        conf.setRandomGenerator(rg);
+        conf.setEventManager(new EventManager());
+
+        BestChromosomesSelector bestChromsSelector = new BestChromosomesSelector(conf, 0.90d);
+        bestChromsSelector.setDoubletteChromosomesAllowed(true);
+        conf.addNaturalSelector(bestChromsSelector, false);
+        conf.addNaturalSelector(new WeightedRouletteSelector(conf), false);
+
+        conf.setMinimumPopSizePercent(0);
+        conf.setSelectFromPrevGen(1.0d);
+        conf.setKeepPopulationSizeConstant(true);
+        conf.setFitnessEvaluator(new DefaultFitnessEvaluator());
+        conf.setChromosomePool(new ChromosomePool());
         conf.addGeneticOperator(new CrossoverOperator(conf, this.config.getCrossProb()));
-        // turnaj funguje nasledovne: najlepsi sa vyberie s pravdepodobnostou p,
-        // druhy najlepsi s pravd. p*(1-p), treti s pravd. p*(1-p)*(1-p) etc.
-
-        // individuals selection
-        //conf.addNaturalSelector(new TournamentSelector(conf, 2, 1.0d), false);
-        conf.addNaturalSelector(new TournamentSelector(conf, 2, 1.0d), false);
-
+        conf.addGeneticOperator(new GaussianMutationOperator(conf, this.config.getMutDev()));
         conf.setPreservFittestIndividual(true);
 
         FitnessFunction ff = new SSPFF(this.data, this.config);
         conf.setFitnessFunction(ff);
         CARule rule = this.setRule();
+        //conf.addGeneticOperator(new MutationOperator(conf, rule.getSize()/2));
 
         IChromosome sampleChromosome = rule.initChromosome(conf, this.config.getMaxSteps());
 
         conf.setSampleChromosome(sampleChromosome);
         conf.setPopulationSize(this.config.getPop());
 
-        Genotype genotype;
+        //genotype = Genotype.randomInitialGenotype(conf);
+        Genotype genotype = this.initGenotype(conf);
 
-        genotype = Genotype.randomInitialGenotype(conf);
 
+        // population evolving
         for (int i = 0; i < this.config.getMaxGen(); i++) {
             logger.info("### " + i + ". generation");
             genotype.evolve();
@@ -105,17 +111,31 @@ public class SSPEA {
          return rule.fromChromosome(genotype.getFittestChromosome());
     }
 
-    private CARule setRule(){
-        if (this.config.getRuleID() == 1)
-            return new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());
-        else if (this.config.getRuleID() == 2)
-            return new CAConformRule(this.config.getNeigh(), this.data.getAminoAcids());
-        else
-            return new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());
+
+    /**
+    * Initialize EA genotype.
+    */
+    private Genotype initGenotype(Configuration conf){
+        Genotype genotype = null;
+
+        if (this.config.getRule() == SimConfig.RULE_SIMPLE)
+            genotype = CASimpleRule.initGenotypeGauss(conf);
+        else if (this.config.getRule() == SimConfig.RULE_CONFORM)
+            genotype = CAConformRule.initGenotypeGauss(conf);
+        return genotype;
     }
 
 
     /* Getters & setters */
+
+    private CARule setRule(){
+        if (this.config.getRule() == SimConfig.RULE_SIMPLE)
+            return new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());
+        else if (this.config.getRule() == SimConfig.RULE_CONFORM)
+            return new CAConformRule(this.config.getNeigh(), this.data.getAminoAcids());
+        else
+            return new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());
+    }
 
     public EAStats getStats(){
         return this.stats;

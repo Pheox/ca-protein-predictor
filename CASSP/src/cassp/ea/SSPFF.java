@@ -80,9 +80,7 @@ public class SSPFF extends FitnessFunction{
                 dataItem.setPsipredAsPredSeq();
 
                 CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
-
                 ca.run(rule);
-                ca.computePsipredPropsMeanDiff();
 
                 dataItem.repairPrediction(
                     ca.getPredSeq(),
@@ -95,6 +93,7 @@ public class SSPFF extends FitnessFunction{
             for (DataItem dataItem : this.data.getData()){
                 CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
                 ca.run(rule);
+                ca.computePropsMeanDiff();
                 dataItem.setPredSeq(ca.getPredSeq());
             }
         }
@@ -110,9 +109,9 @@ public class SSPFF extends FitnessFunction{
     private CARule createRule(IChromosome chromosome){
         CARule rule;
 
-        if (this.config.getRuleID() == 1)
+        if (this.config.getRule() == SimConfig.RULE_SIMPLE)
             rule = new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());
-        else if (this.config.getRuleID() == 2)
+        else if (this.config.getRule() == SimConfig.RULE_CONFORM)
             rule = new CAConformRule(this.config.getNeigh(), this.data.getAminoAcids());
         else
             rule = new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());

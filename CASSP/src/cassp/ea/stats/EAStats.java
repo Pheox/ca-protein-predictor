@@ -21,9 +21,6 @@ import org.apache.log4j.*;
 */
 public class EAStats{
 
-    static double MIN_Y_RANGE = 40;
-    static double MAX_Y_RANGE = 60;
-
     static Logger logger = Logger.getLogger(EAStats.class);
 
     private ArrayList<GenStats> generations;
@@ -47,7 +44,8 @@ public class EAStats{
         }catch (IOException e){
             System.err.println(e);
         }
-        String path = dir + "/" + name;
+        String pngPath = dir + "/" + name + ".png";
+        String txtPath = dir + "/" + name + ".txt";
 
         // init jgnuplot
         Plot.setGnuplotExecutable("gnuplot");
@@ -59,21 +57,25 @@ public class EAStats{
         plot.setKey("right bottom box");
         plot.setXLabel("Generation");
         plot.setYLabel("Fitness");
-        plot.setRanges("[1:" + this.generations.size() + "] ["
-            + EAStats.MIN_Y_RANGE + ":" + EAStats.MAX_Y_RANGE + "]");
 
-        // create tmp file with data
-        File tmpFile = null;
+        double min = 100.0;
+        double max = 0.0;
+
         try{
-            tmpFile = File.createTempFile("temp",".tmp");
-            FileWriter fo = new FileWriter(tmpFile);
+            FileWriter fo = new FileWriter(txtPath);
             BufferedWriter bw = new BufferedWriter(fo);
 
             for (int i = 0; i < this.generations.size(); i++) {
+                double gMax = this.generations.get(i).getMax();
+                double gMin = this.generations.get(i).getMin();
+
+                if (gMax > max) max = gMax;
+                if (gMin < min) min = gMin;
+
                 bw.write((this.generations.get(i).getGeneration() + 1) + "\t");
                 bw.write(this.generations.get(i).getMean() + "\t");
-                bw.write(this.generations.get(i).getMax() + "\t");
-                bw.write(String.valueOf(this.generations.get(i).getMin()));
+                bw.write(gMax + "\t");
+                bw.write(String.valueOf(gMin));
                 bw.write("\n");
             }
             bw.close();
@@ -82,21 +84,22 @@ public class EAStats{
             logger.error("\n" + e);
         }
 
-        plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:2 smooth bezier", Axes.NOT_SPECIFIED,
+        plot.setRanges("[1:" + this.generations.size() + "] ["
+            + (min - 1) + ":" + (max + 1) + "]");
+
+        plot.pushGraph(new Graph(txtPath, "1:2 smooth bezier", Axes.NOT_SPECIFIED,
             "mean", Style.LINES));
-        plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:3 smooth bezier", Axes.NOT_SPECIFIED,
+        plot.pushGraph(new Graph(txtPath, "1:3 smooth bezier", Axes.NOT_SPECIFIED,
             "max", Style.LINES));
-        plot.pushGraph(new Graph(tmpFile.getAbsolutePath(), "1:4 smooth bezier", Axes.NOT_SPECIFIED,
+        plot.pushGraph(new Graph(txtPath, "1:4 smooth bezier", Axes.NOT_SPECIFIED,
             "min", Style.LINES));
 
         // save image
-        plot.setOutput(Terminal.PNG, path, "640, 480");
+        plot.setOutput(Terminal.PNG, pngPath, "640, 480");
         try{
             plot.plot();
         }catch (Exception e){
             logger.error("\n" + e);
         }
-
-        tmpFile.deleteOnExit();
     }
 }
