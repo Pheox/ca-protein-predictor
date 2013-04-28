@@ -46,7 +46,7 @@ public class Data {
         this.initAminoAcids();
         this.maxCF = -1;
         this.maxCC = -1;
-        this.mode = 0; // normal
+        this.mode = SimConfig.TRAIN_MODE_NORMAL; // normal
     }
 
     /**
@@ -670,12 +670,16 @@ public class Data {
         return this.data.size();
     }
 
-    public DataItem get(int i){
-        return this.data.get(i);
+    public DataItem get(int index){
+        return this.data.get(index);
     }
 
     public void add(DataItem di){
         this.data.add(di);
+    }
+
+    public void remove(int index){
+        this.data.remove(index);
     }
 
     public void merge(Data data){

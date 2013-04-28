@@ -43,6 +43,7 @@ public class CASSP {
     private EAStats eaStats;
     private AccuracyStats accStats;
     private Psipred psipred;
+    private Random random;
 
 
     /**
@@ -53,6 +54,7 @@ public class CASSP {
         this.config = config;
         this.accStats = null;
         this.psipred =  new Psipred(this.config.getPsipredPath());
+        this.random = new Random();
     }
 
 
@@ -133,6 +135,7 @@ public class CASSP {
         this.setupTestData();
 
         this.rule = this.loadRule();
+        this.rule.getAminoAcids();
         this.testData.setAminoAcids(this.rule.getAminoAcids());
         this.testRule(this.testData);
 
@@ -180,9 +183,12 @@ public class CASSP {
 
 
     private void testRule(Data testData){
+        Data tmp = this.testData;
+        this.testData = testData;
         for (DataItem di: testData.getData()){
             this.predict(di);
         }
+        this.testData = tmp;
     }
 
 
@@ -230,6 +236,7 @@ public class CASSP {
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
             ca.run(this.rule);
             ca.computePropsMeanDiff();
+
             ca.computeReliabIndexes(
                 rule.computeMaxPropsDiff(
                     new double[]{this.testData.getMaxCF(), this.testData.getMaxCC()}
@@ -238,6 +245,7 @@ public class CASSP {
 
             di.setPredSeq(ca.getPredSeq());
             di.setReliabIndexes(ca.getReliabIndexes());
+            di.computeMeanReliabIndex();
 
             // PSIPRED repairing
             String psipredSeq = di.getPsipredSeq();
@@ -290,6 +298,7 @@ public class CASSP {
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
             ca.run(this.rule);
             ca.computePropsMeanDiff();
+
             ca.computeReliabIndexes(
                 rule.computeMaxPropsDiff(
                     new double[]{this.testData.getMaxCF(), this.testData.getMaxCC()}
@@ -298,6 +307,7 @@ public class CASSP {
 
             di.setPredSeq(ca.getPredSeq());
             di.setReliabIndexes(ca.getReliabIndexes());
+            di.computeMeanReliabIndex();
 
             di.repairPrediction(
                 di.getPsipredSeq(),
@@ -334,6 +344,10 @@ public class CASSP {
     */
     public double crossValidate(int folds){
         if (folds < 1) return -1;
+        if (this.config.getTrainMode() == SimConfig.NO_TRAINING){
+            logger.error("Can't do cross-validation without training!");
+            return -1;
+        }
 
         // setup data ofc - zobrat train data
         this.setupTrainData();
@@ -345,9 +359,24 @@ public class CASSP {
             this.cvData[i].setAminoAcids(this.data.getAminoAcids());
         }
 
-        for (int i = 0; i < this.data.length(); i++) {
-            this.cvData[i % folds].add(this.data.get(i));
+        Data tmpData = new Data();
+        int foldSize = this.data.length()/folds;
+
+        for (int i = 0; i < folds; i++){
+            // get foldSize random dataItems
+            for (int j = 0; j <  foldSize; j++) {
+                int rnd = this.random.nextInt(this.data.length());
+                this.cvData[i].add(this.data.get(rnd));
+                tmpData.add(this.data.get(rnd));
+                this.data.remove(rnd);
+            }
         }
+        this.data.setData(tmpData.getData());
+        tmpData = null;
+
+        //for (int i = 0; i < this.data.length(); i++) {
+        //    this.cvData[i % folds].add(this.data.get(i));
+        //}
 
         // all validations
         Collection<Callable<CARule>> tasks = new ArrayList<Callable<CARule>>();
@@ -360,11 +389,15 @@ public class CASSP {
             // merge data parts
             final Data mergedData = new Data();
             final Data testData = cvData[i];
+            testData.computeChouFasman();
+            testData.computeConformCoeffs();
 
             for (int j = 0; j < folds; j++) {
                 if (j != i)
                     mergedData.merge(cvData[j]);
             }
+            mergedData.computeChouFasman();
+            mergedData.computeConformCoeffs();
 
             tasks.add(new Callable<CARule>(){
                 public CARule call(){
@@ -407,16 +440,18 @@ public class CASSP {
                 acc = Utils.sov(testData);
 
             accSum += acc;
+            logger.info("rule acc: " + acc);
 
             if (acc > bestAcc){
                 bestAcc = acc;
                 bestRule = this.rule;
             }
         }
+        logger.info("best rule acc: " + bestAcc);
         this.rule = bestRule;
         this.saveRule();
 
-        System.out.println("finito: " + accSum/folds);
+        logger.info("mean acc: " + accSum/folds);
         return  accSum/folds;
     }
 
