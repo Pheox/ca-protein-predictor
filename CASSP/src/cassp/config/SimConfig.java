@@ -270,14 +270,13 @@ public class SimConfig {
     }
 
     public String toString(){
-        // TODO ! - needs update
-        String s = "#######################################\n";
+        String s = "\n#######################################\n";
         s += "##     CASSP Configuration File      ##\n";
         s += "#######################################\n\n";
         s += "######  GENERAL  ######\n";
         s += "# number of cross-validation folds, if 0 - no cross validation\n";
         s += "# cv is computed from data in data path variable\n";
-        s += "cv_folds = " + this.cvFolds;
+        s += "cv_folds = " + this.cvFolds + "\n";
         s += "# accuracy_type: 0 - Q3, 1 - SOV\n";
         s += "accuracy_type = " + this.accuracyType + "\n\n";
         s += "# acc_classes: 1 - n\n";

@@ -49,16 +49,15 @@ public class Main {
         }
 
         CASSP simulator = new CASSP(config);
-        System.out.println(config.toString());
+        //logger.info(config.toString());
 
 
+        // possible CROSS VALIDATION
         if (config.getCVFolds() > 1){
             simulator.crossValidate(config.getCVFolds());
-            //simulator.createEvolutionImage("evolution_best_rule");
-            //simulator.createAccClassesImage("accuracy_best_rule");
-            //simulator.createReliabImage("reliability_best_rule");
         }
 
+        // possible TRAINING
         if (config.getTrainMode() != SimConfig.NO_TRAINING &&
                 config.getCVFolds() <= 1){
             simulator.train();
@@ -67,6 +66,7 @@ public class Main {
             simulator.createReliabImage("reliability_train");
         }
 
+        // possible TESTING
         if (config.getTestMode() != SimConfig.NO_TESTING){
             simulator.loadRule();
             double acc = simulator.test();
@@ -77,6 +77,7 @@ public class Main {
 
         String toPredict = config.getToPredict();
 
+        // possible PREDICTION
         if (toPredict != null){
             simulator.loadRule();
             String predicted = null;
