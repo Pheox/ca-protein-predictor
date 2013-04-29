@@ -95,23 +95,24 @@ public class SSPEA {
 
         // population evolving
         for (int i = 0; i < this.config.getMaxGen(); i++) {
-            logger.info("### " + i + ". generation");
             genotype.evolve();
 
             // filling GenStats object
             GenStats gs = new GenStats();
             gs.setMax(Utils.getMax(genotype.getPopulation()));
-            logger.info(Utils.getMax(genotype.getPopulation()));
             gs.setMin(Utils.getMin(genotype.getPopulation()));
             gs.setMean(Utils.getMean(genotype.getPopulation()));
             gs.setGeneration(i);
             this.stats.addGenStats(gs);
 
+            logger.info("##  " + i + ". generation: " + genotype.getFittestChromosome().getFitnessValue());
             if (this.stats.isConverged())
                 break;
          }
 
-         return rule.fromChromosome(genotype.getFittestChromosome());
+         CARule bestRule = rule.fromChromosome(genotype.getFittestChromosome());
+         bestRule.computeMaxPropsDiff(new double[]{this.data.getMaxCF(), this.data.getMaxCC()});
+         return rule;
     }
 
 
