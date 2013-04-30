@@ -23,11 +23,19 @@ public class EAStats{
 
     static Logger logger = Logger.getLogger(EAStats.class);
 
+    /**
+    * Array of generation statistics objects.
+    */
     private ArrayList<GenStats> generations;
+
     private int convergLength;
     private int noChange;
     private boolean converged = false;
 
+    /**
+    * @param convergLength Length of convergence, if best value is not changed in "length" generations,
+    * evolutionary algorithm is stopped.
+    */
     public EAStats(int convergLength){
         this.generations = new ArrayList<GenStats>();
         this.convergLength = convergLength;
@@ -35,6 +43,9 @@ public class EAStats{
         this.converged = false;
     }
 
+    /**
+    * Add statistics of one generation of evolutionary algorithm.
+    */
     public void addGenStats(GenStats gs){
         if (this.noChange == 0)
             this.noChange++;
@@ -44,25 +55,30 @@ public class EAStats{
             else
                 this.noChange = 0;
         }
-
         this.generations.add(gs);
         if (this.noChange >= this.convergLength)
             this.converged = true;
     }
 
+    /**
+    * Returns true if an evolutionary algorithm converged.
+    */
     public boolean isConverged(){
         return this.converged;
     }
 
     /**
-    * Create PNG image of EA evolution with name <name> to directory <dir>.
+    * Create PNG image of EA evolution based on collected statistics.
+    *
+    * @param dir destination directory
+    * @param name name of an image (without file extension)
     */
     public void createImage(String dir, String name){
         File d = new File(dir);
         try{
             dir = d.getCanonicalPath();
         }catch (IOException e){
-            System.err.println(e);
+            logger.error(e.getMessage());
         }
         String pngPath = dir + "/" + name + ".png";
         String txtPath = dir + "/" + name + ".txt";
@@ -101,7 +117,7 @@ public class EAStats{
             bw.close();
         }
         catch (IOException e){
-            logger.error("\n" + e);
+            logger.error(e.getMessage());
         }
 
         plot.setRanges("[1:" + this.generations.size() + "] ["

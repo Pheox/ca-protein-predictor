@@ -19,9 +19,24 @@ public class GenStats{
 
     static Logger logger = Logger.getLogger(GenStats.class);
 
+    /**
+    * Number of a generation.
+    */
     private int generation;
+
+    /**
+    * Fitness value mean of a generation.
+    */
     private double mean;
+
+    /**
+    * Fitness value minimum of a generation.
+    */
     private double min;
+
+    /**
+    * Fitness value maximum of a generation.
+    */
     private double max;
 
 

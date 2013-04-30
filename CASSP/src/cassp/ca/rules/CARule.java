@@ -13,6 +13,7 @@ import java.util.*;
 
 import org.jgap.*;
 
+import cassp.*;
 import cassp.ca.*;
 import cassp.data.*;
 import cassp.config.*;
@@ -154,7 +155,9 @@ public abstract class CARule implements Serializable{
         return this.aminoAcids;
     }
 
-    public AminoAcid getAminoAcid(char aa){
+    public AminoAcid getAminoAcid(char aa) throws CASSPException{
+        if (this.aminoAcids.get(aa) == null)
+            throw new CASSPException("Required amino acid does not exist.");
         return this.aminoAcids.get(aa);
     }
 

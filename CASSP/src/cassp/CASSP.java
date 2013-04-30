@@ -101,10 +101,17 @@ public class CASSP {
     * Training to find out the fittest rule.
     * @return Best rule.
     */
-    public double train(){
+    public double train() throws CASSPException{
         this.setupData(this.config.getDataPath(), this.config.getTrainMode());
         this.rule = this.trainRule(this.data);
-        this.testRule(this.data);
+        // aplying the fittest rule to dataset, needed to compute statistics
+        // and create corresponding images
+        try{
+            this.testRule(this.data);
+        } catch (CASSPException e){
+            throw e;
+        }
+
         this.saveRule();
 
         return this.computeAccuracy(this.data);
@@ -115,37 +122,6 @@ public class CASSP {
         this.data.computeChouFasman();
         this.data.computeConformCoeffs();
     }
-
-/*
-    private void setupTrainData(){
-        this.data = new Data(this.config.getDataPath(), this.config.getTrainMode());
-
-        // get Chou-Fasman coefficients
-        String cfPath = this.config.getDataCFPath();
-        if (cfPath != null && cfPath.length() > 0)
-            this.data.loadChouFasman(this.config.getDataCFPath());
-        else
-            this.data.computeChouFasman();
-
-        // get conformation coefficients
-        String ccPath = this.config.getDataCCPath();
-        if (ccPath != null && ccPath.length() > 0)
-            this.data.loadConformCoeffs(this.config.getDataCCPath());
-        else
-            this.data.computeConformCoeffs();
-    }
-
-    private void setupTestData(){
-        this.testData = new Data(this.config.getTestDataPath(), this.config.getTestMode());
-
-        // get Chou-Fasman coefficients
-        this.testData.computeChouFasman();
-
-        // get conformation coefficients
-        this.testData.computeConformCoeffs();
-    }
-*/
-
 
     /**
     * Train a rule based on <data> and <config>.
@@ -170,15 +146,14 @@ public class CASSP {
     * Application of trained rule to test dataset.
     * @return accuracy of specified type (Q3 or SOV)
     */
-    public double test(){
+    public double test() throws CASSPException{
         this.setupData(this.config.getTestDataPath(), this.config.getTestMode());
+        String rulePath = this.config.getBestRulePath();
 
-        if (this.config.getBestRulePath().length() == 0)
+        if (rulePath == null)
+            throw new CASSPException("No rule specified to apply the test!");
+        else if (rulePath.length() == 0)
             this.rule = this.loadRule();
-        else if (this.rule == null){
-            logger.error("No rule speified to test!");
-            return -1.0;
-        }
 
         this.data.setAminoAcids(this.rule.getAminoAcids());
         this.testRule(this.data);
@@ -213,6 +188,9 @@ public class CASSP {
         return this.computeAccuracy(data);
     }
 
+    /**
+    * Computes accuracy of a rule for specified <data>.
+    */
     private double computeAccuracy(Data data){
         double accuracy = 0.0;
 
@@ -224,9 +202,16 @@ public class CASSP {
     }
 
 
-    private void testRule(Data data){
-        for (DataItem di: data.getData()){
-            this.predict(di);
+    /**
+    * Apply a rule to specified <data>.
+    */
+    private void testRule(Data data) throws CASSPException{
+        try{
+            for (DataItem di: data.getData()){
+                this.predict(di);
+            }
+        } catch (CASSPException e){
+            throw e;
         }
     }
 
@@ -236,7 +221,6 @@ public class CASSP {
     * Sequences are separated by end of line.
     **/
     public String predict(File f){
-        // open a file
         String result = "";
 
         try{
@@ -262,32 +246,30 @@ public class CASSP {
     * @param aaSeq amino acid sequence
     * @return predicted secondary structure sequence
     */
-    public String predict(String aaSeq){
+    public String predict(String aaSeq) throws CASSPException{
 
         if (this.config.getBestRulePath().length() == 0)
             this.rule = this.loadRule();
         else if (this.rule == null){
-            logger.error("No rule speified to test!");
+            logger.error("No rule specified to test!");
             return "";
         }
 
         DataItem di = new DataItem();
         di.setAaSeq(aaSeq);
 
-        if (this.config.getTestMode() == SimConfig.TEST_MODE_CP){
+        if (this.config.getTestMode() == SimConfig.PREDICT_MODE_CP){
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
             ca.run(this.rule);
             ca.computePropsMeanDiff();
-
             ca.computeReliabIndexes(rule.getMaxPropsDiff());
 
             di.setPredSeq(ca.getPredSeq());
             di.setReliabIndexes(ca.getReliabIndexes());
             di.computeMeanReliabIndex();
 
-            // PSIPRED repairing
+            // Repairing by PSIPRED prediction.
             String psipredSeq = di.getPsipredSeq();
-
             if (psipredSeq.length() == 0){
                 psipredSeq = this.psipred.predict(di.getAaSeq());
             }
@@ -298,12 +280,13 @@ public class CASSP {
                 this.config.getRepairType()
             );
         }
-        else if (this.config.getTestMode() == SimConfig.TEST_MODE_PC){
+        else if (this.config.getTestMode() == SimConfig.PREDICT_MODE_PC){
             di.setPsipredSeq(this.psipred.predict(di.getAaSeq()));
             di.setReliabIndexes(this.psipred.getReliabIndexes());
 
             di.setPsipredAsPredSeq();
 
+            // Repairing by CASSP prediction.
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
             ca.run(this.rule);
 
@@ -313,10 +296,15 @@ public class CASSP {
                 this.config.getRepairType()
             );
         }
-        else if (this.config.getTestMode() == SimConfig.TEST_MODE_NORMAL ||
-            this.config.getTestMode() == SimConfig.NO_TESTING){
+        else if (this.config.getTestMode() == SimConfig.PREDICT_MODE_NORMAL ||
+            this.config.getTestMode() == SimConfig.NO_PREDICTION){
+
                 CellularAutomaton ca = new CellularAutomaton(di, this.config);
-                ca.run(this.rule);
+                try{
+                    ca.run(this.rule);
+                } catch (CASSPException e){
+                    throw e;
+                }
                 di.setPredSeq(ca.getPredSeq());
         }
         return di.getPredSeq();
@@ -330,25 +318,19 @@ public class CASSP {
     * @param di data item
     * @return predicted secondary structure sequence
     */
-    public String predict(DataItem di){
+    public String predict(DataItem di) throws CASSPException{
 
         if (this.config.getTestMode() == SimConfig.TEST_MODE_CP){
             CellularAutomaton ca = new CellularAutomaton(di, this.config);
             ca.run(this.rule);
             ca.computePropsMeanDiff();
-/*
-            ca.computeReliabIndexes(
-                rule.computeMaxPropsDiff(
-                    new double[]{this.testData.getMaxCF(), this.testData.getMaxCC()}
-                )
-            );
-*/
             ca.computeReliabIndexes(rule.getMaxPropsDiff());
 
             di.setPredSeq(ca.getPredSeq());
             di.setReliabIndexes(ca.getReliabIndexes());
             di.computeMeanReliabIndex();
 
+            // Repairing by PSIPRED prediction.
             di.repairPrediction(
                 di.getPsipredSeq(),
                 this.config.getThreshold(),
@@ -357,8 +339,9 @@ public class CASSP {
         }
         else if (this.config.getTestMode() == SimConfig.TEST_MODE_PC){
                 di.setPsipredAsPredSeq();
-                CellularAutomaton ca = new CellularAutomaton(di, this.config);
 
+                // Repairing by CASSP prediction.
+                CellularAutomaton ca = new CellularAutomaton(di, this.config);
                 ca.run(this.rule);
 
                 di.repairPrediction(
@@ -369,7 +352,11 @@ public class CASSP {
         }
         else if (this.config.getTestMode() == SimConfig.TEST_MODE_NORMAL){
                 CellularAutomaton ca = new CellularAutomaton(di, this.config);
-                ca.run(this.rule);
+                try{
+                    ca.run(this.rule);
+                } catch (CASSPException e){
+                    throw e;
+                }
                 di.setPredSeq(ca.getPredSeq());
         }
         return di.getPredSeq();
@@ -382,20 +369,19 @@ public class CASSP {
     * @param folds number of sub-trainings and sub-testings
     * @return mean accuracy of sub-tests
     */
-    public double crossValidate(int folds){
+    public double crossValidate(int folds) throws CASSPException{
         if (folds < 1) {
-            logger.error("Number of folds should be at least 2!");
-            return -1;
+            throw new CASSPException("Number of folds should be at least 2!");
         }
 
+
         if (this.config.getTrainMode() == SimConfig.NO_TRAINING){
-            logger.error("Can't do cross-validation without training!");
-            return -1;
+            throw new CASSPException("Can't do cross-validation without training!");
         }
 
         this.setupData(this.config.getDataPath(), this.config.getTrainMode());
 
-
+        // initialize all data sets
         this.cvData = new Data[folds];
         for (int i = 0; i < folds; i++) {
             this.cvData[i] = new Data();
@@ -405,8 +391,8 @@ public class CASSP {
         Data tmpData = new Data();
         int foldSize = this.data.length()/folds;
 
+        // random data splitting
         for (int i = 0; i < folds; i++){
-            // get foldSize random dataItems
             for (int j = 0; j <  foldSize; j++) {
                 int rnd = this.random.nextInt(this.data.length());
                 this.cvData[i].add(this.data.get(rnd));
@@ -417,7 +403,7 @@ public class CASSP {
         this.data.setData(tmpData.getData());
         tmpData = null;
 
-        // all validations
+        // thread tasks
         Collection<Callable<CARule>> tasks = new ArrayList<Callable<CARule>>();
 
         // mapping rules to data
@@ -437,6 +423,7 @@ public class CASSP {
             mergedData.computeChouFasman();
             mergedData.computeConformCoeffs();
 
+            // thread creation
             tasks.add(new Callable<CARule>(){
                 public CARule call(){
                     CARule rule = trainRule(mergedData);
@@ -457,8 +444,8 @@ public class CASSP {
         double accSum = 0.0;
         double bestAcc = 0.0;
 
+        // find out and save best rule
         for (Future<CARule> rule : rules) {
-            // find out and save best rule
             try{
                 this.rule = rule.get();
             }catch (InterruptedException e){
@@ -468,15 +455,13 @@ public class CASSP {
             }
 
             Data testData = rulesData.get(this.rule);
-            this.testRule(testData);
+            try{
+                this.testRule(testData);
+            } catch (CASSPException e){
+                throw e;
+            }
 
-            double acc = 0.0;
-
-            if (this.config.getAccuracyType() == SimConfig.Q3)
-                acc = Utils.q3(testData);
-            else if (this.config.getAccuracyType() == SimConfig.SOV)
-                acc = Utils.sov(testData);
-
+            double acc = this.computeAccuracy(testData);
             accSum += acc;
             logger.info("rule acc: " + acc);
 
@@ -485,14 +470,13 @@ public class CASSP {
                 bestRule = this.rule;
             }
         }
-        logger.info("best rule acc: " + bestAcc);
+        logger.info("BEST rule acc: " + bestAcc);
         this.rule = bestRule;
         this.saveRule();
 
-        logger.info("mean acc: " + accSum/folds);
+        logger.info("MEAN acc: " + accSum/folds);
         return  accSum/folds;
     }
-
 
     /**
     * Creates PNG image of fitness value evolution in generations.
@@ -500,7 +484,7 @@ public class CASSP {
     */
     public void createEvolutionImage(String name){
         if (this.data == null){
-            logger.warn("No training was performed!");
+            logger.warn("No training was performed, so no evolution image is created!");
             return;
         }
 
@@ -511,14 +495,13 @@ public class CASSP {
         this.accStats = null;
     }
 
-
     /**
     * Creates PNG file of accuracy depending on reliabiliry classes.
     * @param name file name of created image
     */
     public void createReliabImage(String name){
         if (this.data == null){
-            logger.error("No training or testing was performed");
+            logger.error("No training or testing was performed, so no image is created!");
             return;
         }
 
@@ -529,10 +512,7 @@ public class CASSP {
         }
 
         Data imageData = this.data;
-
-        //if (this.accStats == null)
         this.computeAccuracyStats(imageData);
-
 
         this.accStats.createReliabImage(this.config.getStatsPath(), name);
         Utils.removeJGnuplotTXTFiles(this.config.getStatsPath());
@@ -545,12 +525,10 @@ public class CASSP {
     */
     public void createAccClassesImage(String name){
         if (this.data == null){
-            logger.error("No training or testing was performed");
+            logger.error("No training or testing was performed, so no image is created!");
             return;
         }
         Data imageData = this.data;
-
-        //if (this.accStats == null)
         this.computeAccuracyStats(imageData);
 
         this.accStats.createAccClassesImage(this.config.getStatsPath(), name);
@@ -572,28 +550,42 @@ public class CASSP {
 
 
     /**
-    * Rule serialization.
+    * Rule serialization to a file path specified by config.getBestRulePath().
     */
     public void saveRule(){
+        String rulePath = this.config.getBestRulePath();
+
+        if (rulePath == null || rulePath.length() == 0){
+            logger.warn("Path for best rule was not specified, so it cannot be serialized.");
+            return;
+        }
+
         try{
-            FileOutputStream fileOut = new FileOutputStream(this.config.getBestRulePath());
+            FileOutputStream fileOut = new FileOutputStream(rulePath);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(this.rule);
             out.close();
             fileOut.close();
-        }catch(IOException i){
-            i.printStackTrace();
+        }catch(IOException e){
+            logger.error(e.getMessage());
         }
     }
 
 
 
     /**
-    * Rule deserialization.
+    * Rule deserialization from a file path specified by config.getBestRulePath().
     */
     public CARule loadRule(){
+        String rulePath = this.config.getBestRulePath();
+
+        if (rulePath == null || rulePath.length() == 0){
+            logger.warn("Rule path was not specified or cannot be loaded");
+            return null;
+        }
+
         try{
-            FileInputStream fileIn = new FileInputStream(this.config.getBestRulePath());
+            FileInputStream fileIn = new FileInputStream(rulePath);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             this.rule = (CARule) in.readObject();
             in.close();
@@ -606,9 +598,6 @@ public class CASSP {
         return this.rule;
     }
 
-
-
-    /* Getters & setters */
 
     public AccuracyStats getAccuracyStats(){
         return this.accStats;

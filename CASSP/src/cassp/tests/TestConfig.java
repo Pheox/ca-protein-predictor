@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import cassp.config.SimConfig;
 
 
+
 public class TestConfig extends TestCase {
 
     public static Test suite() {
@@ -27,7 +28,6 @@ public class TestConfig extends TestCase {
 
 
     private SimConfig config;
-
 
     public void setUp() {
         this.config = new SimConfig();

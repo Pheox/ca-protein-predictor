@@ -30,8 +30,8 @@ public class TestUtils extends TestCase {
         TestRunner.run(suite());
     }
 
-    private Data simpleData;
 
+    private Data simpleData;
 
     public void setUp() {
         this.simpleData = new Data();

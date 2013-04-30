@@ -16,7 +16,9 @@ import org.jgap.*;
 import org.jgap.data.*;
 import org.jgap.impl.*;
 import org.jgap.xml.*;
+import org.apache.log4j.*;
 
+import cassp.*;
 import cassp.ca.*;
 import cassp.data.*;
 import cassp.config.*;
@@ -25,6 +27,8 @@ import cassp.ca.rules.*;
 
 
 public class TestCARules extends TestCase {
+
+    static Logger logger = Logger.getLogger(CASSPException.class);
 
     public static Test suite() {
         return new TestSuite(TestCARules.class);
@@ -108,12 +112,17 @@ public class TestCARules extends TestCase {
         weights[0] = 1; weights[1] = 1; weights[2] = 1;
 
         this.simpleRule.setWeights(weights);
-        String seq = this.ca.run(this.simpleRule);
 
-        assertEquals("CEC", seq);
-        assertEquals(93.333, this.ca.getCell(1).getHelixProps(), 0.1);
-        assertEquals(156.666, this.ca.getCell(1).getSheetProps(), 0.1);
-        assertEquals(116.666, this.ca.getCell(1).getCoilProps(), 0.1);
+        try{
+            String seq = this.ca.run(this.simpleRule);
+            assertEquals("CEC", seq);
+            assertEquals(93.333, this.ca.getCell(1).getHelixProps(), 0.1);
+            assertEquals(156.666, this.ca.getCell(1).getSheetProps(), 0.1);
+            assertEquals(116.666, this.ca.getCell(1).getCoilProps(), 0.1);
+        } catch (CASSPException e){
+            logger.error(e.getMessage());
+            return;
+        }
     }
 
     public void testConformRuleNeigh1(){
@@ -136,21 +145,24 @@ public class TestCARules extends TestCase {
         this.conformRule.setBeta(1);
         this.conformRule.setGamma(1);
 
+        try{
+            String seq = this.ca.run(this.conformRule);
+            assertEquals("CCC", seq);
 
-        String seq = this.ca.run(this.conformRule);
-        assertEquals("CCC", seq);
+            assertEquals(2.245, this.ca.getCell(0).getHelixProps(), 0.1);
+            assertEquals(3.97186, this.ca.getCell(0).getSheetProps(), 0.1);
+            assertEquals(4.09224, this.ca.getCell(0).getCoilProps(), 0.1);
 
-        assertEquals(2.245, this.ca.getCell(0).getHelixProps(), 0.1);
-        assertEquals(3.97186, this.ca.getCell(0).getSheetProps(), 0.1);
-        assertEquals(4.09224, this.ca.getCell(0).getCoilProps(), 0.1);
+            assertEquals(3.0546, this.ca.getCell(1).getHelixProps(), 0.1);
+            assertEquals(3.0866, this.ca.getCell(1).getSheetProps(), 0.1);
+            assertEquals(3.1728, this.ca.getCell(1).getCoilProps(), 0.1);
 
-        assertEquals(3.0546, this.ca.getCell(1).getHelixProps(), 0.1);
-        assertEquals(3.0866, this.ca.getCell(1).getSheetProps(), 0.1);
-        assertEquals(3.1728, this.ca.getCell(1).getCoilProps(), 0.1);
-
-        assertEquals(2.8989, this.ca.getCell(2).getHelixProps(), 0.1);
-        assertEquals(2.655, this.ca.getCell(2).getSheetProps(), 0.1);
-        assertEquals(3.4326, this.ca.getCell(2).getCoilProps(), 0.1);
+            assertEquals(2.8989, this.ca.getCell(2).getHelixProps(), 0.1);
+            assertEquals(2.655, this.ca.getCell(2).getSheetProps(), 0.1);
+            assertEquals(3.4326, this.ca.getCell(2).getCoilProps(), 0.1);
+        } catch (CASSPException e){
+            logger.error(e.getMessage());
+        }
     }
 
     public void testSimpleRuleToFromChromosome(){

@@ -26,8 +26,8 @@ public class TestData extends TestCase {
         TestRunner.run(suite());
     }
 
-    private Data data;
 
+    private Data data;
 
     public void setUp() {
         this.data = new Data();

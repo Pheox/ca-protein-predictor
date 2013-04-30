@@ -19,26 +19,47 @@ import cassp.config.*;
 
 
 /**
-* Prediction strength - the difference between the output unit with highest value (winner unit)
-* and the output unit with the next highest value.
-* This difference is used to define a reliability index for the prediction of each residue
-* (normalised to a scale from 0 (low) to 9 (high)).
-* Residues with higher reliability index are predicted with higher accuracy (Fig. 4; newer graphs).
-* In practice, the reliability index offers an excellent tool to focus on some key regions
-* predicted at high levels of expected accuracy.
-* (Note however, that the reliability indices tend to be unusually high for poor alignments.)
+* Class representing prediction system statistics.
 */
 public class AccuracyStats {
 
     static Logger logger = Logger.getLogger(AccuracyStats.class);
 
+    public static int MAX_PROPS = 100;
+
+    /**
+    * Accuracy type - Q3 or SOV.
+    */
     private int accuracyType;
+
+    /**
+    * Accuracy for whole data set (for all secondary structure motifs overall).
+    */
     private double totalAccuracy;
+
+    /**
+    * Accuracy only of alpha helix motifs.
+    */
     private double accuracyH;
+
+    /**
+    * Accuracy only of beta sheet motifs.
+    */
     private double accuracyE;
+
+    /**
+    * Accuracy only of coil motifs.
+    */
     private double accuracyC;
 
+    /**
+    * Number of reliability classes.
+    */
     private int reliabClassesNumber;
+
+    /**
+    * Number of accuracy classes.
+    */
     private int accuracyClassesNumber;
 
     private double[] reliabClasses;
@@ -46,15 +67,16 @@ public class AccuracyStats {
 
     private double maxProps;
 
+
     public AccuracyStats(){
-        this.maxProps = 100;
+        this.maxProps = AccuracyStats.MAX_PROPS;
 
         this.totalAccuracy = 0.0;
         this.accuracyH = 0.0;
         this.accuracyE = 0.0;
         this.accuracyC = 0.0;
-        this.reliabClassesNumber = 10;
-        this.accuracyClassesNumber = 10;
+        this.reliabClassesNumber = SimConfig.RELIAB_CLASSES;
+        this.accuracyClassesNumber = SimConfig.ACC_CLASSES;
 
         this.reliabClasses = new double[this.reliabClassesNumber];
         this.accuracyClasses = new double[this.accuracyClassesNumber];
@@ -93,10 +115,8 @@ public class AccuracyStats {
             this.accuracyE = Utils.sov(data, 'E');
             this.accuracyC = Utils.sov(data, 'C');
         }
-
         // compute reliability classes
         this.computeReliabClasses(data, accuracyType);
-
         // compute accuracyClasses
         this.computeAccClasses(data, accuracyType);
     }

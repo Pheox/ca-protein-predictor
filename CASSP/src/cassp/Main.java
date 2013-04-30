@@ -54,25 +54,38 @@ public class Main {
 
         // possible CROSS VALIDATION
         if (config.getCVFolds() > 1){
-            simulator.crossValidate(config.getCVFolds());
+            try{
+                simulator.crossValidate(config.getCVFolds());
+            }catch (CASSPException e){
+                logger.error(e.getMessage());
+            }
         }
 
         // possible TRAINING
         if (config.getTrainMode() != SimConfig.NO_TRAINING &&
                 config.getCVFolds() <= 1){
-            simulator.train();
-            simulator.createEvolutionImage("evolution");
-            simulator.createAccClassesImage("accuracy_train");
-            simulator.createReliabImage("reliability_train");
+            try{
+                simulator.train();
+                simulator.createEvolutionImage("evolution");
+                simulator.createAccClassesImage("accuracy_train");
+                simulator.createReliabImage("reliability_train");
+            } catch (CASSPException e){
+                logger.error(e.getMessage());
+            }
         }
 
         // possible TESTING
         if (config.getTestMode() != SimConfig.NO_TESTING){
             simulator.loadRule();
-            double acc = simulator.test();
-            logger.info("Test accuracy: " + acc);
-            simulator.createAccClassesImage("accuracy_test");
-            simulator.createReliabImage("reliability_test");
+
+            try{
+                double acc = simulator.test();
+                logger.info("Test accuracy: " + acc);
+                simulator.createAccClassesImage("accuracy_test");
+                simulator.createReliabImage("reliability_test");
+            } catch(CASSPException e){
+                logger.error(e.getMessage());
+            }
         }
 
         String toPredict = config.getToPredict();
@@ -83,15 +96,21 @@ public class Main {
             String predicted = null;
 
             File f = new File(toPredict);
-            if (f.exists()) {
-                predicted = simulator.predict(f);
-            }
-            else{
-                predicted = simulator.predict(toPredict);
-            }
-            logger.info("predicted: \n" + predicted);
-        }
 
+            try{
+                if (f.exists()) {
+                    predicted = simulator.predict(f);
+                }
+                else{
+                    predicted = simulator.predict(toPredict);
+                }
+                logger.info("\n\nSequence or file to predict: " + toPredict +
+                    "\nPredicted sequence:\n" + predicted);
+            }catch (CASSPException e){
+                logger.error(e.getMessage());
+                logger.error(e.getStackTraceStr());
+            }
+        }
         System.exit(0);
     }
 }

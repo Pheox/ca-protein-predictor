@@ -20,10 +20,23 @@ import cassp.ca.rules.*;
 
 public class CellularAutomaton {
 
+    /**
+    * 1D array (lattice) of CA cells.
+    */
     private CACell[] cells;
+
     private int cellsLength;
+
+    /**
+    * Sequence representation of CA lattice.
+    */
     private DataItem dataItem;
+
+    /**
+    * Rule used on CA.
+    */
     private CARule rule;
+
     private SimConfig config;
 
     private String predSeq;
@@ -60,15 +73,18 @@ public class CellularAutomaton {
     * @param rule Transition rule of cellular automaton.
     * @param data Data object needed for amino acids properties.
     */
-    public String run(CARule rule){
+    public String run(CARule rule) throws CASSPException{
         this.rule = rule;
         int diLength = this.dataItem.length();
 
         // cells initialization
         for (int i = 0; i < diLength; i++){
-            this.cells[i] = new CACell(rule.getAminoAcid(this.dataItem.getAaAt(i)));
+            try{
+                this.cells[i] = new CACell(rule.getAminoAcid(this.dataItem.getAaAt(i)));
+            } catch (CASSPException e){
+                throw e;
+            }
         }
-
         int ruleSteps = this.rule.getSteps();
 
         for (int s = 0; s < ruleSteps; s++) {
@@ -126,7 +142,11 @@ public class CellularAutomaton {
         return props;
     }
 
-
+    /**
+    * Computes reliability indexes of all predicted CA states.
+    *
+    * @param maxProps maximum propensities needed to propensities normalization
+    */
     public void computeReliabIndexes(double maxProps){
         double diff = 0.0;
         int index = 0;
@@ -146,7 +166,6 @@ public class CellularAutomaton {
     public void computePsipredMeanReliabIndex(){
         System.out.println(this.reliabIndexes);
     }
-
 
     public String getPredSeq(){
         return this.predSeq;

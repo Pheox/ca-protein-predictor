@@ -11,16 +11,35 @@ import cassp.*;
 import cassp.data.*;
 
 
+
 /**
 * Cell of cellular automaton.
 */
 public class CACell{
 
+    /**
+    * Every cell is represented by one amino acid.
+    */
     private AminoAcid aminoAcid;
+
+    /**
+    * Secondary structure motif of an amino acid - state of a cell.
+    */
     private char motif;
 
+    /**
+    * Alpha helix propensities of a cell state (secondary structure motif).
+    */
     private double helixProps;
+
+    /**
+    * Beta sheet propensities of a cell state (secondary structure motif).
+    */
     private double sheetProps;
+
+    /**
+    * Coil propensities of a cell state (secondary structure motif).
+    */
     private double coilProps;
 
     private boolean dirtyFlag;
@@ -34,6 +53,10 @@ public class CACell{
         this.dirtyFlag = true;
     }
 
+
+    /**
+    * Copy constructor.
+    */
     public CACell(CACell cell){
         this.aminoAcid = cell.getAminoAcid();
         this.motif = cell.getMotif();
@@ -71,6 +94,7 @@ public class CACell{
         s += "coil props: " + this.coilProps + "\n";
         return s;
     }
+
 
     /* Getters & setters */
 

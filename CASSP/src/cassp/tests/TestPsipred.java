@@ -29,10 +29,10 @@ public class TestPsipred extends TestCase {
         TestRunner.run(suite());
     }
 
+
     private final String psipredPath = "/home/vlado/programs/psipred/runpsipred";
     private final String rulePath = "./best_rule.rule";
     private Psipred psipred;
-
 
     public void setUp() {
         this.psipred = new Psipred(this.psipredPath);

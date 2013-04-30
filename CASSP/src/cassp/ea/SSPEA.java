@@ -5,6 +5,7 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
+
 package cassp.ea;
 
 import java.io.*;
@@ -29,15 +30,6 @@ import cassp.ea.stats.*;
 
 
 
-/*
-Notes:
-- default mutation rate - 1/12 (1/X)
-- default crossover rate - 35 % from pop size
-- http://vyuka.martinpilat.com/2011/11/09/eva-5-cviceni-realna-funkce-ii-operatory/
-*/
-
-
-
 /**
 * Secondary Structure Prediction Evolutionary Algorithm.
 */
@@ -49,18 +41,29 @@ public class SSPEA {
     private SimConfig config;
     private EAStats stats;
 
+    /**
+    * @param config program configuration
+    * @param data data used by evolutionary algorithm
+    */
     public SSPEA(SimConfig config, Data data){
         this.data = data;
         this.config = config;
         this.stats = new EAStats(config.getNoChangeEAEnd());
     }
 
+    /**
+    * Method evolving genotype.
+    */
     public CARule evolve() throws Exception{
-        // EA configuration
+
         Configuration.reset();
         Configuration conf = new Configuration("conf");
         conf.setBreeder(new GABreeder());
 
+        /*
+        * Custom random number generator is used
+        * because of standard deviation issues of GaussianRandomGenerator.
+        */
         RandomGenerator rg = new GaussianRndGenerator(this.config.getMutDev());
         conf.setRandomGenerator(rg);
         conf.setEventManager(new EventManager());
@@ -73,31 +76,34 @@ public class SSPEA {
         conf.setMinimumPopSizePercent(0);
         conf.setSelectFromPrevGen(1.0d);
         conf.setKeepPopulationSizeConstant(true);
+        // highest fitness value is better
         conf.setFitnessEvaluator(new DefaultFitnessEvaluator());
         conf.setChromosomePool(new ChromosomePool());
         conf.addGeneticOperator(new CrossoverOperator(conf, this.config.getCrossProb()));
+        /*
+        * Mutation: random number from gaussian distribution with specified standard distribution
+        * is added to EVERY gene.
+        */
         conf.addGeneticOperator(new GaussianMutationOperator(conf, this.config.getMutDev()));
         conf.setPreservFittestIndividual(true);
 
         FitnessFunction ff = new SSPFF(this.data, this.config);
         conf.setFitnessFunction(ff);
         CARule rule = this.setRule();
-        //conf.addGeneticOperator(new MutationOperator(conf, rule.getSize()/2));
 
         IChromosome sampleChromosome = rule.initChromosome(conf, this.config.getMaxSteps());
 
         conf.setSampleChromosome(sampleChromosome);
         conf.setPopulationSize(this.config.getPop());
 
-        //genotype = Genotype.randomInitialGenotype(conf);
+        // genotype initialization
         Genotype genotype = this.initGenotype(conf);
-
 
         // population evolving
         for (int i = 0; i < this.config.getMaxGen(); i++) {
             genotype.evolve();
 
-            // filling GenStats object
+            // filling statistics object
             GenStats gs = new GenStats();
             gs.setMax(Utils.getMax(genotype.getPopulation()));
             gs.setMin(Utils.getMin(genotype.getPopulation()));
@@ -106,10 +112,11 @@ public class SSPEA {
             this.stats.addGenStats(gs);
 
             logger.info("##  " + i + ". generation: " + genotype.getFittestChromosome().getFitnessValue());
+
+            // check if best fitness value converged
             if (this.stats.isConverged())
                 break;
          }
-
          CARule bestRule = rule.fromChromosome(genotype.getFittestChromosome());
          bestRule.computeMaxPropsDiff(new double[]{this.data.getMaxCF(), this.data.getMaxCC()});
          return rule;
@@ -128,9 +135,6 @@ public class SSPEA {
             genotype = CAConformRule.initGenotypeGauss(conf);
         return genotype;
     }
-
-
-    /* Getters & setters */
 
     private CARule setRule(){
         if (this.config.getRule() == SimConfig.RULE_SIMPLE)

@@ -16,23 +16,31 @@ import org.apache.log4j.*;
 import cassp.config.*;
 
 
+
 /**
 * Represents one data item.
 */
 public class DataItem {
-
-    /**
-    * Threshold of using PSIPRED.
-    */
-    public static int PSIPRED_THRESHOLD = 3;
 
     private String aaSeq;
     private String sspSeq;
     private String psipredSeq;
     private String predictedSeq;
     private double propsMeanDiff;
+
+    /**
+    * Mean reliability index for whole protein sequence.
+    */
     private int meanReliabIndex;
+
+    /**
+    * Reliability indexes in one String.
+    */
     private String reliabIndexesStr;
+
+    /**
+    * Reliability indexes array, one reliability index for every sequence letter.
+    */
     private ArrayList<Integer> reliabIndexes;
 
 
@@ -44,6 +52,11 @@ public class DataItem {
         this.reliabIndexesStr = "";
     }
 
+    /**
+    * @param aa amino acid sequence
+    * @param ssp true/experimental secondary structure sequence
+    * @param pred predicted secondary structure sequence
+    */
     public DataItem(String aa, String ssp, String pred){
         this.aaSeq = aa;
         this.sspSeq =ssp;
@@ -52,12 +65,19 @@ public class DataItem {
         this.reliabIndexesStr = "";
     }
 
+    /**
+    * Length of a sequence.
+    */
     public int length(){
         return this.aaSeq.length();
     }
 
     /**
     * Repair prediction.
+    *
+    * @param predSeq repairing sequence
+    * @param threshold reliability index threshold
+    * @param repairType repair type
     */
     public void repairPrediction(String predSeq, int threshold, int repairType){
         if (repairType == SimConfig.REPAIR_PROTEIN){
@@ -80,18 +100,30 @@ public class DataItem {
 
     /* Getters & setters */
 
+    /**
+    * Returns amino acid sequence.
+    */
     public String getAaSeq(){
         return this.aaSeq;
     }
 
+    /**
+    * Returns amino acid at specified index.
+    */
     public char getAaAt(int index){
         return this.aaSeq.charAt(index);
     }
 
+    /**
+    * Sets amino sequence.
+    */
     public void setAaSeq(String aa){
         this.aaSeq = aa;
     }
 
+    /**
+    * Returns secondary structure sequence.
+    */
     public String getSspSeq(){
         return this.sspSeq;
     }
@@ -157,6 +189,9 @@ public class DataItem {
         this.meanReliabIndex = index;
     }
 
+    /**
+    * Computes reliability index mean.
+    */
     public void computeMeanReliabIndex(){
         double sum = 0.0;
         for (int i = 0; i < this.reliabIndexes.size();i++) {

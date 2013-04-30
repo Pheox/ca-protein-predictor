@@ -13,12 +13,16 @@ import junit.textui.TestRunner;
 import static org.junit.Assert.assertEquals;
 
 import java.io.*;
+import org.apache.log4j.*;
 
 import cassp.*;
 import cassp.config.*;
 
 
+
 public class TestCASSP extends TestCase {
+
+    static Logger logger = Logger.getLogger(CASSPException.class);
 
     public static Test suite() {
         return new TestSuite(TestCASSP.class);
@@ -44,7 +48,12 @@ public class TestCASSP extends TestCase {
     }
 
     public void testEvolutionImageCreation(){
-        this.simulator.train();
+        try{
+            this.simulator.train();
+        } catch (CASSPException e){
+            logger.error(e.getMessage());
+        }
+
         this.simulator.createEvolutionImage("evolution");
 
         File f = new File(this.config.getStatsPath() + "evolution.png");
@@ -57,7 +66,12 @@ public class TestCASSP extends TestCase {
     }
 
     public void testAccClassesImageCreation(){
-        this.simulator.train();
+        try{
+            this.simulator.train();
+        } catch (CASSPException e){
+            logger.error(e.getMessage());
+        }
+
         this.simulator.createAccClassesImage("accuracy");
 
         File f = new File(this.config.getStatsPath() + "accuracy.png");
@@ -70,7 +84,12 @@ public class TestCASSP extends TestCase {
     }
 
     public void testReliabImageCreation(){
-        this.simulator.train();
+        try{
+            this.simulator.train();
+        }catch (CASSPException e){
+            logger.error(e.getMessage());
+        }
+
         this.simulator.createReliabImage("reliability");
 
         File f = new File(this.config.getStatsPath() + "reliability.png");

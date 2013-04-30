@@ -5,8 +5,8 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
-
 package cassp.config;
+
 
 import org.kohsuke.args4j.Option;
 
@@ -17,37 +17,168 @@ import java.util.*;
 
 public class SimConfig {
 
+    /**
+    * Simple accuracy method, for more information see:
+    * http://proteinmodel.org/AS2TS/SOV/sov_help.html
+    */
     static public int Q3 = 0;
+
+    /**
+    * Advanced accuracy method considering segments as elements,
+    * for more information see: http://proteinmodel.org/AS2TS/SOV/sov_help.html
+    */
     static public int SOV = 1;
 
+    /**
+    * If specified, no training is performed.
+    */
     static public int NO_TRAINING = -1;
+
+    /**
+    * If specified, training only with CASSP is performed.
+    */
     static public int TRAIN_MODE_NORMAL = 0;
+
+    /**
+    * If specified, training is performed with CASSP, repairing with PSIPRED.
+    */
     static public int TRAIN_MODE_CP = 1;
+
+    /**
+    * If specified, training is performed with PSIPRED, repairing with CASSP.
+    */
     static public int TRAIN_MODE_PC = 2;
 
+
+    /**
+    * If specified, no testing is performed.
+    */
     static public int NO_TESTING = -1;
+
+    /**
+    * If specified, testing only with CASSP is performed.
+    */
     static public int TEST_MODE_NORMAL = 0;
+
+    /*
+    * If specified, testing is performed with CASSP, repairing with PSIPRED.
+    */
     static public int TEST_MODE_CP = 1;
+
+    /**
+    * If specified, testing is performed with PSIPRED, repairing with CASSP.
+    */
     static public int TEST_MODE_PC = 2;
 
+    /**
+    * If specified, no prediction is performed.
+    */
+    static public int NO_PREDICTION = -1;
+
+    /**
+    * If specified, prediction only with CASSP is performed.
+    */
+    static public int PREDICT_MODE_NORMAL = 0;
+
+    /*
+    * If specified, prediction is performed with CASSP, repairing with PSIPRED.
+    */
+    static public int PREDICT_MODE_CP = 1;
+
+    /**
+    * If specified, prediction is performed with PSIPRED, repairing with CASSP.
+    */
+    static public int PREDICT_MODE_PC = 2;
+
+
+    /**
+    * If specified, repairing lies in replacing whole sequence
+    * by repairing sequence if mean reliability index is lower than threshold.
+    */
     static public int REPAIR_PROTEIN = 0;
+
+    /**
+    * If specified, repairing lies in replacing individual amino acids predictions
+    * by repairing amino acid predictions if reliability index of individual amino acid
+    * is lower than threshold.
+    */
     static public int REPAIR_RESIDUE = 1;
 
-    static public int CV_FOLDS = 3;
+    /**
+    * Implicit number of cross validation folds.
+    */
+    static public int CV_FOLDS = 5;
+
+    /**
+    * Accuracy type - implicit is 0 = Q3.
+    */
     static public int ACCURACY_TYPE = 0; // Q3
-    static public int RELIAB_CLASSES = 10;
+
+    /**
+    * Implicit number of reliability classes.
+    */
+    static public int RELIAB_CLASSES = 100;
+
+    /**
+    * Implicit threshold depending on RELIAB_CLASSES.
+    */
     static public int THRESHOLD = 4;
+
+    /**
+    * Implicit number of accuracy classes.
+    */
     static public int ACC_CLASSES = 10;
+
+    /**
+    * Implicit number of CA predictor maximum steps.
+    */
     static public int MAX_STEPS = 10;
+
+    /**
+    * Implicit CA cell neighborhood (one side), whole neighborhood
+    * is computed as followsL NEIGH*2 + 1.
+    */
     static public int NEIGH = 3;
+
+    /**
+    * Simple rule specified by class CASimpleRule.
+    */
     static public int RULE_SIMPLE = 0;
+
+    /**
+    * More advanced rule specified by class CAConformRule.
+    */
     static public int RULE_CONFORM = 1;
+
     static public double MUT_PROB = 0.03;
+
+    /**
+    * Implicit deviation of normal distribution used by random number generator
+    * in the process of genotype mutation.
+    */
     static public double MUT_DEV = 0.1;
+
+    /**
+    * Implicit crossover probability.
+    */
     static public double CROSS_PROB = 0.75;
+
+    /**
+    * Implicit number of generations of an evolutionary algorithm.
+    */
     static public int MAX_GEN = 10000;
+
+    /**
+    * Implicit length of EA-convergence = as a number of generation
+    * in that the best fitness value is not improved.
+    */
     static public int NO_CHANGE = 1000;
+
+    /**
+    * Implicit size of population used by an evolutionary algorithm.
+    */
     static public int POP = 100;
+
 
     // general
     @Option(name="-cv",usage="Sets a number of cross-validation folds")
@@ -107,7 +238,7 @@ public class SimConfig {
     @Option(name="-rule",usage="Sets a rule type")
     private int rule;
 
-    @Option(name="-tresh",usage="Sets prediction repairing threshold")
+    @Option(name="-thresh",usage="Sets prediction repairing threshold")
     private int threshold;
 
     // 0 - normal, 1 - CASSP + PSIPRED, 2 - PSIPRED + CASSP
@@ -117,6 +248,10 @@ public class SimConfig {
     // 0 - normal, 1 - CASSP + PSIPRED, 2 - PSIPRED + CASSP
     @Option(name="-test_mode",usage="Sets testing mode")
     private int testMode;
+
+    // 0 - normal, 1 - CASSP + PSIPRED, 2 - PSIPRED + CASSP
+    @Option(name="-predict_mode",usage="Sets prediction mode")
+    private int predictMode;
 
     // 0 - protein, 1 - amino acid
     @Option(name="-repair",usage="Sets type of predicted aa repairing.")
@@ -147,6 +282,7 @@ public class SimConfig {
         this.rule = SimConfig.RULE_SIMPLE;
         this.trainMode = SimConfig.TRAIN_MODE_NORMAL;
         this.testMode = SimConfig.TEST_MODE_NORMAL;
+        this.predictMode = SimConfig.PREDICT_MODE_NORMAL;
         this.repair = SimConfig.REPAIR_RESIDUE;
         this.mutDev = SimConfig.MUT_DEV;
         this.noChange = SimConfig.NO_CHANGE;
@@ -253,6 +389,11 @@ public class SimConfig {
         else
             this.testMode = SimConfig.NO_TESTING;
 
+        if (prop.getProperty("predict_mode") != null)
+            this.predictMode = Integer.parseInt(prop.getProperty("predict_mode"));
+        else
+            this.predictMode = SimConfig.NO_PREDICTION;
+
         if (prop.getProperty("repair") != null)
             this.repair = Integer.parseInt(prop.getProperty("repair"));
         else
@@ -288,6 +429,8 @@ public class SimConfig {
         s += "train_mode = " + this.trainMode + "\n\n";
         s += "# 0 - normal, 1 - CASSP + PSIPRED, 2 - PSIPRED + CASSP\n";
         s += "test_mode = " + this.testMode + "\n\n";
+        s += "# 0 - normal, 1 - CASSP + PSIPRED, 2 - PSIPRED + CASSP\n";
+        s += "predict_mode = " + this.testMode + "\n\n";
         s += "# 0 - protein, 1 - residues\n";
         s += "repair = " + this.repair + "\n\n";
 
@@ -487,6 +630,14 @@ public class SimConfig {
 
     public void setTestMode(int testMode){
         this.testMode = testMode;
+    }
+
+    public int getPredictMode(){
+        return this.predictMode;
+    }
+
+    public void setPredictMode(int predictMode){
+        this.predictMode = predictMode;
     }
 
     public int getThreshold(){

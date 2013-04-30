@@ -5,9 +5,9 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
+
 package cassp.ea;
 
-import java.util.*;
 
 import org.jgap.*;
 import org.jgap.data.*;
@@ -34,22 +34,18 @@ public class SSPFF extends FitnessFunction{
     private Data data;
     private int mode;
 
-    /**
-    * What is the best initialization?
-    */
+
     public SSPFF(Data data, SimConfig config){
         this.data = data;
         this.config = config;
         this.mode = config.getTrainMode();
     }
 
-
     /**
     * Computes value of fitness function for a given chromosome.
     * @param chromosome Chromosome which fitness value is computing.
     */
     public double evaluate(IChromosome chromosome){
-
         int sumOk = 0;
         int sumAll = 0;
         double fitness = 0.0;
@@ -59,7 +55,12 @@ public class SSPFF extends FitnessFunction{
         if (this.mode == SimConfig.TRAIN_MODE_CP){
             for (DataItem dataItem : this.data.getData()){
                 CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
-                ca.run(rule);
+                try{
+                    ca.run(rule);
+                } catch (CASSPException e){
+                    logger.error(e.getMessage());
+                }
+
                 ca.computePropsMeanDiff();
                 ca.computeReliabIndexes(
                     rule.computeMaxPropsDiff(new double[]{this.data.getMaxCF(), this.data.getMaxCC()})
@@ -68,6 +69,7 @@ public class SSPFF extends FitnessFunction{
                 dataItem.setPredSeq(ca.getPredSeq());
                 dataItem.setReliabIndexes(ca.getReliabIndexes());
 
+                // Repairing by PSIPRED prediction.
                 dataItem.repairPrediction(
                     dataItem.getPsipredSeq(),
                     this.config.getThreshold(),
@@ -79,8 +81,14 @@ public class SSPFF extends FitnessFunction{
             for (DataItem dataItem : this.data.getData()){
                 dataItem.setPsipredAsPredSeq();
 
+                // Repairing by CASSP prediction.
                 CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
-                ca.run(rule);
+                try{
+                    ca.run(rule);
+                }catch (CASSPException e){
+                    logger.error(e.getMessage());
+                }
+
                 dataItem.computeMeanReliabIndex();
 
                 dataItem.repairPrediction(
@@ -93,7 +101,11 @@ public class SSPFF extends FitnessFunction{
         else if (this.mode == SimConfig.TRAIN_MODE_NORMAL){
             for (DataItem dataItem : this.data.getData()){
                 CellularAutomaton ca = new CellularAutomaton(dataItem, this.config);
-                ca.run(rule);
+                try{
+                    ca.run(rule);
+                }catch (CASSPException e){
+                    logger.error(e.getMessage());
+                }
                 ca.computePropsMeanDiff();
                 dataItem.setPredSeq(ca.getPredSeq());
             }
@@ -106,7 +118,9 @@ public class SSPFF extends FitnessFunction{
         return fitness;
     }
 
-
+    /**
+    * Creates rule based of rule type according to genes of a specified chromosome.
+    */
     private CARule createRule(IChromosome chromosome){
         CARule rule;
 
@@ -116,7 +130,6 @@ public class SSPFF extends FitnessFunction{
             rule = new CAConformRule(this.config.getNeigh(), this.data.getAminoAcids());
         else
             rule = new CASimpleRule(this.config.getNeigh(), this.data.getAminoAcids());
-
         return rule.fromChromosome(chromosome);
     }
 }
