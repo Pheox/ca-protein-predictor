@@ -161,7 +161,12 @@ public class CASimpleRule extends CARule{
     }
 
     public double computeMaxPropsDiff(double[] maxCoeffs){
-        this.maxPropsDiff = maxCoeffs[0]*(2*this.neigh + 1);
+        /*
+        * It should be maxCoeffs[0]*(2*this.neigh + 1) theoretically,
+        * but empirical expression is used.
+        */
+        //this.maxPropsDiff = maxCoeffs[0]*(2*this.neigh + 1);
+        this.maxPropsDiff = maxCoeffs[0]*this.neigh/3;
         return this.maxPropsDiff;
     }
 

@@ -183,7 +183,12 @@ public class CAConformRule extends CARule{
     }
 
     public double computeMaxPropsDiff(double[] maxCoeffs){
-        this.maxPropsDiff = maxCoeffs[0]*(2*this.neigh + 1) + maxCoeffs[1]*(this.neigh*2 + 1);
+        /*
+        * It should be maxCoeffs[0]*(2*this.neigh + 1) + maxCoeffs[1]*(this.neigh*2 + 1) theoretically,
+        * but empirical expression is used.
+        */
+        //this.maxPropsDiff = maxCoeffs[0]*(2*this.neigh + 1) + maxCoeffs[1]*(this.neigh*2 + 1);
+        this.maxPropsDiff = maxCoeffs[0]*this.neigh/3 + maxCoeffs[1]*(this.neigh*2 + 1);
         return this.maxPropsDiff;
     }
 

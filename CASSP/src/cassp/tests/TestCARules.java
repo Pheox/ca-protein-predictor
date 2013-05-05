@@ -82,7 +82,7 @@ public class TestCARules extends TestCase {
 
         this.simpleRule = new CASimpleRule(2, this.data.getAminoAcids());
         double maxDiff = this.simpleRule.computeMaxPropsDiff(new double[]{this.data.getMaxCF()});
-        assertEquals(1200.0, maxDiff);
+        assertEquals(160.0, maxDiff);
     }
 
     public void testConformMaxPropsDiff(){
@@ -93,7 +93,7 @@ public class TestCARules extends TestCase {
         double maxDiff = this.conformRule.computeMaxPropsDiff(
             new double[]{this.data.getMaxCF(), this.data.getMaxCC()}
         );
-        assertEquals(1212.013, maxDiff, 0.01);
+        assertEquals(172.013089, maxDiff, 0.01);
     }
 
 

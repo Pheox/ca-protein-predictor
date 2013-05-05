@@ -354,6 +354,7 @@ public class CASSP {
                 CellularAutomaton ca = new CellularAutomaton(di, this.config);
                 try{
                     ca.run(this.rule);
+                    ca.computePropsMeanDiff();
                 } catch (CASSPException e){
                     throw e;
                 }

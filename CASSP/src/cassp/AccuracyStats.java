@@ -132,6 +132,10 @@ public class AccuracyStats {
         for (DataItem di: data.getData()) {
             int index = (int) Math.round(di.getPropsMeanDiff()/this.maxProps*this.reliabClassesNumber);
 
+            // just to be sure we are not out of array
+            if (index >= this.reliabClassesNumber)
+                index = this.reliabClassesNumber - 1;
+
             if (accuracyType == SimConfig.Q3){
                 double[] q3 = Utils.q3(di);
                 this.reliabClasses[index] += q3[0]*q3[1];
