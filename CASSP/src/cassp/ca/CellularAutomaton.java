@@ -11,7 +11,6 @@ package cassp.ca;
 import java.util.*;
 
 import cassp.*;
-import cassp.ca.*;
 import cassp.data.*;
 import cassp.config.*;
 import cassp.ca.rules.*;

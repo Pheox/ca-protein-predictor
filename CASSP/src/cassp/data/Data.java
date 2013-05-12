@@ -46,6 +46,8 @@ public class Data {
     */
     private int mode;
 
+	private BufferedReader br;
+
 
     /**
     * Constructor 1 - initializes structures.
@@ -109,7 +111,7 @@ public class Data {
         try{
             FileInputStream fstream = new FileInputStream(filePath);
             DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            br = new BufferedReader(new InputStreamReader(in));
 
             String aaSeq;
             String sspSeq;
@@ -167,7 +169,7 @@ public class Data {
         try{
             FileInputStream fstream = new FileInputStream(filePath);
             DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            br = new BufferedReader(new InputStreamReader(in));
 
             String aaSeq;
             String sspSeq;
@@ -281,18 +283,22 @@ public class Data {
     /**
     * Computes Chou-Fasman coefficients.
     */
-    @SuppressWarnings("unchecked")
-    public void computeChouFasman(){
+    @SuppressWarnings("rawtypes")
+	public void computeChouFasman(){
         // conformation states of all amino acids
-        HashMap<Character, ArrayList> cs = new HashMap<Character, ArrayList>();
+        HashMap<Character, ArrayList<Integer>> cs = 
+        		new HashMap<Character, ArrayList<Integer>>();
         // relative frequencies of amino acids
-        HashMap<Character, ArrayList> relat_f = new HashMap<Character, ArrayList>();
+        HashMap<Character, ArrayList<Double>> relat_f = 
+        		new HashMap<Character, ArrayList<Double>>();
         // amino acids acounts
         HashMap<Character, Integer> aa_counts = new HashMap<Character, Integer>();
         // final chou-fasman parameters of 20 classic amino acids
-        HashMap<Character, ArrayList> final_cf = new HashMap<Character, ArrayList>();
+        HashMap<Character, ArrayList<Double>> final_cf = 
+        		new HashMap<Character, ArrayList<Double>>();
         // chou fasman parameters of ambiguous amino acids
-        HashMap<Character, ArrayList> ambiguous_cf = new HashMap<Character, ArrayList>();
+        HashMap<Character, ArrayList<Double>> ambiguous_cf = 
+        		new HashMap<Character, ArrayList<Double>>();
 
 
         for (char amino_acid : Utils.aminoAcids){
@@ -582,7 +588,8 @@ public class Data {
     }
 
 
-    private void computeCP(
+    @SuppressWarnings("rawtypes")
+	private void computeCP(
         HashMap<Character, Integer> aaCounts,
         HashMap<Character, HashMap<Character, Integer>> begs,
         HashMap<Character, HashMap<Character, Integer>> breaks,

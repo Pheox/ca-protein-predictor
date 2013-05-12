@@ -10,12 +10,11 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-import static org.junit.Assert.assertEquals;
 
 import java.util.*;
 
-import cassp.*;
 import cassp.data.*;
+import cassp.utils.Psipred;
 
 
 
@@ -31,7 +30,6 @@ public class TestPsipred extends TestCase {
 
 
     private final String psipredPath = "/home/vlado/programs/psipred/runpsipred";
-    private final String rulePath = "./best_rule.rule";
     private Psipred psipred;
 
     public void setUp() {

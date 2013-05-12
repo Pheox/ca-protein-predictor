@@ -16,7 +16,6 @@ import org.jgap.*;
 import cassp.*;
 import cassp.ca.*;
 import cassp.data.*;
-import cassp.config.*;
 
 
 
@@ -28,7 +27,9 @@ import cassp.config.*;
 **/
 public abstract class CARule implements Serializable{
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
     * Number of next configurations of CA to be computed.
     */
     protected int steps;

@@ -10,7 +10,6 @@ package cassp.ea;
 
 
 import org.jgap.*;
-import org.jgap.data.*;
 
 import org.apache.log4j.*;
 
@@ -28,7 +27,9 @@ import cassp.ca.rules.*;
 */
 public class SSPFF extends FitnessFunction{
 
-    static Logger logger = Logger.getLogger(SSPFF.class);
+	private static final long serialVersionUID = 1L;
+
+	static Logger logger = Logger.getLogger(SSPFF.class);
 
     private SimConfig config;
     private Data data;
@@ -46,8 +47,6 @@ public class SSPFF extends FitnessFunction{
     * @param chromosome Chromosome which fitness value is computing.
     */
     public double evaluate(IChromosome chromosome){
-        int sumOk = 0;
-        int sumAll = 0;
         double fitness = 0.0;
 
         CARule rule  = this.createRule(chromosome);

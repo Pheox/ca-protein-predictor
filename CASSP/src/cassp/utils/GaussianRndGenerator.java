@@ -10,9 +10,7 @@ package cassp.utils;
 
 
 import java.util.*;
-import java.io.*;
 
-import org.jgap.*;
 import org.jgap.impl.*;
 
 
@@ -22,7 +20,8 @@ import org.jgap.impl.*;
  */
 public class GaussianRndGenerator extends GaussianRandomGenerator {
 
-    private double stdDev;
+	private static final long serialVersionUID = 1L;
+	private double stdDev;
     private Random random;
 
 

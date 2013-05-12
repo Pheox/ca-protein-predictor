@@ -10,7 +10,6 @@ package cassp.utils;
 
 
 import java.util.*;
-import java.io.*;
 
 import org.jgap.*;
 import org.jgap.impl.*;
@@ -20,7 +19,9 @@ import org.apache.log4j.*;
 
 public class MyDoubleGene extends DoubleGene {
 
-    static Logger logger = Logger.getLogger(MyDoubleGene.class);
+	private static final long serialVersionUID = 1L;
+
+	static Logger logger = Logger.getLogger(MyDoubleGene.class);
 
     Random random;
 

@@ -17,7 +17,9 @@ import java.io.*;
 */
 public class AminoAcid implements Serializable{
 
-    private char abbrev;
+	private static final long serialVersionUID = 1L;
+
+	private char abbrev;
 
     // Chou-Fasman parameters
     /**

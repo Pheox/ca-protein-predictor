@@ -10,12 +10,9 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-import static org.junit.Assert.assertEquals;
 
 import org.jgap.*;
-import org.jgap.data.*;
 import org.jgap.impl.*;
-import org.jgap.xml.*;
 import org.apache.log4j.*;
 
 import cassp.*;

@@ -10,10 +10,8 @@ package cassp.utils;
 
 import java.io.*;
 import java.util.*;
-import java.lang.Math.*;
 
 import org.jgap.*;
-import org.jgap.data.*;
 
 import cassp.data.*;
 
@@ -191,8 +189,6 @@ public class Utils {
     }
 
     public static double[] sov(DataItem dataItem){
-        char motiv;
-
         Map<SOVSegment, ArrayList<SOVSegment>> olSegments;
         ArrayList<SOVSegment> origSegments = new ArrayList<SOVSegment>();
         ArrayList<SOVSegment> predSegments = new ArrayList<SOVSegment>();

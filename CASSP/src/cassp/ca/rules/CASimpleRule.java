@@ -12,18 +12,12 @@ import java.util.*;
 import java.text.*;
 
 import org.jgap.*;
-import org.jgap.data.*;
-import org.jgap.impl.*;
-import org.jgap.xml.*;
-import org.w3c.dom.*;
 import org.apache.log4j.*;
 
-import cassp.*;
 import cassp.ca.*;
 import cassp.data.*;
 import cassp.utils.*;
-import cassp.config.*;
-import cassp.ca.rules.*;
+
 
 
 /**
@@ -31,7 +25,9 @@ import cassp.ca.rules.*;
 */
 public class CASimpleRule extends CARule{
 
-    static Logger logger = Logger.getLogger(CASimpleRule.class);
+	private static final long serialVersionUID = 1L;
+
+	static Logger logger = Logger.getLogger(CASimpleRule.class);
 
     // boundary conditions
     public static int BOUNDARY_H = 0;

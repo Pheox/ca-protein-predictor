@@ -8,20 +8,11 @@
 
 package cassp.ea;
 
-import java.io.*;
-import java.util.*;
-
 import org.jgap.*;
-import org.jgap.data.*;
 import org.jgap.impl.*;
-import org.jgap.xml.*;
 import org.jgap.event.*;
-import org.jgap.util.*;
-import org.w3c.dom.*;
 import org.apache.log4j.*;
 
-import cassp.*;
-import cassp.ca.*;
 import cassp.data.*;
 import cassp.utils.*;
 import cassp.config.*;

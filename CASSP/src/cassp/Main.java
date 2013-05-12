@@ -14,9 +14,7 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.CmdLineException;
 
 import java.io.*;
-import java.util.Properties;
 
-import cassp.utils.*;
 import cassp.config.*;
 
 
@@ -49,7 +47,7 @@ public class Main {
         }
 
         CASSP simulator = new CASSP(config);
-        //logger.info(config.toString());
+        logger.info(config.toString());
 
 
         // possible CROSS VALIDATION

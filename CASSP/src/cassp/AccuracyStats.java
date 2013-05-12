@@ -275,4 +275,16 @@ public class AccuracyStats {
             logger.error("\n" + e);
         }
     }
+    
+    double getAccuracyH(){
+    	return this.accuracyH;
+    }
+    
+    double getAccuracyE(){
+    	return this.accuracyE;
+    }
+    
+    double getAccuracyC(){
+    	return this.accuracyC;
+    }
 }

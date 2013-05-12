@@ -13,7 +13,8 @@ import org.apache.log4j.*;
 
 public class CASSPException extends Exception{
 
-    static Logger logger = Logger.getLogger(CASSPException.class);
+	private static final long serialVersionUID = 1L;
+	static Logger logger = Logger.getLogger(CASSPException.class);
 
 
     public CASSPException(){

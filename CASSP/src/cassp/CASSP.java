@@ -365,10 +365,12 @@ public class CASSP {
 
 
     /**
-    * Cross-validation - dataset is divided to <folds> parts.
+    * Cross-validation - dataset is divided into "folds" parts.
+    * Rule with the best accuracy is saved. Every model is trained
+    * using his own thread.
     *
     * @param folds number of sub-trainings and sub-testings
-    * @return mean accuracy of sub-tests
+    * @return mean accuracy of all trained models
     */
     public double crossValidate(int folds) throws CASSPException{
         if (folds < 1) {

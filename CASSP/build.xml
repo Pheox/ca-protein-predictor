@@ -124,13 +124,14 @@
       </batchtest>
     </junit>
 
+    <available file="${ant.home}/lib/ant.pom" property="full.ant"/>
     <cobertura-report format="html" destdir="${cob_reports}" srcdir="${src}"/>
 
   </target>
 
 
 
-  <target name="test" depends="run-tests">
+  <target name="test" depends="run-tests" if="full.ant">
     <junitreport todir="${junit_reports}">
       <fileset dir="${junit_reports}/raw/">
         <include name="TEST-*.xml"/>

@@ -5,7 +5,7 @@
 *   This software is distributed under the terms of the GNU General Public License.
 */
 
-package cassp;
+package cassp.utils;
 
 
 import java.io.*;
@@ -25,7 +25,6 @@ public class Psipred{
     static Logger logger = Logger.getLogger(Psipred.class);
 
     private String progPath;
-    private double diff;
     private String sspSeq;
     private String reliabIndexesStr;
     private ArrayList<Integer> reliabIndexes;
@@ -33,7 +32,6 @@ public class Psipred{
 
     public Psipred(String progPath){
         this.progPath = progPath;
-        this.diff = 0.0;
         this.sspSeq = "";
         this.reliabIndexes = new ArrayList<Integer>();
     }
