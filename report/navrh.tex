@@ -1,11 +1,40 @@
 \chapter{Návrh predikèného systému}\label{navrh}
-% zakladny model (z clanku Chopry), modifikacie modelu (nove ideje)
+% zakladny model (z clanku Chopry), mierne upraveny model - diplomka Salanda
+\todo{nazvy kapitol}
 
-Navrhnutý systém z~veµkej èasti vychádza z~2~prác venujúcich
-sa SSP pomocou CA \cite{chopra_2007} \cite{salanda_2012}.
+
+% uviest co som vylepsil oproti spominanym clankom, co som pridal,
+% co som naopak abstrahoval
+Navrhnutý systém z~veµkej èasti vychádza z~dvoch prác venujúcich
+sa SSP s vyu¾itím CA \cite{chopra_2007} \cite{salanda_2012}.
 Modifikované sú tie èasti systému, ktoré majú potenciál zlep¹i»
 úspe¹nos» predikcie SSP. Ide hlavne o~spôsob klasifikácie
-jednotlivých reziduí popísaný ni¾¹ie.
+jednotlivých reziduí do jednej z troch motívov sekundárnej ¹truktúry proteínov.
+\todo{trochu rozviest}
+
+% tupy popis mojho systemu
+Predikèným modelom je celulárny automat, ktorého prechodová funkcia
+bola suboptimálne parametrizovaná pomocou evoluèných algoritmov, konkrétne
+evoluèných stratégii.
+
+Boli navrhnuté 2 prechodové funkcie. Prvá je zhodná s prechodovou funkciu
+vytvorenou Choprom a spol., no bola implementovaná najmä kvôli porovnávaniu
+v experimentálnej fáze.
+Druhou je metóda vyu¾ívajúca jednak klasické Chou-Fasmanove koeficienty, druhak
+tzv. konformaèné koeficienty. Ide tie¾ o ¹tatistický popis pravdepodobnosti výskytu
+urèitej aminokyseliny v urèitom konformaènom stave resp. motíve sekundárnej ¹truktúry.
+
+Významnou je experimentálna èas» práce, ktorá sa zameriava na:
+\begin{itemize}
+	\item experimentálne zistenie optimálnej veµkosti okolia, ktoré bude vyu¾íva» prechodová
+	funkcia celulárneho automatu, podµa práce pánov .. .. by mal by» limit veµkosti okolia 17
+	(8 vµavo, 8 vpravo), kedy sa úspe¹nos» signifikantne nezvy¹uje ...cite...
+	\item
+\end{itemize}
+
+
+
+
 Aby sa predikèný model mal o~èo oprie», definujeme ¹tatistické
 %(sekcia \ref{sec:stat_popis}) a~experimentálne (sekcia \ref{sec:stat_exp})
 vlast\-nos\-ti reziduí.

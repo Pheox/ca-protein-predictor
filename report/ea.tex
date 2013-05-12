@@ -3,9 +3,12 @@
 % Goldberg - Genetic Algorithms in Search, Optimization and Machine Learning.
 % Hynek - Geneticke algoritmy a geneticke programovanie.
 
-% algoritmus EA alebo GA ?? - EA (budem vyuzivat ES)
+% TODO:
+% - geneticke operatory - doplnit, hlavne aj sposoby mutacie pri permutacnom kodovani jedicov
+% - pri krizeni spomenut CGP - kartezske geneticke programovanie, pri ktorom
+%   sa pouziva iba mutacia
 
-% porovnanie s nejakou biografiou + citacia
+
 Charles Darwin bol Anglièan, syn významného lekára.
 Vy¹tudoval teológiu, po ¹túdiu sa zaoberal geologickými formáciami
 v~horách Walesu. Koncom roka 1831 v¹ak odi¹iel na~5\mbox{-}roè\-nú výskumnú cestu okolo sveta.
@@ -14,24 +17,24 @@ vo~východnej èasti Tichého oceánu, kde zhroma¾dil podµa jeho slov najcennej¹iu è
 prírodovedeckého materiálu, ktorý pou¾il vo~svojom najväè¹om diele
 publikovanom v~roku 1859\,--\,{\it O~vzniku druhov prírodným výberom alebo
 uchovávanie prospe¹ných plemien v~boji o~¾ivot}.
-Vrhá ucelený pohµad na~vývoj druhov oslobodený od~spi\-ri\-tua\-lity a~nábo¾enských
+Vrhá v òom ucelený pohµad na~vývoj druhov oslobodený od~spi\-ri\-tua\-lity a~nábo¾enských
 predstáv svojej a~predchádzajúcich dôb a~hlavou plnou
 prírodovedných informácii získaných z~okru¾nej plavby okolo sveta.
 Darwin vysvetµuje vznik rôznych druhov organizmov
 na~základe prirodzeného výberu, teda schopnosti pre¾i» len tých naj\-schop\-nej¹ích.
 % citacia darwina?
 Významným argumentom pre~jeho teóriu boli aj stratigrafické výsledky geológa Charlesa Lyella,
-ktoré podporovali rodiacu sa evoluènú teóriu v~\uvoz{èasovej zlo¾itosti}.
+ktoré podporovali rodiacu sa evoluènú teóriu v~oblasti \uvoz{èasovej zlo¾itosti}.
 Aplikované princípy klasickej evoluènej teórie s~mnohými \uvoz{vylep¹eniami}
 hrajú význam\-nú úlohu vo~fonde vedomostí µudstva.
 
 
 % GA 1973, ES 1964, EP 1962, GP 1989
-Evoluèné algoritmy, ktoré sú postavené na~my¹lienkach evoluènej teórie,
+Evoluèné algoritmy (EA), ktoré sú postavené na~my¹lienkach evoluènej teórie,
 zaèali vznika» u¾ v~50-tych rokoch 20. storoèia.
-Výraznej¹í záujem v¹ak nastal a¾ koncom 80-tych rokoch minulého storoèia,
-kedy David Goldberg významne roz¹íril prácu Johna Holland z roku 1975
-o~genetických algoritmoch \cite{holland1975}, v~práci publikovanej v~roku 1989 \cite{goldberg_ga_89}.
+Výraznej¹í záujem v¹ak nastal a¾ koncom 80-tych rokov minulého storoèia,
+kedy David Goldberg významne roz¹íril prácu Johna Hollanda 
+o~genetických algoritmoch (z roku 1975 \cite{holland1975}) v~práci publikovanej v~roku 1989 \cite{goldberg_ga_89}.
 Znaèným impulzom pre popularizáciu EA bola prvá väè¹ia práca
 o~genetickom programovaní, ktorej autorom je John Kozza \cite{koza_1}.
 
@@ -43,8 +46,8 @@ o~genetickom programovaní, ktorej autorom je John Kozza \cite{koza_1}.
 \section{Biologické pojmy v EA kontexte}
 
 Vo~zvy¹ku tejto práce sa budú vyskytova» pojmy pochádzajúce z~biológie,
-no sémantika nie v¹etkých je zhodná so~sémantikou v~kontexte
-evoluèných algoritmov. Pre ujasnenie pojmov je uvedený ich krátky prehµad.
+no sémantika nie v¹etkých je zhodná so~sémantikou v~kontexte EA. 
+Pre ujasnenie pojmov je uvedený ich krátky prehµad.
 
 Medzi základné pojmy Darwinovej evoluènej teórie patrí populácia.
 Populácia je mno¾ina jedincov, ktorí sú reprezentovaní svojím genetickým materiálom.
@@ -66,10 +69,11 @@ urèitý dátový typ a~alely sú hodnotami daného dátového typu, génu.
 % ZARADENIE EVOLUCNYCH ALGORITMOV
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Zaradenie evoluèných algoritmov}
+% TODO: rozsirit !!!
 
 Existujú problémy, ktorých exaktný model sa nedá, nevieme alebo je veµmi
-nároèné zostavi», a navy¹e stavový priestor resp. poèet rie¹ení
-daného problému je obrovský.
+nároèné zostavi», a navy¹e poèet rie¹ení
+daného problému resp. stavový priestor úlohy je obrovský.
 Kvôli takýmto problémom vznikol pojem {\it softcomputing} a~v¹etko èo podeò spadá.
 Je to spôsob rie¹enia problémov \uvoz{s~rozumom},
 teda nie hrubou (hard) silou ako je to prípade klasických algoritmov
@@ -77,37 +81,71 @@ na~prehµadávanie stavového priestoru (napr. BFS, DFS).
 Softcomputing rie¹i problémy pomocou urèitej heuristiky resp. heuristickej funkcie, ktorou
 algoritmus \uvoz{myslí}. Potrebné je doda», ¾e metódy softcomputingu väè¹inou nenájdu
 najlep¹ie rie¹enie, ale len suboptimálne, ktoré v¹ak takmer v¾dy postaèuje.
-Obrázok~\ref{obr:ea_classification} zobrazuje zasadenie evoluèných, resp. genetických
-algoritmov do~kontextu v¹etkých významných optimalizaèných techník.
+Obrázok~\ref{obr:ea_classification} zobrazuje zasadenie evoluèných algoritmov 
+do~kontextu v¹etkých významných optimalizaèných techník, ktorých ucelený prehµad
+je výborne spísaný v.
 
+Evoluèné algoritmy sú spoloèným vyjadrením pre mno¾inu moderných matematických
+postupov, ktoré vyu¾ívajú modely evoluèných procesov v prírode zalo¾ených na Darwinovej evoluènej
+teórii popísanej na zaèiatku tejto kapitoly.
+Jednotlivé rie¹enia, ktoré tvoria populáciu, sa vyvíjajú na základe klasických evoluèných a genetických
+operátorov ako je selekcia, krí¾enie èi mutácia.
+EA stavajú a súèasne aj padajú na fitness funkcii, ktorá definuje schopnos» jedinca pre¾i» v danom
+prostredí resp. schopnos» rie¹enia rie¹i» daný problém.
+Evoluèné algoritmy sú v poslednej dobe veµmi roz¹írené. 
+Príli¹ná popularizácia so sebou v¹ak priná¹a aj nerealistické oèakávania.
+Podobne ako evoluèné algoritmy, tak v¹eobecne aj v¹etky optimalizaèné techniky nefungujú
+ako univerzálne metódy, ale ka¾dá z nich sa hodí na inú oblas» problémov
+a zisti», ktorá technika je najlep¹ia, prípadne s akými parametrami, 
+je u¾ úlohou in¾inirskeho návrhu.
 
-% minimalne pseudokod + popis
-% vychadzat z knihy od Hyneka ??
-% pojednanie o pouzitelnosti EA
-%Podstatným rozdielom medzi klasickými optimalizaènými technikami
-% optimalizacne techniky
-% calculus based techniques - nutne, dostacujuce podmienky (Newton), ktore musia byt splnene
-% indirect calculus based techniques - gradientne metody
-%   - nelinearne rovnice, neexistuje riesenie
-% direct - hill climbing (Newton) - len pre niektore problemy "well-behaved"
-% linearne programovanie - optimalizacna technika, ktora vyuziva nejaky
-%    algoritmus na prehladavanie stavoveho priestoru
+Podstatným rozdielom oproti klasickým optimalizaèným metódam je práca nie s jedným, ale
+s mno¾inou rie¹ení, na ktorú je mo¾no aplikova» rôzne genetické a iné algoritmy.
+V¹eobecnú schému evoluèného algoritmu je mo¾né definova» nasledovne \cite{hynek_ga_gp}:
 
-% kam zaradit tabu search etc., swarm optimization, differential evolution, imunitne algs?
-% pozriet slajdy o metaheuristikach - seems legit
+\begin{enumerate}
+	\item Vynuluj hodnotu poèítadla generácii $t=0$.
+	\item Náhodne vygeneruj poèiatoènú populáciu $P(0)$.
+	\item Vypoèítaj ohodnotenie ($fitness$) ka¾dého indivídua v poèiatoènej populácii $P(0)$.
+	\item Vyber dvojice indivíduí z populácie $P(t)$ a vytvor ich potomkov $P'(t)$.
+	\item Vytvor novú populáciu $P(t+1)$ z pôvodnej populácie $P(t)$ a mno¾iny potomkov $P'(t)$.
+	\item Zväè¹i hodnotu poèítadla generácii o jedna $(t:=t+1)$.
+	\item Vypoèítaj ohodnotenie ($fitness$) ka¾dého indivídua v populácii $P(t)$.
+	\item Ak je $t$ rovné maximálnemu poètu generácii alebo je splnené iné ukonèovacie kritérium, vrá» 
+	ako výsledok populáciu $P(t)$; inak pokraèuj krokom èíslo 4.
+\end{enumerate}
+
+ 
 \begin{figure}[h]
 \begin{center}
   \scalebox{0.5}{\includegraphics{pics/optim_methods.jpg}}
-  \caption{Klasifikácia genetických algoritmov v kontexte optimalizaèných techník.
-  Softcompiting spadá medzi stochastické heuristické metódy.}
+  \caption{Klasifikácia evoluèných algoritmov v kontexte optimalizaèných techník.
+  Softcomputing spadá pod stochastické heuristické metódy.}
   \label{obr:ea_classification}
 \end{center}
 \end{figure}
 
-%jednotlivé typy nebudem rozpisova», ucelený prehµad spísal ...
-%http://cseweb.ucsd.edu/~dturnbul/CSE150/DiscussionNotes/Week2/CSE150_Discussion_Week2.html
 
 
+% EVOLUCNE STRATEGIE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Evoluèné stratégie}
+
+Keï v roku 1963 zaèali Hans-Paul Schwefel a Ingo Rechenberg na Technickej univerzite
+v Berlíne s napodobòovaním vývoja v prírode, boli presvedèení, ¾e ich metóda najlep¹ie
+aproximuje evolúciu v ¾ivej prírode.
+Preto svoju metódu nazvali, celkom v¹eobecne, evoluèné stratégie (ES).
+Postupom èasu sa v¹ak ukázalo, ¾e tento spôsob rie¹i len urèitý typ úloh, hlavne
+v stavebnom a strojnom in¾inierstve.
+Genetické algoritmy nie sú teda podradené evoluèným stratégiam, ako sa domnievali, ale naopak, 
+svojou popularitou ich zatieòujú \cite{kalat_evo_alg}.
+Genóm v rámci ES je zlo¾ený z génov, ktoré sú reprezentované reálnymi èíslami,
+z èoho vyplýva implementaèná diferenciácia genetických operátorov.
+% toto az do operatorov??, Gaussova funkcia - termin OK ?
+Mutaèný operátor je väè¹inou implementovaný pomocou pripoèítania hodnoty podµa Gaussovej
+funkcie. Takýto spôsob mutácie rie¹i jeden problém genetických algoritmov -- malé zmeny
+genotypu nemusia vies» k malým zmenám fenotypu\footnote{Tento problém sa dá obís» napríklad
+pomocou Grayovho kódovania}.
 
 
 % GENETICKE OPERATORY
@@ -118,19 +156,83 @@ algoritmov do~kontextu v¹etkých významných optimalizaèných techník.
 % sa podobne techniky (koleso stastia, najlepsi vyhrava, elitizmus),
 % pri ciastocnej obnove sa pouzivaju techniky rulety etc. - aspon spomenut
 
+% trochu dlhsie pojednanie o genetickych operatoroch
+\todo{Tro¹ku rozvies»}
 Evoluèné procesy z~biológie boli aplikované a~svojím spôsobom
 interpretované v~teórii evoluèných algoritmov.
 Ide o~pekný príklad medzioborového transféru informácií.
+V evoluènom procese je teda nutná znaèná variácia genómu.
 Genetickými operátormi sú selekcia (prirodzený výber) a~rekombinaèné
 operátory\,--\,krí¾enie (obrázok \ref{obr:krizenia})
 a~mutácia (obrázok \ref{obr:mutation}).
 
+
+
 % SELEKCIA
-%\subsection{Selekcia}
-%...
+\subsection{Selekcia}
+
+Selekcia je základným evoluèným operátorom, urèuje, ktoré rie¹enie v populácii rie¹ení
+pre¾ije, a ktoré nie. Reprezentuje prirodzený výber popísaný Darwinom.
+Rozoznávame 3 najpou¾ívanej¹ie typy selekcie a ich varianty:
+
+\begin{itemize}
+	\item koleso ¹»astia\,--\,jednotlivým jedincom sa priradí pravdepodobnos» výberu do ïal¹ej
+	generácie na základe hodnoty fitness funkcie, \uvoz{lep¹í} jedinci budú vyberaný do ïal¹ej
+	genrácie s vy¹¹ou pravdepodobnos»ou ne¾ \uvoz{hor¹í} jedinci
+% OK ??	
+	\item turnaj\,--\,je zalo¾ený na náhodnom výbere $n$-tíc jedincov a ich súboji, v ktorom sú
+	zbraòami hodnoty fitness funkcie, ví»az je vo väè¹ine variant tejto selekcie vybraný do ïal¹ej
+	generácie v¾dy, no mô¾e by» vyberaný s pravdepodobnos»ou men¹ou ne¾ 1
+
+	\item \uvoz{najlep¹í vyhráva}\,--\,je najjednoduch¹ím typom selekcie, v ka¾dej generácii preferuje
+	len tých najstatnej¹ích jedincov, jedincov umiestnených na èelných prieèkach rebríèka zostavovaného
+	komisiou, ktorá hodnotí statnos» jedinca na základe hodnoty fitness funkcie.
+	Popisovaný spôsob výberu je vhodný v prípade, keï fitness funkcia nemá veµa extrémov, preto¾e evoluèné
+	algoritmy zalo¾ené na tomto type selekcie nevedia rie¹i» tzv. klamné problémy a multimodálne funkcie,
+	preto¾e v populácii nezachovávame diverzitu, vyberáme jedincov s najlep¹ou hodnotou fitness funkcie.
+	Evoluèné algoritmy zalo¾ené na tomto type selekcie èastkrát predbe¾ne konvergujú, teda uviaznu
+	v lokálnom extréme.
+\end{itemize}1
+
+
+Pri reálnych praktických aplikáciach je len málokedy mo¾né sa stretnú» s èistým jedným typom selekcie,
+takmer v¾dy sa pou¾ívajú ich mo¾né variácie a kombinácie.
+Pre priblí¾enie, existujú aj prístupy, ktoré pracujú s dvoma populáciami kvôli zachovaniu rôznorodosti
+populácie a dochádza k migrácii medzi populáciami.
+Ka¾dá populácia je v¹ak zalo¾ená na inej fitness funkcii \cite{park_dual_pop}.
+
+So selekciou úzko súvisí obnova populácie. Po vyhodnotení hodnôt fitness funkcie jedincov
+populácie a selekcii jedincov, ktorí \uvoz{pre¾ijú}, máme viac mo¾ností ako nahradi»
+aktuálnu populáciu novou. Rozli¹ujeme 2 základné prístupy:
+
+\begin{itemize}
+	\item {\bf úplná obnova populácie}\,--\,dochádza k vymieraniu rodièov, teda celá generácia je nahradená novou
+	\item {\bf èiastoèná obnova populácie} (steady state)\,--\,potomkami sa nahradi len urèitá èas» jedincov
+\end{itemize}
+
 
 % KRIZENIE
-%\subsection{Krí¾enie}
+\subsection{Krí¾enie}
+% rekombinacia je krizenie + mutacia ??
+Krí¾enie je základným rekombinaèným operátorom, pomocou ktorého
+sa mie¹a genetická informácia 2 jedincov.
+K tomuto operátoru mo¾no pristupova» viacerými spôsobmi, ktorých vizuálna podoba
+je zobrazená na obrázku \ref{obr:krizenia}:
+
+\begin{itemize}
+	\item {\bf $n$-bodové krí¾enie}\,--\,najpou¾ívanej¹í typ krí¾enia, väè¹inou sa pou¾íva
+	krí¾enie jednobodové alebo dvojbodové, závisí samozrejme na danom probléme a veµkosti
+	chromozómu
+	\item {\bf krí¾enie maskou}\,--\,náhodne sa vygeneruje bitová maska, ktorej då¾ka je zhodná
+	s då¾kou chromozómu a noví jedinci sa tvoria tak, ¾e gény na pozíciach obsahujúcich \uvoz{0}
+	zdedí prvý potomok a gény na pozíciach obsahujúcich \uvoz{1} zdedí potomok druhý 
+	\item {\bf aritmetické krí¾enie}\,--\,sa vyu¾íva najmä pri evoluèných stratégiach, kde sú
+	gény reprezentované reálnymi èíslami, noví jedinci sa tvoria na základe aplikácie
+	nejakého aritmetického operátoru (väè¹inou priemer) na gény rodièov
+\end{itemize}
+
+
+
 
 \begin{figure}[h]
 \centering
@@ -145,8 +247,21 @@ a~mutácia (obrázok \ref{obr:mutation}).
 
 
 % MUTACIA
-%\subsection{Mutácia}
-%...
+\subsection{Mutácia}
+\todo{permutaèné chromozómy}
+Mutácia je motorom evoluèných algoritmov, je zalo¾ená na náhodnej zmene génu chromozómu jedinca,
+mutácia zabezpeèuje vznik nových vlastností, zmenu génov. Rozli¹ujeme v zásade 2 typy mutácie
+(ilustruje obrázok \ref{obr:mutation}):
+
+
+\begin{itemize}
+	\item {\bf inverzia génu}\,--\,vhodné a pou¾itelné len pri binárnej reprezentácii
+	génov, teda génoch, ktoré mô¾u existova» len v 2 navzájom rôznych alelách
+	\item {\bf pripoèítanie hodnoty rozlo¾enia pravdepodobnosti}\,--\,vyu¾íva sa
+	pri reprezentácii génov reálnymi èíslami, k hodnote génu sa pripoèíta hodnota
+	daná urèitým rozdelením pravdepodobnosti
+\end{itemize}
+
 
 \begin{figure}[h]
 \begin{center}

@@ -1,5 +1,8 @@
 \chapter{Úvod}\label{uvod}
 
+% TODO:
+% - blizsie uviest implementaciu a experimenty
+% - inak OK ?
 
 ®ivot na~Zemi je zalo¾ený na~uhlíku.
 Chemické vlastnosti tohto prvku, ktorého tvorba by ani nezaèala, keby \uvoz{parametre} vesmíru
@@ -19,26 +22,28 @@ génov v~DNA.
 %©túdium proteínov nám teda okrem iného pomáha rozlú¹ti» genetickú informáciu.
 Ich funkcia je definovaná priestorovým usporiadaním jednotlivých aminokyselín
 (terciárna ¹truktúra) a~naopak.
-Priestorové rozlo¾enie jednotlivých aminokyselín doká¾u naj\-pres\-nej¹ie
-urèi» experimentálne metódy.
-Proteínov je ale veµmi veµa (v~µudskom organizme sa odhadujú rádovo milióny \cite{proteins_number}) a~experimentálne
-metódy sú èasovo aj finanène nároèné, èo podnietilo vznik predikèných metód ¹truktúry proteínov.
-Medzikrokok k~terciárnej ¹truktúre proteínu je sekundárna ¹truktúra,
+Toto usporiadanie doká¾u naj\-pres\-nej¹ie (nie v¹ak na 100 \%) urèi» experimentálne metódy.
+Proteínov je v¹ak veµmi veµa (v~µudskom organizme sa ich poèet odhaduje 
+na rádovo milióny \cite{proteins_number}) 
+a neefektívnos» èasovo a finanène nároèných experimentálnych metód podnietila
+vznik strojových predikèných metód ¹truktúry proteínov.
+Medzikrokom k~terciárnej ¹truktúre proteínu je sekundárna ¹truktúra,
 ktorej správna predikcia významným spôsobom uµahèuje predikciu ¹truktúry priestorovej.
-A~to je grom tejto práce -- predikova» sekundárnu ¹truktúru proteínov.
-Bli¾¹í popis techník predikcie sekundárnej ¹truktúry proteínov sa nachádza v~kapitole \ref{predikcia}.
+A~to je grom tejto práce -- vylep¹i» predikciu sekundárnej ¹truktúry proteínov.
+Bli¾¹í popis základných techník predikcie sekundárnej ¹truktúry proteínov 
+sa nachádza v~kapitole \ref{predikcia}.
 
 Pou¾itým predikèným modelom je celulárny automat (CA) (viï kapitola \ref{ca}),
 ktorý je tvorený mrie¾kou jednoduchých funkèných jednotiek (buniek).
 Ka¾dá bunka sa nachádza v~jednom z~viacerých, vopred definovaných stavov.
-Stav bunky sa mô¾e poèas behu CA zmeni».
+Stav bunky sa mô¾e poèas behu CA meni».
 Èi a~ako sa stav bunky zmení, závisí na prechodovej funkcii CA
 a~na~stavoch buniek v~okolí aktuálnej bunky.
-Prechodová funkcia definuje chovanie CA.
+Prechodová funkcia definuje správanie CA.
 Tento jednoduchý výpoèetný model by mal zaisti» predov¹etkým rýchlos» predikcie.
 
 Najväè¹ím problémom CA je vhodné urèenie prechodovej funkcie.
-Nie je mo¾né \uvoz{od\-skú\-¹a»} v¹etky a~urèi» najlep¹iu,
+Nie je mo¾né \uvoz{od\-skú\-¹a»} v¹etky mo¾né a~urèi» najlep¹iu z nich,
 preto prichádzajú na~scénu optimalizaèné techniky, v~na¹om prípade genetický algoritmus,
 ktorý pri hµadaní suboptimálneho rie¹enia pou¾íva princípy evoluèného výberu a~genetiky
 (viac v~kapitole \ref{ea}).
@@ -47,6 +52,11 @@ Vlastným návrhom predikèného systému, pou¾itím ¹tatistických
 a experimentálnych cha\-rak\-teris\-tík amino\-kyselín,
 celulárneho automatu a evoluène in¹pirovaných techník,
 sa zaoberá kapitola~\ref{navrh}.
+
+% info o implementacii, typoch experimentov
+V kapitole \ref{implem} sa nachádza popis implementácie konzolovej aj webovej verzie systému.
+Popis a spracovanie experimentov (optimálna veµkos» okolia, poèet krokov CA èi predikcia v spolupráci 
+s nástrojom PSIPRED) obsahuje kapitola \ref{exps}.
 Záver (kapitola \ref{zaver}) obsahuje krátke zhrnutie práce.
 
 %Návrhom predikèného systému vyu¾ívajúceho uvedenú metodiku sa zaoberá kapitola~\ref{navrh}
