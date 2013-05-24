@@ -12,17 +12,17 @@
 
 Proteíny sú základnými stavebnými kameòmi ¾ivota na~Zemi,
 starajú sa o~podstatnú èas» biologických funkcí a~ich reguláciu.
-Funkcia proteínov je urèená ich ¹truktúrou a~predikciou 
+Funkcia proteínov je urèená ich ¹truktúrou a~predikciou
 (sekundárnej) ¹truktúry sa venovala táto práca.
 Bol navrhnutý predikèný model zalo¾ený na~modeli celulárneho automatu,
 na ktorého parametre (poèet krokov, váhy okolitých buniek atï.)
-boli kvôli netriviálnej optimalizácii vyu¾ité slu¾by evoluèných algoritmov, 
+boli kvôli netriviálnej optimalizácii vyu¾ité slu¾by evoluèných algoritmov,
 konkrétne evoluèných stratégii.
 Boli navrhnuté dve prechodové funkcie modelu celulárneho automatu,
 \emph{základná}, vyu¾ívajúca prístup pánov Chopru a Bendera \cite{chopra_2007}
 a ich Chou-Fasmanove koeficienty,
-a \emph{roz¹írená}, ktorá okrem Chou-Fasmanových koeficientov vyu¾íva tzv. konformaèné preferencie, 
-ktoré popisujú preferencie jednotlivých aminokyselín zaèína» alebo konèi» 
+a \emph{roz¹írená}, ktorá okrem Chou-Fasmanových koeficientov vyu¾íva tzv. konformaèné preferencie,
+ktoré popisujú preferencie jednotlivých aminokyselín zaèína» alebo konèi»
 urèitý motív sekundárnej ¹truktúry \cite{zhang_huang_cc_2005}.
 Na základe vykonaných experimentov mo¾no poveda», ¾e výsledky oboch pravidiel sa lí¹ili minimálne.
 Pridané ¹tatistické vlastnosti sú zrejme nejakým spôsobom
@@ -32,7 +32,7 @@ sekundárnej ¹truktúry, a tým pádom nepriná¹ajú takmer ¾iadne nové
 informácie, ktoré by klasifikácii reziduí pomohli.
 
 Systém bol otestovaný ako samostatný prediktor, bola
-získaná úspe¹nos» $Q_3=57,414\,\%$ resp. $SOV=42,688\,\%$ pre dátovú sadu RS126, 
+získaná úspe¹nos» $Q_3=57,414\,\%$ resp. $SOV=42,688\,\%$ pre dátovú sadu RS126,
 $Q_3=57,796\,\%$ resp. $SOV=42.696\,\%$ pre dátovú sadu CB513.
 Bola tie¾ vytvorená nová dátová sada pomocou nástroja PDBselect, ktorá v¹ak vzhµadom
 k svojej rozµahlosti nebola pou¾itá na trénovanie, no otestované
@@ -46,7 +46,7 @@ CASSP ako primárny prediktor a PSIPRED ako prediktor sekundárny, a naopak.
 Spôsom, akým sa nahradzujú primárne predikcie sekundárnymi bol uva¾ovaný
 dvojaký -- náhrada sekvencií ako celku na základe priemernej
 vierohodnosti predikcie ich jednolivých reziduí, a náhrada
-jednotlivých reziduí na základe ich vierohodnosti predikcie. 
+jednotlivých reziduí na základe ich vierohodnosti predikcie.
 Výsledkom v¹ak v oboch prípadoch spoloènej predikcie nebolo zlep¹enie úspe¹nosti
 nástroja PSIPRED pre v¹etky motívy sekundárnej ¹truktúry.
 Malé zlep¹enie (v desatinách percenta) vykázala úspe¹nos» predikcie
@@ -69,7 +69,6 @@ k predikcii sekunárnej ¹truktúry proteínov:
 	prípadne uvoluèné informácie, èo by ale spomalilo predikciu, no vhodná kombinácia
 	prídavných informácii by mohla signifikantne zlep¹i» úspe¹nos» predikcie
 \end{itemize}
-
 
 %Navrh\-nutý systém si kladie za priority rýchlos» a~solídnu úspe¹nos»,
 %ktorou nemô¾e kon\-ku\-ro\-va» sofistikovaným predikèným metódam, ale

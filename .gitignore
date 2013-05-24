@@ -13,7 +13,7 @@
 *.toc
 
 # data
-data/pdb_vyber/files/
+data/.orig/
 CASSP/frontend/
 CASSP/doc/
 CASSP/reports/

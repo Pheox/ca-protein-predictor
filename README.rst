@@ -53,24 +53,3 @@ Tests
  cb_513     81.101  69.291
  pdb_vyber  79.905  69.165
  ========== ======  ======
-
-
-NOTES
-=====
-- report-introduction
-    - last paragraph needs reconstruction
-- report-ca
-    - neighborhood description, new illustration
-    - table similar to bachelor thesis (clearer)
-    - Langton loops
-- report-ea
-    - Sipper (60 %)
-    - diagram - differential evolution, swarm partition optimization, steepest descent, tabu search, quantum search (Grovers algorithm), minimax, alpha-beta, A*
-- report-proteins
-    - seems ok
-- report-spp
-    - conformation states definition
-- design
-    - what about ROC curves
-    - what about cumulative/non-cumulative lift
-    - experimental residues description - chemical shifts stuff?
