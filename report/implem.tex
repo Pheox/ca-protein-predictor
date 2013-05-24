@@ -1,0 +1,152 @@
+\chapter{Implementácia predikèného systému}\label{implem}
+% nejaka schema programu
+% popis weboveho rozhrania + screenshot
+% vyhody, nevyhody, limity
+% diagram tried? - zjednoduseny
+% implementacne prostriedky - netreba ako seksn
+
+
+% co mam v bakalarke
+% niekde na zaciatku spomenut nazov systemu CASSP/ kniznice ??
+
+
+
+Implementácia prediktora, nazvaného \emph{CASSP} (Cellular Automaton Secondary Strucure Predictor), 
+predstavuje prepis návrhu systému do podoby núl a jednièiek,
+do podoby in¹trukcií procesora. Tento prepis je vcelku priamoèiarý proces. Ide najmä o hµadanie
+èo najvhodnej¹ích implementaèných prostriedkov, ktoré budú èo najlep¹ie reprezentova» 
+navrhnutý model.
+
+Prediktor je implementovaný v jazyku Java JRE (Java Runstime Environment) 1.6, 
+zaistená je bezproblémová funkènos» aj pre JRE 1.7.
+Na implementáciu evoluèného algoritmu bola pou¾itá voµne dostupná kni¾nica JGAP \cite{jgap}.
+
+
+
+% KONFIGURACIA A API SYSTEMU
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Konfigurácia a API systému}
+Výsledný program má dve varianty -- konzolovú a webovú.
+Konzolová aplikácia je konfigurovateµná pomocou konfiguraèného súboru
+a argumentov príkazovej riadky s tým, ¾e konfigurácia parametrov
+v príkazovej riadke má vy¹¹iu prioritu ne¾ konfigurácia
+v konfiguraènom súbore, èím je zabezpeèená urèitá flexibilita
+konfigurácie programu.
+Veµké mno¾stvo vlastností systému je parametrizovaných, kompletné
+mo¾nosti konfigurácie mo¾no nájs» v~dokumentácii k systému.
+Systém má definované API, tzn. mo¾no ho tie¾ pou¾i» ako kni¾nicu.
+Príklad pou¾itia API (pou¾itie cross-validácie):
+
+\begin{alltt}
+	SimConfig config = new SimConfig(<conf_file_path>);
+	config.setDataPath(<data_path>);
+	config.setCrossProb(0.75);
+	config.setPop(100);
+
+	CASSP predictor = new CASSP(config);
+	predictor.crossValidate(10); // 10-stupòová cross-validácia
+
+	predictor.createEvolutionImage("evolution");
+	predictor.createAccClassesImage("accuracy");
+	predictor.createReliabImage("reliability");
+\end{alltt}
+
+
+% PLUSY A MINUSY
+%%%%%%%%%%%%%%%%
+\section{Vlastnosti systému}
+% implementovaný model CA nie je robustný ani ¹kálovatelný
+
+Výhodou systému je mo¾ná paralelizácia výpoètu pri trénovaní
+prechodovej funkcie pomocou cross-validácie, ktorá je implementovaná
+pomocou vláken.
+Pre mo¾nú vlastnú definíciu prechodovej funkcie CA
+je implementovaná abstraktná trieda {\tt CARule}.
+Prepísaním metód {\tt toChromosome}, {\tt fromChromosome} a {\tt nextState} mo¾no dosiahnu» po¾adované správanie prechodovej funkcie.
+Spustením metód modulu CASSP -- {\tt createEvolutionImage}, {\tt createReliabImage} a {\tt createAccClassesImage}
+sa vytvoria obrázky popisujúce dosiahnutý výsledok (viï obrázok \ref{obr:pics}) vo formáte PNG \cite{png_doc}. 
+Dáta potrebné pre tvorbu obrázkov sú ulo¾ené do textového súboru pre vlastné zobrazenie týchto dát.
+Pre neskor¹ie pou¾itie získaného pravidla je implementovaná jeho serializácia,
+metóda {\tt loadRule} pravidlo naèíta, metóda {\tt saveRule} pravidlo ulo¾í do po¾adovaného súboru.
+V rámci systému je vytvorený model zapúzdrujúci nástroj PSIPRED triedou {\tt Psipred}.
+Pri trénovaní/testovaní CASSPu s nástrojom PSIPRED je v¹ak nutný iný formát dát (viï obrázok \ref{obr:formats}).
+
+
+
+\begin{figure}
+	\centering
+	\begin{SubFloat}[Black box]{\label{obr:format_a} Formát dát pre systém CASSP.}%
+		\begin{minipage}[b]{0.3\linewidth}% a minipage to control the width...
+		\begin{verbatim}
+		FVNQHLCGSHLVEALYLVCGERGFFYTPKA
+		CCCCCCCCHHHHHHHHHHHHHHCECCCCCC
+
+		...
+		\end{verbatim}%
+		\end{minipage}%
+	\end{SubFloat}%
+	\hspace{3cm}%
+	\begin{SubFloat}{\label{obr:format_b} Formát dát pre systém CASSP vyu¾ívajúci nástroj PSIPRED.}%...verbatim subfigure with
+		\begin{minipage}[b]{0.3\linewidth}% a minipage to control the width...
+		\begin{verbatim}
+		FVNQHLCGSHLVEALYLVCGERGFFYTPKA
+		CCCCCCCCHHHHHHHHHHHHHHCECCCCCC
+		CCCCCCHHHHHHHHHHHHHCCCCEEECCCC
+		954013267899999999708622662589
+
+		...
+		\end{verbatim}%
+		\end{minipage}%
+	\end{SubFloat}
+	\caption{Formát dátových súborov pre samostatný nástroj CASSP (a) -- aminokyselinová sekvencia, referenèná sekvencia sekundárnej ¹truktúry, a pre systém spolupracujúci s nástrojom PSIPRED 
+	(b) -- aminokyselinová sekvencia, referenèná sekvencia sekundárnej ¹truktúry,
+	sekvencia sekundárnej ¹truktúry predikovaná nástrojom PSIPRED, koeficienty spoµahlivosti
+	predikcie nástroja PSIPRED.}
+	\label{obr:formats}
+\end{figure}
+
+
+
+
+
+\begin{figure}[h]
+  \centering
+  \subfloat[Evolúcia hodnoty fitness funkcie ({\tt createEvolutionImage}).]
+  {\label{obr:implem_evol}\fbox{\includegraphics[width=65mm]{fig/implem/evolution.png}}}
+  \\
+  \subfloat[Úspe¹nos» predikcie v závislosti na hodnoty spoµahlivosti predikcie ({\tt createReliabImage}).]
+  {\label{obr:implem_reliab}\fbox{\includegraphics[width=65mm]{fig/implem/reliability.png}}}\ \ 
+  \subfloat[Poèet sekvencií v závislosti na úspe¹nosti predikcie (\tt createAccClassesImage).]
+  {\label{obr:implem_acc}\fbox{\includegraphics[width=65mm]{fig/implem/accuracy.png}}}
+  \caption{Obrázky popisujúce \uvoz{výkonnos»} evoluèného algoritmu a vlastnosti predikcie
+  zvolenej dátovej sady.}
+  \label{obr:pics}
+\end{figure}
+
+
+% MINIMALISTICKE WEBOVE ROZHRANIE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Webové rozhranie}
+
+% hodit obrazok jednoznacne a popisat GUI !
+% aknestihnem, tak len popis technologie a dostupnost ???
+
+Webové rozhranie je minimalistické, no spåòa úèel.
+V rámci webového rozhrania nemo¾no trénova» nové prechodové
+pravidlá, pre ka¾dý spôsob predikcie je nastavené pravidlo
+dosahujúce najlep¹ej úspe¹nosti predikcie.
+Bol pou¾itý open-source framework Google Web Toolkit\footnote{
+Domovská stránka Google Web Toolkitu: \url{https://developers.google.com/web-toolkit/}.} (GWT).
+ktorý poskytuje nástroje potrebné pre jednoduchú tvorbu a správu JavaScriptových front-endových aplikácií.
+Ide o server-klient komunikáciu,
+na strane serveru je pou¾itá technológia Java servletov,
+na strane klienta sú prelo¾ené funkcie aplikaèného rozhrania
+do JavaScriptového kódu.
+Webovú adresa a bli¾¹í popis jednotlivých èastí je mo¾né dohµada» v~dokumentácii k systému.
+
+% info o spolupraci PSIPREDu a CASSPu popisat aj v navrhu ???
+%V rámci webového rozhrania je mo¾ná predikcia buï len navrhnutého
+%a implementovaného nástroja CASSP, nástroja CASSP ako primárneho prediktora
+%alebo CASSP ako sekundárneho prediktora.
+
+% obrazok rozhrania !!!!

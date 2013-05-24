@@ -32,6 +32,30 @@
 \usepackage{amsmath}
 \usepackage{blindtext}
 \usepackage{todonotes}
+\usepackage{alltt}
+\usepackage{appendix}
+
+
+% SubFloat environment definition
+\makeatletter
+\newbox\sf@box
+\newenvironment{SubFloat}[2][]%
+{\def\sf@one{#1}%
+\def\sf@two{#2}%
+\setbox\sf@box\hbox
+\bgroup}%
+{ \egroup
+\ifx\@empty\sf@two\@empty\relax
+\def\sf@two{\@empty}
+\fi
+\ifx\@empty\sf@one\@empty\relax
+\subfloat[\sf@two]{\box\sf@box}%
+\else
+\subfloat[\sf@one][\sf@two]{\box\sf@box}%
+\fi}
+\makeatother
+
+
 
 \DeclareUrlCommand\url{\def\UrlLeft{<}\def\UrlRight{>} \urlstyle{tt}}
 %zde muzeme vlozit vlastni balicky
@@ -81,30 +105,35 @@
   %===========================================================================
   %Klicova slova
   keywords.cs={sekundární struktura proteínù, celulární automat,
-    proteinové predikce, genetický algoritmus}, %klicova slova v ceskem jazyce
+    proteinové predikce, evoluèní algoritmus}, %klicova slova v ceskem jazyce
   keywords.en={secondary protein structure, cellular automata,
-    protein prediction, genetic algorithm}, %klicova slova v anglickem jazyce
+    protein prediction, evolutionary algorithm}, %klicova slova v anglickem jazyce
   %Abstract
   abstract.cs={
   Tato práce popisuje návrh metody predikce sekundární struktury proteinù
-  zalo¾enou na~ce\-lu\-lár\-ních automatech (CA).
-  Prechodová funkce je získaná pomocí evoluèního algoritmu.
-  Predikèní model bude vyu¾ívat statistických i~experimentálních vlastností aminokyselin.
-  Cílem je vyvinout takovou metodu predikce, která je rychlá,
-  % selling point? viz zkouska PSIPREDu? - rychla + zakomponovat PSIPRED
-  vykazuje solidní úspì¹nost
-  a~mohla by být pou¾ita ako doplòkový nástroj ke~stávajícim metodám
-  predikce sekundární struktury proteínù.
-  %Výsledky ukazují, ¾e ... \\
+  zalo¾enou na~ce\-lu\-lár\-ních automatech (CA) -- CASSP.
+  Optimální parametry modelu a pøechodové funkce jsou získany
+  pomocí evoluèního algoritmu.
+  Predikèní model vyu¾íva pouze statistických vlastností aminokyselin,
+  tak¾e je velice rychlý. Dosa¾ené výsledky byly porovnány s výsledky existujících metod. 
+  Byla také otestováná spoleèná predikce navr¾eného systému CASSP s existujícím nástrojem PSIPRED.
+  Nepodaøilo se v¹ak dosáhnout výsledkù, ktoré by tento existujíci nástroj pøevy¹ovali.
+  Èásteèné zlep¹ení se dosáhlo pøi predikci pouze motivù sekndární struktury $\alpha$-helix,
+  co mù¾e pomoci v pøípade, ¾e po¾adujeme co nejpøesenj¹í predikcii právì tìchto motivù.
+  K navr¾enému systému bylo také vytvoøeno webové rozhraní.
   }, % abstrakt v ceskem jazyce
   abstract.en={
   This work describes a~method of~the~secondary structure prediction of~proteins based
-  on~cellular automaton (CA) model.
-  Transition rules are acquired by evolutionary algorithm.
-  Prediction model will use both statistical and experimental characteristics of~amino acids.
-  The goal is to~create such a~prediction method that is fast, reasonably accurate
-  and could be used as an~additional tool hand in~hand with~today's used
-  protein secondary structure prediction methods.
+  on~cellular automaton (CA) model -- CASSP.
+  Optimal model and CA transition rule parameters are acquired by evolutionary algorithm.
+  Prediction model uses only statistical characteristics of amino acids,
+  so its prediction is fast. 
+  Achieved results was compared with results of other tools for this purpose.
+  Prediction cooperation with a existing tool PSIPRED was also tested.
+  It didn't succeed to beat this existing tool,
+  but partial improvement was achieved in prediction of only $\alpha$-helix secondary
+  structure motif, what can be helful if we need the best prediction of $\alpha$-helices.
+  It was developed also a web interface of designed system.
   }, % abstrakt v anglickem jazyce
   %Prohlaseni
   declaration={Prohla¹uji, ¾e jsem tuto diplomovou práci vypracoval samostatnì pod vedením pana Ing. Jaroslava Bendla.},
@@ -127,13 +156,22 @@
 
 %Podekovani (nepovinne)
 \acknowledgment{
-  % podakovanie veducemu
-
-  % The access to computing and storage facilities owned by parties and projects contributing to the National Grid Infrastructure MetaCentrum, provided under the programme "Projects of Large Infrastructure for Research, Development, and Innovations" (LM2010005) is highly appreciated/acknowledged.
-Velké podìkování takisto patøí za pøístup k výpoèetním a úlo¾ním zaøízením 
-patøícím do národní sí»ové infrastruktury MetaCentrum, 
-poskytovaným v rámci programu \uvoz{Projekty velké infrastruktury pro výzkum, vývoj a inovaci} (LM2010005).
+Chcel by som poïakova» Ing. Jaroslavovi Bendlovi za cenné rady pri tvorbe tejto práce. 
+Veµké poïakovanie takisto patrí za prístup k výpoèetným a úlo¾ným zariadeniam patriacim 
+do národnej sie»ovej infra¹truktúry MetaCentrum, vybudovanej v rámci programu 
+\uvoz{Projekty rozsiahlej infra¹truktúry pre výzkum, vývoj a inovácie} (LM2010005).
+% The access to computing and storage facilities owned by parties and projects contributing to the National Grid Infrastructure MetaCentrum, provided under the programme "Projects of Large Infrastructure for Research, Development, and Innovations" (LM2010005) is highly appreciated/acknowledged.
 }
+
+\renewcommand{\appendixtocname}{Prílohy}
+\renewcommand{\appendixpagename}{Prílohy}
+\renewcommand{\appendixname}{Prílohy}
+\renewcommand{\listfigurename}{Zoznam obrázkov}
+\renewcommand{\listtablename}{Zoznam tabuliek}
+\renewcommand{\figurename}{Obrázok}
+\renewcommand{\tablename}{Tabuµka}
+
+
 
 \begin{document}
   % Vysazeni titulnich stran
@@ -147,6 +185,14 @@ poskytovaným v rámci programu \uvoz{Projekty velké infrastruktury pro výzkum, vý
   % \listoffigures
   % \listoftables
 
+  %\renewcommand{\appendixtocname}{Prílohy}
+  \renewcommand{\figurename}{Obrázok}
+  \renewcommand{\tablename}{Tabuµka}
+  \renewcommand{\appendixpagename}{Príloha}
+  \renewcommand{\appendixname}{Príloha}
+  \renewcommand{\bibname}{Literatúra}
+  
+
   % Text prace
   % ----------------------------------------------
   \input{obsah} % viz. obsah.tex
@@ -157,12 +203,15 @@ poskytovaným v rámci programu \uvoz{Projekty velké infrastruktury pro výzkum, vý
   % Pouzita literatura
   % ----------------------------------------------
 \ifczech
+  \def\refname{Literatúra}
   \bibliographystyle{czechiso}
 \else
   \bibliographystyle{plain}
 %  \bibliographystyle{alpha}
 \fi
+  \def\refname{Literatúra}
   \begin{flushleft}
+  \def\refname{Literatúra}
   \bibliography{xbriga00_dp} % viz. xbriga00.bib
   \end{flushleft}
   \appendix

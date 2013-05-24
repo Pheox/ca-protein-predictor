@@ -1,24 +1,264 @@
-\chapter{Predikcia sekundárnej ¹truktúry proteínov}\label{predikcia}
+\chapter{Proteíny a predikcia ich ¹truktúry}\label{predikcia}
 % zoznam zakladnych metod: http://www.cbs.dtu.dk/biolinks/pserve1.php
-% solidny zdroj: http://en.wikipedia.org/wiki/Protein_structure_prediction
+% dalsie zhrnutie predikcnych metod: http://course.wilkes.edu/bioinformatics/stories/storyReader$122
+% dalsie zhrnutie: http://www.sbg.bio.ic.ac.uk/people/rob/CCP11BBS/secstrucpred.html
 
-% zda sa byt celkom dobre zhrnutie:
-% http://course.wilkes.edu/bioinformatics/stories/storyReader$122
-% !! http://www.sbg.bio.ic.ac.uk/people/rob/CCP11BBS/secstrucpred.html
+% Matthews Correlational Coefficient MCC: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1479840/
 
-
-% proteinove rodiny -  The SCOP database reports 1296 families 
-% and the CATH database (version 1.7 beta), reports 1846 families.
-
-% profil - pozicne specificka matica ziskana z viacnasobneho zarovnania sekvencii
-% v ramci 1 rodiny proteinov
 
 % TODO:
-% - ako presne funguje zarovnanie sekvencii?
-% - sekcia o roznych metodach 
-% - spomenut horny limit predikcie - okolo 90 % 
+% - viac popisat mapovanie 8 tried na 3 v ramci DSSP
+% - v celej praci nahradit coil s velkym C
 
 
+%V snahe zjednodu¹i» výpoèetnú zlo¾itos» zis»ovania celkovej ¹truktúry proteénov, 
+%je predikcia sekundárnej ¹truktúry z aminokyselinovej sekvencie prvým dôle¾itým krokom.
+
+%Reziduem je oznacovana samostatna jednotka v rámci polymeru. V proteinech to jsou napríklad aminokyseliny, cukry atd.
+
+
+Jacob Berzelius, významný ¹védsky chemik, v~roku 1838 navrhol názov
+\uvoz{proteín} pre~zlo¾ité organické
+zlú\-èeni\-ny bohaté na~dusík, ktoré nachá\-dzal v~bunkách ¾ivoèí\-chov a~rastlín.
+©truktúra a chémia proteínov sa vyvinula a doladila behom milárd rokov evolúcie.
+Z~che\-mic\-kého hµadiska sú proteíny naj\-zlo¾i\-tej¹ie a~funkène naj\-dômysel\-nej¹ie
+známe molekuly.
+Sú tvorené sekvenciou amino\-kyse\-lín, ktorých väè¹ina bola objavená
+v~priebehu 19.\,storoèia. Sú pospájané kovalentnou peptidovou väzbou
+o~veµkosti pribli¾ne 1,32 \AA\ a~tvoria väè¹inu suchej hmotnosti bunky \cite{alberts2005zaklady}. 
+Vysoká poèetnos» funkcií, ktoré proteíny zais»ujú, pramení z~obrovského poètu rôznych tvarov, 
+ktorých mô¾u v priestore nadobúda»~--~funkcia sleduje ¹truktúru.
+
+
+% STRUKTURA, GEN. KOD
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{©truktúra proteínov a genetický kód}
+
+% zacat zosiroka
+Zásadným krokom v~¹túdiu proteínov bola práca Jamesa B. Sumnera z~roku
+1926, ktorý ukázal, ¾e enzýmy mo¾no kry¹talizova» a~izolova».
+V~roku 1953 Francis Crick a~James D. Watson popísali ¹truktúru DNA
+a~v~roku 1958 prvý menovaný po~prvý krát vyslovil slovné spojenie {\it Centrálna dogma
+molekulárnej biológie}, ktoré hovorí, ¾e cesta k~proteínom
+je: DNA $\rightarrow$ RNA $\rightarrow$ proteín.
+Pri¹lo sa na~to, ¾e trojice nukleotidov DNA (kodóny) sa mapujú
+na~aminokyseliny \cite{codon_to_aa}, pri¹lo sa na~genetický kód (viï obrázok \ref{obr:gen_code}).
+Inými slovami, sekvencia nukleotidov urèitého génu, ktorý definuje konkrétny proteín,
+sa v~procese translácie \uvoz{prelo¾í} na~sekvenciu aminokyselín
+(podrobný popis v~\cite{alberts2005zaklady}).
+Dá sa poveda», ¾e genetický kód definuje sémantiku DNA re»azca.
+
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.4}{\includegraphics{fig/proteins/gen_code.png}}
+  \caption{Genetický kód (prevzaté z \cite{alberts2005zaklady}).
+  Pre väè¹inu aminokyselín existuje viac kodónov, ktoré ich kódujú. Tri kombinácie nukleotidov 
+  sú \uvoz{vyèlenené} pre ukonèovanie génov (tzv. stop-ko\-dóny).}
+  \label{obr:gen_code}
+  \end{center}
+\end{figure}
+
+
+% najskor kratky prelad urovni struktury, v dalsom texte blizsi popis + blizsie
+% venovanie sa sekundarnej strukture
+% TODO tato veta
+Spojením viacerých aminokyselín vzniká peptidový re»azec,
+zvy¹ky aminokyselín (reziduá) od\-stu\-pujú od~osi re»azca ako tzv. postranné re»azce.
+O~vlastnostiach proteínov rozhoduje charakter reziduí aminokyselín
+a~z~toho vyplývajúce sily, ktoré medzi nimi pôsobia.
+Hydrofóbne (nepolárne) aminokyseliny sú pri»ahované k~sebe, tj. do~vnútra molekuly
+(ak sú vo~vodnom prostredí), hydrofilné (polárne) sa naopak orientujú na~povrch molekuly.
+Po denaturácii, rozpade natívnej priestorovej ¹truktúry, peptidového re»azca
+a následnom odstránení denaturaèného rozpú¹»adla, 
+sa sekvencia aminokyselín zbalí spä» do pôvodného tvaru. 
+Z toho vyplýva, ¾e úplná informácia potrebná k urèeniu trojrozmerného tvaru proteínu je obsiahnutá
+v charaktere jeho aminokyselín a ich poradí v peptidovom re»azci.
+©truktúra proteínov je pomerne zlo¾itá, preto má zmysel definova» jej úrovne.
+Rozli¹ujeme 4~úrovne ¹truktúry proteínov~--~primárnu,
+sekundárnu, terciárnu a kvartérnu \cite{alberts2005zaklady} (viï obrázok \ref{obr:protein_struct}).
+
+
+%\begin{enumerate}
+%  \item {\bf Primárna ¹truktúra}\,--\,sekvencia aminokyselín
+%  \item {\bf Sekundárna ¹truktúra}\,--\,opakujúce sa vzory usporiadania aminokyselín
+%  \item {\bf Terciárna ¹truktúra}\,--\,usporiadanie sekundárnych ¹truktúr v priestore
+%  \item {\bf Kvartérna ¹truktúra}\,--\,vzájomné priestorové usporiadanie viacerých peptidových re»azcov
+%\end{enumerate}
+
+
+% primarna struktura
+{\bf Primárna ¹truktúra}.
+Na~najni¾¹ej úrovni, na~úrovni molekúl, je sekvencia aminokyselín odvodzovaná 
+na~základe kódujúcej sekvencie nukleotidov DNA.
+Dlhú dobu sa sekvenovanie proteínov vykonávalo priamou analýzou
+ich aminokyselín. Prvým proteínom, ktorého sekvencia bola urèená,
+je inzulín (v~roku 1955).
+Vývoj rýchlych metód sekvenovania DNA v~dne¹nej dobe umo¾òuje
+oveµa jednoduch¹iu, nepriamu sekvenáciu proteínov urèením poradia 
+nukleotidov v~DNA \cite{necas_2000}.
+
+% skundarna struktura
+{\bf Sekundárna ¹truktúra}.
+Pri porovnávaní trojrozmerných ¹trukúr rôznych proteínov
+vy¹lo najavo, ¾e napriek jedineènosti celkovej konformácie ka¾dého proteínu
+je v nich mo¾né objavi» 2 základné modely skladania. Oba druhy boli
+objavené asi pred 60 rokmi pri ¹tú\-diu vlasov a hodvábia.
+Prvým z nich je $\alpha$-helix (H), nájdený v proteíne $\alpha$-keratín,
+ktorý sa hojne vyskytuje v ko¾i, vlasoch, nechtoch atï.
+Druhým typom je $\beta$-sheet (E), nájdený v proteíne fibroín, ktorý
+je hlavnou zlo¾kou hodvábia.
+Aminokyseliny mimo nich sa oznaèujú ako Coil (C).
+Oba ¹truktúrne elementy sú stabilizované vodíkovými mostíkmi.
+%$\alpha$-he\-lix vytvára skrutkovicové usporiadanie aminokyselín, 
+%v~$\beta$-sheet motíve prebiehajú úseky re»azca paralelne
+%alebo antiparalelne vedµa seba.
+Jadra mnohých proteínov obsahujú rozsiahle oblasti $\beta$-sheetov.
+Tvoria sa zo susedných polypeptidových re»azcov, ktoré majú buï
+rovnakú alebo opaènú orientáciu, resp. sú paralelné alebo antiparalelné.
+$\alpha$-helix vzniká, keï sa jednoduchý polypeptidový re¾azec ovíja okolo
+samého seba a tvorý tuhý valec. Vodíkový mostík vzniká medzi ka¾dou ¹tvrtou
+peptidovou väzbou a~spája skupinu $C=O$ jednej peptidovej väzby 
+so skupinou $N-H$ inej peptidovej väzby.
+To dáva vznik pravidelnej skrutkovici s 3,6 aminokyselinovými zvy¹kami (reziduami)
+na jednu otáèku.
+Krátke úseky $\alpha$-helixov sú obzvlá¹» hojné v proteínoch
+umiestnených v buneèných membránach, ako sú transportné proteíny a receptory.
+
+% terciarna struktura
+{\bf Terciárna ¹truktúra}. Koneèná, priestorová konformácia polypeptidového re»azca. 
+Zis»ovanie terciárnej ¹truktúry je metodicky veµmi zlo¾ité, pou¾íva sa
+difrakcia rönt\-ge\-no\-vých lúèov na kry¹táloch proteínov, nukleárna magnetická rezonancia
+(NMR) alebo elektrónová mikroskopia \cite{alberts2005zaklady}.
+Evoluène príbuzné proteíny majú veµké podobnosti v~terciárnej ¹truktúre.
+
+
+% kvarterna struktura
+{\bf Kvartérna ¹truktúra}.
+Niektoré proteíny sú zlo¾ené z väè¹ieho poètu
+men¹ích molekúl (podjednotiek, protomérov), ktoré sú navzájom viazané
+nekovalentnými väzbami. Vzájomné priestorové usporiadanie týchto podjednotiek
+udáva kvartérnu ¹truktúru proteínu.
+
+
+©túdium konformácie, funkcie a evolúcie proteínov tie¾ prezradilo dôle¾itos»
+ïal¹ej organizaènej jednotky, ktorá sa lí¹i od jednotiek doposiaµ popísaných.
+Touto jednotkou je \emph{proteínová doména}, ktorá je tvorená µubovolnou èas»ou
+polypeptidového re»azca, ktorá sa mô¾e nezávisle zvinú» do kompaktnej
+stálej ¹truktúry. Doména obvykle obsahuje 50--350 aminokyselín
+a je modulárnou jednotkou. Z domén sú vytvorené v¹etky väè¹ie proteíny.
+Niekedy sa táto ¹truktúra nazýva \emph{suprasekundárna}.
+
+
+\begin{figure}[p]
+\begin{center}
+  \scalebox{1.0}{\includegraphics{fig/proteins/prot_struct_all.jpg}}
+  \caption{
+Úrovne ¹truktúry proteínu. 
+(a) Primárna ¹truktúra. 
+(b) Sekundárna ¹truktúra.
+Polypeptid mô¾e formova» $\alpha$-helix alebo $\beta$-sheet, ktorý má 2 polypeptidové segmenty
+usporiadané antiparalelne (znázornené ¹ípkami).
+(c) Terciárna ¹truktúra. Hem je neproteínová kruhová ¹truktúra
+s atómom ¾eleze v strede.
+(d) Kvartérna ¹truktúra ilustrovaná proteínom hemoglobín, ktorý je zlo¾ený
+zo ¹tyroch polypeptirových podjednotiek.
+Obrázok bol prevzatý z \cite{griffiths_genetics}.
+}
+  \label{obr:protein_struct}
+  \end{center}
+\end{figure}
+
+
+
+% tento obrazok vyhodit ??
+%\begin{figure}[h]
+%\begin{center}
+%  \scalebox{1.3}{\includegraphics{fig/proteins/protein_levels_cz.jpg}}
+%  \caption{Úrovne ¹truktúry proteínov, prevzaté z \cite{protein_levels}.}
+%  \label{obr:protein_struct}
+%  \end{center}
+%\end{figure}
+
+
+Molekuly proteínov sa zúèastòujú na~v¹etkých základných ¾ivotných procesoch.
+Mnohé bielkoviny sú multifunkèné, napríklad membránové imunoglobulíny imunocytov
+sú stavebnou súèas»ou membrány a~súèasne majú funkciu signálnu --
+rozpoznávajú \uvoz{svoje} antigény.
+
+\newpage
+\noindent Podµa funkcie mô¾eme proteíny rozdeli» nasledovne \cite{necas_2000}:
+
+\begin{itemize}
+  \item {\bf Stavebné bielkoviny}\,--\,sú súèas»ou bunkových ¹truktúr.
+  Informácia pre~¹pecifické usporiadanie podjednotiek je obsiahnutá
+  v~¹truktúre molekuly, v~¹truktúre väzbového miesta. Nie je potrebné
+  dodáva» ani energiu, preto¾e nadmolekulárny komplex má ni¾¹iu
+  voµnú energiu ako zmes nepospájaných podjednotiek.
+
+  \item {\bf Enzýmové bielkoviny}\,--\,enzýmové reakcie uskutoèòujú
+  takmer v¹etky chemické reakcie v~bunke, a~tým celý jej metabolizmus.
+  Enzýmová katalýza je jednou z naj\-dôle¾i\-tej\-¹ích funkcií proteínov.
+  Enzýmy umo¾òujú priebeh aj tých chemických reakcií, ktoré by za~podmienok,
+  v~ktorých mô¾u ¾ivé systémy existova», vôbec prebieha» nemohli.
+
+  \item {\bf Informaèné bielkoviny}\,--\, regulujú bunkové procesy
+  a~medzibunkové vz»ahy. Mole\-ku\-ly proteínov hrajú v~týchto
+  informaèných procesoch 2~role -- vystupujú ako signály, ktoré prená¹ajú informáciu,
+  a~receptory, ktoré mô¾u signály prijíma» a transformova»
+  na~iné signály.
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Významné projekty súvisiace s analýzou proteínov}
+
+Potenciálu ¹túdia DNA, génov a~ich produktov, proteínov, sú si vedomé
+aj vlády a~ka¾doroène investujú do~výskumu mno¾stvo finanèných prostriedkov.
+Hlavným dotovateµom najväè¹ích projektov je USA.
+% NIH - National Institute of Health, DOE - Department of Energy
+V~roku 1990 bol zahájený medzinárodný výskumný projekt
+s~názvom \emph{Projekt µudského genómu} (HGP\footnote{Z angl. Human Genome Project,
+domovská stránka projektu: \url{http://www.ornl.gov/sci/techresources/Human_Genome/home.shtml}.}).
+Cieµom projektu bola sekvenácia µudského genómu a~analýza
+zhruba 20\,000--25\,000 génov z~fyzikálneho aj~funkèného hµadiska.
+V~prvých fázach bol riaditeµom vy¹¹ie spomínaný James D. Watson.
+V~roku 2003 bola publikovaná koneèná verzia výsledkov
+a~v~tom istom roku bol projekt úspe¹ne ukonèený \cite{us_hgp}.
+
+% 1000 Genomes Project
+V roku 2011 bol ukonèený projekt s~názvom \emph{Projekt 1000 genómov} (1000 Genomes Project),
+ktorý za pár rokov osekvenoval viac ne¾ tisíc µudských genómov rôznych národností, 
+zdravých aj~postihnutých jedincov, za~úèelom mo¾nosti skúma» rôzne variácie v genóme.
+
+% ENCODE
+% zacal pred 3-4 rokmi, rydzo americky projekt, 5 pracovisk, cca 450 ludi,
+% cca 300 milionov USD, v septembri? - 30 publikacii - prve vysledky,
+% vysledky ukazuju, ze nie je pravda, ze velka cast je odpadna junk,
+% naopak, najmenej 80 % DNA nejaku funkciu ma
+Rýchlos» sekvenácie genómu sa zrýchµuje vysokým tempom.
+HGP za~viac ne¾ 10 rokov získal sekvenciu genómu jediného èloveka,
+dne¹né metódy, nazývané tie¾ Next Generation metódy,
+sú schopné zisti» sekvenciu genómu za~rádovo dni.
+Taktie¾ cena i¹la nadol z~miliárd na~menej ne¾ \$10\,000.
+Sekvencií dát je dostatok, no problémom je, ¾e im príli¹ nerozumieme,
+resp. rozumieme len malej èasti.
+Vznikla iniciatíva konkretizovaná do~projektu ENCODE \cite{encode_pilot}
+\footnote{Z angl. ENCyclopedia Of~DNA Elements, domovská stránka projektu: \url{http://www.genome.gov/10005107}.},
+ktorého cieµom je nájs» a analyzova» v¹etky funkèné èasti µudského genómu.
+Ide o~rýdzo americký projekt, pracuje na~òom niekoµko pracovísk, bolo doò
+investovaných pribli¾ne \$300 miliónov.
+V septembri 2012 bolo nárazovo publikovaných niekoµko desiatok prác
+v~renomovaných vedeckých èasopisoch. Jedným z~výsledkov je,
+¾e nie je pravda, ¾e väè¹ia èas» DNA je nepotrebná, ale naopak,
+väè¹ina má urèitú funkciu \cite{junk_dna_2012}.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Predikcia sekundárnej ¹truktúry}\label{sec:klasif_pred}
+% dobre nadviazanie ??
 
 Dr¾iteµ dvoch Nobelových cien (1954, 1962), Linus Pauling, bol prvý, kto predpovedal
 motívy sekundárnej ¹truktúry proteínov (SSP) \cite{rost_review}.
@@ -29,13 +269,16 @@ za pomoci röntgenového ¾iarenia, ktoré nám dovoluje \uvoz{vidie»} rádovo v jedno
 Rozkvet experimentálneho zis»ovania ¹truktúry proteínov v¹ak nastal a¾ v 90-tych rokoch
 20. storoèia vïaka technickému pokroku.
 Obrázok \ref{obr:pdb_growth} ukazuje nárast poètu záznamov v súèasnosti naj\-väè\-¹ej databáze
-PDB \cite{pdb_paper}.
+PDB \cite{pdb_paper}. 
+Krivky zobrazených neredundantných záznamov nemajú tendenciu konvergencie, 
+èo indikuje, ¾e sa e¹te ani neblí¾ime úplnému pokrytiu proteínových ¹truktúr v rámci PDB \cite{pdb_vyber}.
 V súèasnosti existuje pribli¾ne 80\,000 záznamov experimentálne zistených 
 ¹truktúr proteínov, dostupná je teda databáza, na ktorú mô¾eme
 aplikova» rôzne techniky predikcie (¹tatistické, strojové uèenie atï.).
 
+% toto viac rozpisat !!!
 Experimentálne metódy klasifikujú (¹tandardizovane podµa DSSP\footnote{Z angl. 
-Define Secondary Structure of Proteins.}) jednotlivé aminokyseliny do~1 z~8 tried,
+Define Secondary Structure of Proteins.}) jednotlivé aminokyseliny do~jednej z~8 tried,
 pri~predikcii sa v¹ak v~odbornej literatúre väè¹inou pou¾íva redukcia
 na~3 základné: H, I, G $\rightarrow$ H (Helix), E, B $\rightarrow$ E (Beta Sheet),
 T, S $\rightarrow$ C (Coil). Vyèerpávajúci popis jednotlivých tried priniesli
@@ -47,37 +290,45 @@ Na tento problém bolo aplikovaných veµa rôznych postupov, nasleduje klasifikácia
 a~popis tých najúspe¹nej¹ích a~najprelomovej¹ích.
 
 
+%  Uwe Hobohm 2012 - link na page?? - z akej je institucie etc..., alebo zistit info z PDFka ??
 \begin{figure}[h]
 \begin{center}
-  \scalebox{0.70}{\includegraphics{pics/pdb.jpg}}
-  \caption{Graf vyjadrujúci nárast poètu záznamov v databáze PDB,
-  dáta získané z \cite{pdb_statistics}.}
+  \scalebox{0.4}{\includegraphics{fig/proteins/pdb_chains.png}}
+  \caption{
+  S rokmi narastajúci poèet PDB záznamov, proteínových re»azcov a neredundantných re»azcov.
+  Úroveò redundancie sekvencií bola urèovaná na základe tzv. HSSP funkcie \cite{hssp_function}.
+  Obrázok bol prevzatý z \cite{pdb_vyber}.
+  % \cite{hobohm_pic}
+}
   \label{obr:pdb_growth}
   \end{center}
 \end{figure}
 
 
+%\begin{figure}[h]
+%\begin{center}
+%  \scalebox{0.70}{\includegraphics{fig/proteins/pdb.jpg}}
+%  \caption{Graf vyjadrujúci nárast poètu záznamov v databáze PDB,
+%  dáta získané z \cite{pdb_statistics}.}
+%  \label{obr:pdb_growth}
+%  \end{center}
+%\end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Klasifikácia predikèných metód}\label{sec:klasif_pred}
 
 %Navrhnutých metód predikcie bolo veµa, menej èi viac úspe¹ných.
 %Pre~lep¹iu orientáciu má zmysel ich klasifikácia.
 
-% prva generacia
+% PRVA GENERACIA
 Podµa chronológie mo¾no metódy predikcie SSP rozdeli»
 do~3~generácii \cite{rost_slajdy1} (viï tabuµka \ref{table:generations}).
-Úspe¹nos» metód 1. generácie nie je vysoká,
-èo je dané najmä neuva¾ovaním globálneho kontextu preteínu
-ani evoluènej informácie extrahovanej z~príslu¹nej rodiny
-homologických proteínových sekvencií.
-
+Úspe¹nos» metód \emph{1. generácie} nie je vysoká,
+èo je dané najmä neuva¾ovaním globálneho kontextu aminokyselinových reziduí
+ani evoluènej informácie extrahovanej z~príslu¹nej rodiny homologických proteínových sekvencií.
 Prvé metódy sa zameriavali najmä na idenifikáciu $\alpha$-helixov a boli zalo¾ené hlavne
-na modeloch popisujúcich prechody medzi helixami a coilami \cite{fasman_helix_coil}.
-
+na modeloch popisujúcich prechody medzi $\alpha$-helixami a ¹truktúrami Coil \cite{fasman_helix_coil}.
 Neskôr sa motív sekundárnej ¹truktúry pre~urèitú aminokyselinu
-sa urèoval na~základe ¹tatistiky, ktorá uprednostòuje ten motív,
-ktorý je pre danú aminokyselinu naj\-be¾\-nej\-¹í.
+urèoval na~základe ¹tatistiky, ktorá uprednostòuje ten motív,
+ktorý je pre danú aminokyselinu naj\-be¾\-nej\-¹í, najpravdepodobnej¹í.
 Vtedaj¹í nedostatok dát neumo¾òoval vyu¾i» plný potenciál ¹tatistického prístupu.
 Medzi najvýznamnej¹ie techniky spadajúce do tejto generácie patrí metóda 
 Chou-Fasman \cite{chou_fasman_prediction} a~GOR (Garnier--Osguthorpe--Robson).
@@ -88,46 +339,20 @@ GOR prediktor, pova¾ovaný za~jedného z~prvých realizovaných ako poèítaèový progr
 vyu¾íva poznatky Bayesovkej ¹tatistiky a teórie informácie, ktoré sú aplikované
 na~okno o~veµkosti 17 aminokyselín (8~vµavo, 8~vpravo).
 Pre~ka¾dú z~20 aminokyselín sa vypoèítú frekvencie výskytu na~danej pozícii v~okne,
-na~základe ktorých sa predikuje aminokyselina v~strede.
+na~základe ktorých sa predikuje motív aminokyseliny v~strede.
 Tento predikèný model v¹ak predpokladá, ¾e neexistuje ¾iadna korelácia
 medzi konkrétnymi motívami sekundárnej ¹truktúry aminokyselín v~okne 17 aminokyselín
 a~predikovaným motívom v~strede okna \cite{gor_1996}.
 GOR~II pracuje s~roz¹írenou databázou, inak je toto¾ná so~základnou metódou GOR.
-Tieto metódy vo~vtedaj¹ej dobe vykazovali vy¹¹iu úspe¹nos» ne¾ bola v~skutoènosti
+Tieto metódy vo~vtedaj¹ej dobe vykazovali vy¹¹iu úspe¹nos» ne¾ bola reálna
 kvôli zahrnutiu trénovacích sekvencií do~testovacích \cite{kabsch_how_good}.
 
 
-
-
-Dalsie zlepsovaky:
-- celkovo, the more divergent profiele search against todays databases supposedly improves any method using alignment
-  information by almost 4 percentage points
-
-EVA:
-- EVA - automatic evaluation of automatic prediction servers
-- princip je nasledujuci: kazdy tyzden zober sekvencie pridane do PDB, pusti
-  na ne vsetky dostupne metody predikcie sekundarnej struktury proteinov a vysledky 
-  porovnaj 
-
-SSpro
-- 
-
-
-
-PSIPRED
-- implementuje detailnu strategiu (of avoiding pollution of the profile through unrelated proteins),
-  kvoli vyhnutiu sa tejto pasci musi byt datova sada urcitym spôsobom prefiltrovana ...citacia..(11)
-
-% podla \cite{gor_1996}:
-% GOR I - okno 17 - ale vyuzival len teoriu informacie
-% In fact, in this approximation one assumes that there is no correlation
-% between residues occurring at different positions in the window of 17 residues so defined.
-% GOR II - len vacsia DB
 % GOR III - v ramci okna sa uvazovali aj typy okolitych aminokyselin
 % GOR IV - ?
 
-% druha generacia
-Metódy vyvinuté v 80-tych rokoch 20. storoèia mo¾no pova¾ova» za 2. generáciu metód SSP.
+% DRUHA GENERACIA
+Metódy vyvinuté v 80-tych rokoch 20. storoèia mo¾no pova¾ova» za \emph{2. generáciu} metód SSP.
 Vy¹¹í výpoèetný výkon dovoloval zlo¾itej¹ie algoritmy
 predikujúce motív príslu¹nej aminokyseliny na základe
 okolitých aminokyselín v definovanom okne o veµkosti 3--51 ami\-no\-kyse\-lín.
@@ -135,22 +360,22 @@ Modelovala sa, na rozdiel od metódy GOR, závislos» motívu
 predikovanej aminokyseliny na motívoch susedných aminokyselín.
 Túto koreláciu si uvedomili aj tvorcovia metódy GOR, keï publikovali
 druhé roz¹írenie -- GOR III, ktoré sa pova¾uje za naj\-výz\-nam\-nej\-¹ieho predstaviteµa
-2. generácie metód predikcie SSP.
+2. generácie.
 Revolúciou v SSP bola dostupnos» roz\-siah\-lých rodín homologickych sekvencií.
 Kombinácia rozsiahlej databázy sekvencií a sofistikovaných poèítaèových techník
 viedla k prekonaniu úspe¹nosti 70 \%.
-%Okrem toho, limit 70--80 \% mô¾e by» funkciou variácie sekundárnej ¹truktúry
-%v rámci homologických proteínov.
 
-Na~prelom 2. a 3. generácie metód predikcie SSP
+Na~\emph{prelom 2. a 3. generácie} metód predikcie SSP
 mo¾no zaradi» algoritmy roz¹írené o~ïal¹ie informácie
 o~aminokyselinách, napr. tvar, veµkos» alebo
 fyzikálno-chemické vlastnosti.
 Patrí sem napríklad metóda najbli¾¹ích susedov, kde sekundárna ¹truktúra sa urèí
 na~základe ¹truktúry najpodobnej¹ích sekvenií \cite{pred_distance_2008},
 GOR~V \cite{gor_v}, ZPRED \cite{zpred}, èi PREDATOR \cite{predator}, ktorý pou¾íva metódu najbli¾¹ích susedov
-skombinovanú s~interakciou vzdialenej¹ích aminokyselín.
+skombinovanú s~interakciou so vzdialenej¹ími aminokyselinami.
  
+
+
 
 %GOR V - pou¾íva PSI-BLAST pre zarovnanie sekvencií
 %PREDATOR - nearest neighbor + interakcia so vzdialenej¹ími aminokyselinami
@@ -164,22 +389,16 @@ skombinovanú s~interakciou vzdialenej¹ích aminokyselín.
 
 \begin{table}[h]
  \begin{center}
- \begin{tabular}{|c|c|c|c|c|c|}\hline
-      {\bf Generácia} & {\bf Obdobie} & {\bf Úspe¹nos» [\%]} & Princíp & Modely\\\hline\hline
-      1. & 1960\,--\,1980 & 50--55 & predispozície jednotlivých aminokyselín & ¹tatistické\\\hline
-      2. & 1980\,--\,1990 & 55--62 & predispozície segmentov aminokyselín & ANN, CA,...\\\hline
-      3. & 1990\,--\,súèasnos» & 70--80 & vyu¾itie evoluènej informácie & ANN, HMM, CA,...\\\hline
+ \begin{tabular}{|c|c|c|c|c|}\hline
+      {\bf Generácia} & {\bf Obdobie} & {\bf Úspe¹nos» [\%]} & {\bf Zalo¾ené na}\\\hline\hline
+      1. & 1960\,--\,1980 & 50--55 & predispozíciach jednotlivých aminokyselín\\\hline
+      2. & 1980\,--\,1990 & 55--62 & predispozíciach segmentov aminokyselín \\\hline
+      3. & 1990\,--\,súèasnos» & 70--80 & evoluènej informácii (zarovnaní sekvencií) \\\hline
  \end{tabular}
  \caption{Generácie metód predikcie SSP.}
  \label{table:generations}
  \end{center}
 \end{table}
-
-
-
-%Vhodné je aj~rozdelenie podµa pou¾itej predikènej techniky
-%(viï tabuµka \ref{table: methods}).
-% \cite{bendl_slajdy}
 
 
 %\begin{table}[h]
@@ -196,15 +415,7 @@ skombinovanú s~interakciou vzdialenej¹ích aminokyselín.
 % \end{center}
 %\end{table}
 
-% chou-fasman podrobnejsie
-%Vyu¾íva relatívnu frekvenciu výskytu jednotlivých AK
-%v~rôznych elementoch sekundárnej ¹truktúry.
-%Vy¾aduje referenènú mno¾inu, na~základe ktorej je mo¾né
-%vykona» ¹tatistickú analýzu.
 
-% algoritmus chou-fasman?
-
-%V roku 2008 Ashish Ghosh a Bijnan Parai publikovali prácu ,
 
 %- PSIPRED zahrnuje 2 dopredne NN, ktore analyzuju vystup z PSI-BLASTu
 %- pouzitie SVM \cite{pred_svm_2006}
@@ -215,78 +426,59 @@ skombinovanú s~interakciou vzdialenej¹ích aminokyselín.
 
 %Zaujímavý je aj prístup pomocou chemických posunov,
 
+% spytat sa na sposob urcovania profilov pri trenovani predikcneho modelu.
 Zaèiatkom 90-tych rokov minulého storoèia zaèali vznika»
-metódy 3. generácie, ktoré sú zalo¾ené na strojovom uèení.
-Èasto sa pou¾ívajú umelé neurónové siete, skryté Markovove modely, 
-èi klasifikátor SVM (z angl. Support Vector Machine). 
-% OK ??
-Klasifikátor SVM ukázal ako vhodný pre predikciu lokalizácie coilov,
-ktoré sú »a¾ko identifikovatelné ¹tatistickými metódami \cite{svm_turns}.
-
-
-
-Tieto metódy kombinujú silu väè¹ích databáz a èoraz sofistikovanej¹ích algoritmov.
-% TODO: ako presne funguje to viacnasobne zarovnanie, zarovnanie pre konkretnu triedu,
-% ci pre vsetky sekvencie ??? alebo inak ???
-Zásadným prvkom týchto metód je vyu¾ívanie evoluènej informácie -- profily proteínových rodín.
+metódy \emph{3. generácie}, ktorých zásadnou vlastnos»ou 
+je vyu¾ívanie evoluènej informácie -- profilov proteínových rodín.
 Bolo toti¾ zistené, ¾e v¹etky prírodne vytvorené proteíny o då¾ke viac ne¾ 100 reziduí
-s viac ne¾ 35 \% ..pairwise... zhodou reziduí má podobnú ¹truktúru. 
-Navy¹e, neutrálne mutácie sú veµmi nepravdepodobné ... lebo??...,
-tak¾e proteínov reálne existuje len malý zlomok.
-Jedným z dôsledkov je, ¾e úseky reziduí o då¾ke povedzme 17 implicitne obsahujú
+a s viac ne¾ 35 \% párovou zhodou má podobnú ¹truktúru, èo implikuje
+stabilitu v rámci divergencie sekvencií. % divergencie? 
+Navy¹e, neutrálne mutácie sú veµmi nepravdepodobné,
+proteínov teda reálne existuje len malý zlomok, èoho dôsledkom je,
+úseky o då¾ke povedzme 17 reziduí implicitne obsahujú
 dôle¾ité informácie o globálnych interakciách, preto¾e profily viacnásobného zarovnania
 reflektujú evoluèné obmedzenia \cite{rost_review}.
-PSI-BLAST a HMM ako predikèný model.
+Tieto metódy kombinujú silu väè¹ích databáz a èoraz sofistikovanej¹ích algoritmov
+zalo¾ených na strojovom uèení.
+Èasto sa pou¾ívajú umelé neurónové siete, skryté Markovove modely, 
+èi klasifikátor SVM (z angl. Support Vector Machine). 
+Klasifikátor SVM ukázal sa ako vhodný pre predikciu lokalizácie ¹truktúr coil, % ??? velke C?
+ktoré sú »a¾ko identifikovatelné ¹tatistickými metódami \cite{svm_turns}.
 Najlep¹iu úspe¹nos» vykazujú metódy zamerané na ¹pecifickú triedu proteínov.
+Medzi najznámej¹ích predstaviteµov 3. generácie mo¾no zaradi» PSIPRED \cite{psipred_orig}, 
+PHD \cite{rs_126}, PHDpsi \cite{ssp_phdpsi}, PROF \cite{rost_eva_phdsec}, 
+JPred3 \cite{ssp_jpred3}, èi SSpro \cite{ssp_sspro}.
+% kratke pojednanie o PSIPREDe
+Táto práca sa sna¾í vylep¹i» úspe¹nos» metódy \emph{PSIPRED}, ktorá
+pou¾íva dvojstupòovú neurónovú sie».
+Vstupom sú informácie o zarovnaní sekvencie pomocou nástroja PSI-BLAST \cite{psiblast}.
+Napriek jednoduchosti modelu je vykazovaná úspe¹nos» porovnatelná
+s~ostatnými metódami 3. generácie \cite{psipred_orig}.
 
-Známymi predstaviteµmi sú PSIPRED \cite{psipred_orig}, PHD \cite{rs_126}, PROF \cite{rost_eva_phdsec}, 
-JPred3 \cite{ssp_jpred3}, SSpro \cite{ssp_sspro}, PHDpsi \cite{ssp_phdpsi}, Copenhagen ???.
-% cit. na psipred - orig. citaciu, atd.
-
-
-
-- bolo tiez zistene, ze informacia z pozicne specifickeho profilu ziskaneho zarovnanim
-  pre konkretnu proteinovu triedu zjednodusuje objavovanie (more distant) vzdialenejsich
-  clenov danej rodiny
-
-%- priklady exitujucich nastrojovl:
-%  - JPred2, PROF, PSIPRED, SSpro, PHDpsi, PHD, Copenhagen
-
-
-
-% snad trosku viac rozviest
+% "SUCASNA GENERACIA"
 Súèasný trend vo~vývoji prediktorov SSP je vytvára» pomerne zlo¾ité modely
-zlo¾ené z~viacerých prediktorov, ide o~tzv. konsenzuálne metódy.
+zlo¾ené z~viacerých prediktorov, ide o~tzv. \emph{konsenzuálne metódy}.
 Príkladom je hierarchický systém Bingru Yanga a~spol.,
 ktorý má 4 vrstvy a~vykazuje úspe¹nos»
 presahujúcu 80 \% \cite{yang_cpm_2009}.
-Nemo¾no nespomenú» metódu JPRED èi NPS.
-
-
 Podµa ¹túdie z~roku 2009 \cite{how_many_3d_2009}, ktorá jednotnou metodológiou
 analyzovala úspe¹nost 59 rôznych spôsobov predikcie SSP, 
 existujúce algoritmické techniky nemô¾u
 by» naïalej vylep¹ované iba pridávaním nehomologických sekvencií
 do~tréningovej dátovej sady, tzn. nové nástroje SSP by sa mali zamera»
 na~navrhovanie nových techník.
-\todo{novych technik OK?}
-
-
-
 % pojednanie o hornom limite uspesnosti
-Dôle¾ité je podotknú», ¾e nie je mo¾né dosiahnu» úspe¹nosti blí¾iacej sa k 100 \%.
-Teoretický horný limit úspe¹nosti je okolo 90 \% \cite{ssp_upper_limit}, 
+Dôle¾ité je podotknú», ¾e nie je mo¾né dosiahnu» úspe¹nos» blí¾iacej sa k 100 \%.
+Teoretický horný limit úspe¹nosti je okolo 90~\%, 
 sèasti kvôli neistej DSSP identifikácii blízko koncov sekundárnych ¹truktúr, kde
-sa lokálne konformácie menia na základe prirodzených podmienok, no mô¾e sa domnieva», ¾e ide
-% TODO
-o single conformation in crystals due to packing constraints.
+sa menia lokálne konformácie \cite{ssp_upper_limit}.
+% OK?
 Uvedená limitácia je taktie¾ spôsobená neschopnos»ou predikcie sekundárnej ¹truktúry uva¾ova»
-terciárnu ¹truktúru. Sekvencia predikovaná ako helix stále mô¾e nadobúda» konformáciu $\beta$-sheet,
-ak je lokalizovaná v rámci $\beta$-sheet regiónu proteínov a jeho postranné re»azce pack well
-s jeho susednými re»azcami.
-Dramatické zmeny spôsobené vlastnou funkciou proteínu alebo prostredím, v ktorom sa nachádza,
-mô¾u taktie¾ meni» lokálnu sekundárnu ¹truktúru.
-
+terciárnu ¹truktúru. Sekvencia predikovaná ako $\alpha$-helix stále mô¾e nadobúda» konformáciu $\beta$-sheet,
+ak je lokalizovaná v rámci $\beta$-sheet regiónu proteínov a jeho postranné re»azce sú zdru¾ené
+so susednými re»azcami.
+Lokálnu sekundárnu ¹truktúru taktie¾ mô¾e meni» vlastná funkcia proteínu alebo aj prostredie, v ktorom
+sa nachádza.
 
 ©truktúra proteínov závisí na nespoèetnom mno¾stve parametrov, ktorými sa je potrebné zaobera»,
 ak chceme dosahova» èoraz lep¹ích výsledkov. 
@@ -296,18 +488,17 @@ alebo veµkos» chemických posunov \cite{mechelke_chem_shift}.
 
 
 
-% HODNOTIACE PRISTUPY
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Hodnotiace prístupy}
+% HODNOTENIE USPESNOSTI
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Hodnotenie úspe¹nosti predikcie}\label{sec:hodnotiace_pristupy}
 
 Dôle¾itým prvkom pri~vývoji metód predikcie SSP sú postupy merajúce
-úspe¹nos» týchto metód.
+ich úspe¹nos».
 Medzi najpou¾ívanej¹ie úspe¹nostné miery patria $\text{Q}_3$ a~SOV.
-
 $\text{Q}_3$ udáva pomer správne klasifikovaných reziduí
-proteínovej sekvencie do 1 z~3~tried (H, E, C) k~v¹etkým reziduám \cite{q3_schulz}.
+proteínovej sekvencie do jednej z~3~tried (H, E, C) k~v¹etkým reziduám \cite{q3_schulz}.
 Táto metodológia je jednoduchá a~má urèitú výpovednú hodnotu,
-presne v¹ak nezachytáva \uvoz{u¾itoènos»} predikcie elementov
+no presne nezachytáva \uvoz{u¾itoènos»} predikcie elementov
 sekundárnej ¹truktúry pre~následné vyu¾itie pri~predikcii terciárnej ¹truktúry,
 preto¾e viac ne¾ správne urèenie konformaèného stavu jednotlivých reziduí
 je dôle¾itej¹ie urèenie
@@ -323,11 +514,12 @@ definovanú v~roku 1999~\cite{rost_sov_redefinition_1999}.
 Vzhµadom k~tomu, ¾e túto mieru budem pou¾íva» pri~hodnotení úspe¹nosti SSP
 a~jej netriviálnosti, nasledujúca èas» sekcie priná¹a jej podrobný popis.
 
-\subsection{SOV}
 
+
+% nadviazat na popis SOV-u
 Nech $s_1$ a~$s_2$ znaèia porovnávané segmenty sekundárnej ¹truktúry v~konformaènom stave $i$~(H, E alebo C).
-$s_1$ je segment referenèný (typicky získaný experimentálne),
-$s_2$ je segment predikovaný.
+Segment $s_1$ je referenèný (typicky získaný experimentálne), 
+$s_2$ predikovaný.
 Nech $(s_1, s_2)$ je pár prekrývajúcich sa segmentov,
 $S(i)$ mno¾ina v¹etkých prekrývajúcich sa párov segmentov v~stave~$i$
 a~$S'(i)$ mno¾ina v¹etkých segmentov $s_1$ v~stave $i$, pre~ktoré neexistuje
@@ -375,18 +567,9 @@ SOV(H) = \frac{100}{6+6+3}\times\left(\frac{1+1}{10} + \frac{2+1}{6} \right) \ti
 
 \begin{figure}[h]
 \begin{center}
-  \scalebox{0.7}{\includegraphics{pics/sov_1.jpg}}
-  \caption{Ilustrácia výpoètu $SOV(H)$. Èierne resp. biele obdå¾niky reprezentujú $minov$ resp. $maxov$ hodnoty prekrývajúcich sa segmentových párov z~experimentálne zistených (EXP)
+  \scalebox{0.70}{\includegraphics{fig/exps/sov.jpg}}
+  \caption{Ilustrácia výpoètu $SOV(H)$. Èierne, resp. biele obdå¾niky reprezentujú $minov$ resp. $maxov$ hodnoty prekrývajúcich sa segmentových párov z~experimentálne zistených (EXP)
   a~predikovaných (PRED) ¹truktúr.}
   \label{obr:sov}
   \end{center}
 \end{figure}
-
-% zatial MCC asi do prace nedavat, resp. az ked najdem clanok
-% ktory uvdenie vyhody jeho pouzitia, zatial je best SOV
-% http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1479840/
-%MCC (Matthews Correlational Coefficient) -¹tatistická miera
-%pracujúca s maticou zámen (confussion matrix) pou¾ívaná hojne
-%v bioinformatike, pou¾i» v tejto práci ? (\cite{hsmm_matthews_2006})
-
-% zahrnut aj reliability index ?? + obrazok od Rosta napr?

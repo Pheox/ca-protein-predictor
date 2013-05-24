@@ -1,7 +1,16 @@
 \chapter{Návrh predikèného systému}\label{navrh}
-% zakladny model (z clanku Chopry), mierne upraveny model - diplomka Salanda
-\todo{nazvy kapitol}
 
+%5.1.2013 bol publikovaný èlánok, ktorý predikuje
+%sek. ¹truktúru na základe chemických \uvoz{shiftov} \cite{mechelke_chem_shifts},
+%existuje databáza VASCO, èo by vy¾adovalo BLAST + pick do VASCO,
+%to do SEP dáva» nebudem,
+%keï budem ma» ostatné experimenty hotové, mô¾em vyskú¹a» aj so shiftami.
+% algoritmus Chou-Fasman: http://prowl.rockefeller.edu/aainfo/chou.htm
+
+% TODO:
+% - diagram systemu ??
+% - podrobny popis pouziteho evolucneho algoritmu
+% - doplnit este tak 3/4 strany
 
 % uviest co som vylepsil oproti spominanym clankom, co som pridal,
 % co som naopak abstrahoval
@@ -9,63 +18,73 @@ Navrhnutý systém z~veµkej èasti vychádza z~dvoch prác venujúcich
 sa SSP s vyu¾itím CA \cite{chopra_2007} \cite{salanda_2012}.
 Modifikované sú tie èasti systému, ktoré majú potenciál zlep¹i»
 úspe¹nos» predikcie SSP. Ide hlavne o~spôsob klasifikácie
-jednotlivých reziduí do jednej z troch motívov sekundárnej ¹truktúry proteínov.
-\todo{trochu rozviest}
+jednotlivých reziduí do jednej z troch motívov sekundárnej ¹truktúry
+a parametrizácie modelu CA.
 
-% tupy popis mojho systemu
-Predikèným modelom je celulárny automat, ktorého prechodová funkcia
-bola suboptimálne parametrizovaná pomocou evoluèných algoritmov, konkrétne
-evoluèných stratégii.
+Ako bolo spomenuté v sekcii \ref{sec:klasif_pred}, výsledná ¹truktúra proteínov závisí
+na veµkom mno¾stve známych èi neznámych parametrov.
+Niektoré parametre je mo¾né získa» iba experimentálne.
+No mô¾eme hodnoty týchto parametrov nahradi» 
+hodnotami najpodobnej¹ej sekvencie získanej zarovnaním
+(napríklad pomocou algoritmu BLAST \cite{blast_tool}),
+preto¾e konzervácia èastí sekvencie spôsobuje, 
+¾e proteíny v rámci jednej rodiny majú podobné vlastnosti. 
+Aminokyselinová sekvencia v¹ak musí by» porovnávaná s celou
+databázou sekvencií, navy¹e, pou¾ívané algoritmy zarovnávania
+majú linárnu èasovú zlo¾itos» v závislosti na då¾ke sekvencie.
+% nasypat citaciu na casovu zlozitpst BLASTu ??
+% linearna casova zlozitost BLASTu - pripadne odkaz na obrazok
+Jednoduch¹ie je vyu¾i» informácie v dátach, 
+tzn. protriedkami ¹tatistiky dáta nejakým spôsobom popísa»,
+ideálne z pohµadu nastoleného problému.
+Takéto získanie informácii je samozrejme obmedzené pokrytím dát.
+Takýmto spôsobom v¹ak mo¾no získa» aj také informácie, ktoré
+sú neznáme, skryté, no nejakým spôsobom agregované do korelácii atp.
+Jedným z cieµov návrhu je, aby bola predikcia systému rýchla
+a aby bol systém robustný, tzn. mal by by» schopný predikova» sekundárnu ¹truktúru
+µubovolnej aminokyselinovej sekvencie,
+teda mal by fungova» bez nutnosti získavania ïal¹ích potrebných informácii
+o predikovanej sekvencií. Na to tu sú vhodnej¹ie, sofistikované prediktory vyu¾ívajúce
+evoluèné informácie získané na základe zarovnania sekvencie
+v rámci urèitej proteínovej rodiny, alebo chemické posuny, kde
+je taktie¾ potrebné zarovnanie a hµadanie najpodobnej¹ej aminokyselinovej
+sekvencie. Uva¾ovaním týchto parametrov do navrhovaného systému by
+model CA strácal zmysel a~vhodnej¹ie by sa javili iné
+predikèné modely.
+Samozrejme, dosahovaná úspe¹nos»
+nebude závratná, no adekvátna po¾adovaným vlastnostiam modelu.
 
+Predikèným modelom je spomínaný CA, ktorého prechodová funkcia
+je suboptimálne parametrizovaná pomocou evoluèného algoritmu, konkrétne
+pomocou evoluènej stratégie.
 Boli navrhnuté 2 prechodové funkcie. Prvá je zhodná s prechodovou funkciu
-vytvorenou Choprom a spol., no bola implementovaná najmä kvôli porovnávaniu
-v experimentálnej fáze.
-Druhou je metóda vyu¾ívajúca jednak klasické Chou-Fasmanove koeficienty, druhak
-tzv. konformaèné koeficienty. Ide tie¾ o ¹tatistický popis pravdepodobnosti výskytu
-urèitej aminokyseliny v urèitom konformaènom stave resp. motíve sekundárnej ¹truktúry.
+vytvorenou Choprom a Benderom v \cite{chopra_2007}, bola implementovaná najmä kvôli porovnávaniu
+s druhou, roz¹írenou verziou prechodovej funkcie, ktorá vyu¾íva okrem klasickým Chou-Fasmanových
+koeficientov aj tzv. konformaèné koeficienty (viï sekcia \ref{sec:stat_popis}), 
+ktoré ¹tatisticky popisujú pravdepodobnos» výskytu urèitej aminokyseliny 
+v urèitom konformaènom stave resp. motíve sekundárnej ¹truktúry.
 
-Významnou je experimentálna èas» práce, ktorá sa zameriava na:
-\begin{itemize}
-	\item experimentálne zistenie optimálnej veµkosti okolia, ktoré bude vyu¾íva» prechodová
-	funkcia celulárneho automatu, podµa práce pánov .. .. by mal by» limit veµkosti okolia 17
-	(8 vµavo, 8 vpravo), kedy sa úspe¹nos» signifikantne nezvy¹uje ...cite...
-	\item
-\end{itemize}
-
-
-
-
-Aby sa predikèný model mal o~èo oprie», definujeme ¹tatistické
-%(sekcia \ref{sec:stat_popis}) a~experimentálne (sekcia \ref{sec:stat_exp})
-vlast\-nos\-ti reziduí.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{©tatistický popis reziduí}\label{sec:stat_popis}
 % nie je dobry 1-riadkovy odstavec
 
-©tatistika je veda, pomocou ktorej na~základe empirických
-dát získavame nové znalosti.
-V~návrhu systému budú vyu¾ité 2~¹tatistické vlastnosti
-aminokyselín, Chou--Fasmanove parametre,
+V~návrhu systému sú vyu¾ité 2~¹tatistické vlastnosti
+aminokyselín, \emph{Chou-Fasmanove koeficienty},
 ktoré aminokyseliny charakterizujú z~pohµadu miery výskytu
 v~ur\-èi\-tom motíve sekundárnej ¹truktúry,
-a~konformaèná analýza,
-ktorá klasifikuje jednotlivé aminokyseliny pre~konkrétny
-motív sekundárnej ¹truktúry do~urèitej konformaènej triedy
-na~základe toho, v~akej èasti motívu sekundárnej ¹truktúry
-sa príslu¹ná aminokyselina nachádza.
+a~\emph{konformaèné preferencie},
+ktoré popisujú jednotlivé aminokyseliny na~základe
+predispozície nachádza» sa na zaèiatku,
+resp. na konci urèitého motívu sekundárnej ¹truktúry.
 
 
-\subsection{Chou-Fasmanove parametre}
-% tu popisat len parametre, metodu ako taku v kapitole predikcia
-% algoritmus Chou-Fasman: http://prowl.rockefeller.edu/aainfo/chou.htm
-
-Jednou z~metód predikcie SSP 1. generácie je Chou-Fasmanova metóda,
-bli¾¹ie popísaná v~sekcii \ref{sec:klasif_pred}.
-V~ich práci z~roku 1974 \cite{chou_fasman_parameters} je definovaný
-tzv. parameter konformaènej pre\-feren\-cie aminokyseliny $j$
-ku~konformaènému stavu~$i$, Chou-Fasmanov parameter $P_j^i$:
+Jednou z~metód predikcie SSP prvej generácie je metóda Chou-Fasman
+(viï \ref{sec:klasif_pred} pre prehµad predikèným metód),
+v~ich práci z~roku 1974 \cite{chou_fasman_parameters} je definovaný
+tzv. parameter konformaènej pre\-dispozí\-cie aminokyseliny $j$
+ku~konformaènému stavu~$i$, Chou-Fasmanov koeficient $P_j^i$:
 
 \begin{eqnarray}
 P_j^i = \frac{f_j^i}{\langle f_j^i\rangle}\label{eq:chou_fasman},
@@ -74,7 +93,8 @@ kde $f_j^i$ je relatívna frekvencia aminokyseliny $j$ v~konformaènom
 stave~$i$ daná vz»ahom \ref{eq:chou_fasman_rel_freq} a~$\langle f_j^i\rangle$
 priemerná relatívna frekvencia konformaèného stavu $i$ v rámci v¹etkých aminokyselín
 vyjadrená vz»ahom \ref{eq:chou_fasman_priem_rel_freq}.
-
+Kvôli konzistencii s odkazovanými prácami sa v systéme s Chou\mbox{-}Fas\-manovými koeficientami $P_j^i$ 
+pracuje v percentuálnej podobe, tzn $P_j^i \cdot 100$.
 
 \begin{eqnarray}
 f_j^i = \frac{n_j^i}{n^i}\label{eq:chou_fasman_rel_freq}
@@ -87,25 +107,30 @@ a~$n^i$ je celkový poèet reziduí v konformaènom stave $i$.
 \end{eqnarray}
 
 
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Konformaèné triedy}
+%\subsection{Konformaèné triedy}
 % tabulku konformacnych klasifikacii pridat do priloh pre obe datove sady ??
 
+
 Na základe práce Guang-Zheng Zhanga a~spol. \cite{zhang_huang_cc_2005}
-definujeme konformaènú triedu pre~v¹etky aminokyseliny
+definujeme \emph{konformaènú triedu} pre~v¹etky aminokyseliny
 a~v¹etky konformaèné stavy (H, E, C).
 Nech $P = p_1, p_2,\dots, p_n$ je primárna ¹truktúra proteínu (sekvencia aminokyselín)
 a~$S = s_1, s_2, \dots, s_n$ odpovedajúca sekundárna ¹truktúra proteínu då¾ky~$n$.
 Ak $s_i$ a~$s_{i+1}$ sú rôzne konformaèné stavy,
-napríklad $s_i = H $ a~$s_{i+1} = B$, hovoríme o~tzv. ¹truktúrnom prechode
+napríklad $s_i = H $ a~$s_{i+1} = E$, hovoríme o~tzv. ¹truktúrnom prechode
 (ST\footnote{Z angl. Structure Transition.}),
-v~tomto prípade $ST_{HB}$.
+v~tomto prípade $ST_{HE}$.
 Týmto spôsobom mô¾eme definova» ostatných 5~¹truktúrnych prechodov:
-$ST_{HC}$, $ST_{BH}$, $ST_{BC}$, $ST_{CH}$ a $ST_{CB}$.
+$ST_{HC}$, $ST_{EH}$, $ST_{EC}$, $ST_{CH}$ a $ST_{CE}$.
 
 Na základe uvedených ¹truktúrnych prechodov definujeme konformaènú prefe\-ren\-ciu
-ami\-nokyse\-lín pre~urèitý motív sekundárnej ¹truktúry.
-©truktúrny prechod $ST_{HB}$ mô¾eme chápa» ako ukonèenie H
+ami\-nokyse\-lín nachádza» sa na zaèiatku resp. konci urèitého motívu sekundárnej ¹truktúry.
+©truktúrny prechod $ST_{HE}$ mô¾eme chápa» ako ukonèenie H
 a~súèasne ako zaèiatok~B.
 V~kontexte v¹etkých 6~ST, poèet v¹etkých ukonèení a~zaèiatkov
 H urèíme nasledovne:
@@ -117,7 +142,7 @@ N_{\alpha\text{-za\v{c}iatok}} = N_{ST_{BH}} + N_{ST_{CH}}
 
 kde $N(\cdot)$ reprezentuje poèet rôznych ¹truktúrnych prechodov.
 Poèet ukonèení a~zaèiatkov B a~C sa urèí analogicky.
-Definujeme konformaènú preferenciu $CP$ ukonèenia resp. zaèiatku
+Definujeme konformaènú preferenciu $CP$ ukonèenia resp. za\-èiat\-ku
 urèitého konformaèného stavu aminokyseliny~$i$,
 konkrétne $CP_{j, \alpha\text{-ukon\v{c}enie}}$, $CP_{j, \alpha\text{-za\v{c}iatok}}$,
 $CP_{j, \beta\text{-ukon\v{c}enie}}$, $CP_{j, \beta\text{-za\v{c}iatok}}$,
@@ -163,59 +188,41 @@ CC_{j,\alpha} = \left\{
 
 Pou¾ité znaky $b, f, n$ znaèia v~tomto poradí triedy
 $Breaker$, $Former$ a $Neutral$.
+Trieda $Breaker$ reprezentuje reziduá, ktoré väè¹inou ukonèujú urèitý motív
+sekundárnej ¹truktúry, $Former$ reprezentuje reziduá, ktoré ho zaèínajú,
+a do triedy $Neutral$ spadajú reziduá väè¹inou nachádzajúce sa mimo jeho okrajov.
 Konformaèná klasifikácia rezidua $j$ je vyjadrená 3-znakovým
 kódom -- $CC_{j,\alpha}CC_{j,\beta}CC_{j,Coil}$.
 % nieco v tom zmysle, ze konformacne triedy pre jednotlive
 % aminokyseliny a datove sady su v prilohe
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section{Experimentálny popis reziduí}\label{sec:stat_exp}
-% kratke pojednanie o chemickych shiftoch - nedat do teoretickej casti ?
-
-%5.1.2013 bol publikovaný èlánok, ktorý predikuje
-%sek. ¹truktúru na základe chemických \uvoz{shiftov} \cite{mechelke_chem_shifts},
-%existuje databáza VASCO, èo by vy¾adovalo BLAST + pick do VASCO,
-%to do SEP dáva» nebudem,
-%keï budem ma» ostatné experimenty hotové, mô¾em vyskú¹a» aj so shiftami.
+Pre potreby modelu nie je pou¾itá vlastná konformaèná klasifikácia 
+$CC_{j,\alpha}$, ale konformaèné preferencie, na základe ktorých sa klasifikuje, tzn.
+$CP_{j, \alpha\text{-ukon\v{c}enie}}$ resp. $CP_{j, \alpha\text{-za\v{c}iatok}}$.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Pou¾itý celulárny automat}
+\section{1\,D celulárny automat ako model\\ aminokyselinovej sekvencie}
+% trosku specifickejsi nadpis
+
 
 Sekvenciu aminokyselín proteínov reprezentuje 1\,D CA, ktorého
 bunky modelujú jednotlivé reziduá aminokyselín.
-Bunky mô¾u nadobúda» 1 z 3 stavov (H, E, C).
-Veµkos» okolia nie je pevná, evoluèný algoritmus zis»uje optimálny rádius.
-% a experimentálne
+Bunky mô¾u nadobúda» jeden z troch stavov (H, E, C).
 ©tatistické vlastnosti aminokyselín sú
 modelované parametrami buniek CA.
+Veµkos» okolia nie je optimalizovaná pomocou evoluèného algoritmu (ale je parametrizovateµná),
+najmä kvôli mo¾nej paralelizácii výpoètu a relatívnej zlo¾itosti
+genetických operátorov navy¹ujúcej èas evo\-lú\-cie optimálneho pravidla.
 V rámci inicializácie sú ka¾dej bunke pridelené
 Chou-Fasmanove koeficienty, ktoré sú
-pri prechode do ïal¹ej konfigurácie CA upravované.
-Aktualizovaná je aj konformaèná trieda buniek
-na základe tabuµky definovanej pre konkrétnu dátovú sadu.
-% aminokyselin
+pri prechode do ïal¹ej konfigurácie CA upravované a vyjadrujú predispozície bunky
+nachádza» sa v urèitom stave.
+Prechodová funkcia CA mô¾e ma» podobu základnú alebo roz¹írenú.
+ % ZAKLADNA PRECHODOVA FUNKCIA
+% rozsireny tvar prechodovej funkcie vyuzivajuci konformacne koeficienty
+\emph{Základná prechodová funkcia} \cite{chopra_2007} má nasledovný tvar:
 
-
-\subsection{Prechodová funkcia}
-
-My¹lienkou prechodovej funkcie je výpoèet preferencie bunky/aminokyseliny
-výskytu v~urèitom konformaènom stave na~základe príslu¹nej
-konformaènej triedy $CC^i_j$ a~hodnôt parametrov vychádzajúcich
-z~Chou-Fasmanových parametrov $P^i_{j}$, CF parametrov:
-
-\begin{eqnarray}
-P^i_{t+1,j} = \frac{\sum\limits^o_{k=-o} w_k P^i_{j-k}}{\sum\limits^o_{k=-o}w_k}
-\end{eqnarray}
-
-$P^i_{t+1,j}$ vyjadruje CF parameter bunky $j$ v~èase $t+1$ pre~konformaèný
-stav $i$, ktorý je váhovaným súètom jednotlivých CF parametrov $P^i_{j-k}$
-v~okolí $o$.
-Vlastná prechodová funkcia má tvar:
-
-% funkcia nepokryva pociatocne stavy S, S_0 !?
 \begin{eqnarray}
 S_{t+1,j} = \max{R^i_{t+1,j}} \ \ \ i\, \epsilon\, \{H, E, C\}
 \end{eqnarray}
@@ -226,54 +233,129 @@ a~parameter $R^{i}_{t+1,j}$ vyjadruje mieru
 príslu¹nosti bunky resp. amino\-kyse\-liny $j$ v~kroku $t+1$
 ku~konformaènému stavu $i$ (H, E, C):
 \begin{eqnarray}
-R^i_{t+1,j} = P^i_{t+1,j} + \alpha\cdot CC^i_j
+R^i_{t+1,j} = P^i_{t+1,j}
 \end{eqnarray}
 
-kde $\alpha$ je koeficient miery závislosti stavu bunky
-na~konformaènej triede $CC^i_j$ optimalizovaná evoluèným algoritmom.
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Pou¾itý evoluèný algoritmus}
-
-EA, konkrétne evoluèná stratégia (ES), je aplikovaná
-na optimalizáciu prechodovej funkcie CA.
-Evolvovaný chromozóm má tvar:
+% Chou-Famsnaove koeficienty to uz nie su, ci? CF koefs su len v prvom kroku, po inicializacii.
+$P^i_{t+1,j}$ vyjadruje Chou-Fasman koeficient bunky $j$ v~èase $t+1$ pre~konformaèný
+stav $i$, ktorý je váhovaným súètom jednotlivých Chou-Fasmanových koeficientov $P^i_{j-k}$
+v~okolí $o$:
 
 \begin{eqnarray}
-C = [s,\alpha,r,w_{-r}, w_{-r+1},\dots,w_{r-1},w_r]
+P^i_{t+1,j} = \frac{\sum\limits^o_{k=-o} w_k P^i_{j-k}}{\sum\limits^o_{k=-o}w_k}
 \end{eqnarray}
 
-kde $s$ vyjadruje poèet krokov EA, $\alpha$ signifikantnos»
-konformaènej triedy na stav bunky a teda na úspe¹nos»
-predikèného modelu, $r$ veµkos» okolia
+
+
+% ROZSIRENA PRECHODOVA FUNKCIA
+% trosku blizsi popis, pre co som pouzil takyto pristup !!! vyhody/nevyhody
+\emph{Roz¹írená prechodová funkcia} sa od základnej lí¹i v definícii 
+predispozícii bunky nachádza» sa v danom stave $R^i_{t+1,j}$:
+
+\begin{eqnarray}
+R^i_{t+1,j} = \alpha \cdot R^i_{t,j} + \beta \cdot CP_{j, i\text{-za\v{c}iatok}} + 
+\gamma \cdot CP_{j, i\text{-ukon\v{c}enie}}\label{eq:roz_prechod}
+\end{eqnarray}
+
+kde $\alpha$, $\beta$ a $\gamma$ sú váhy troch definovaných parametrov,
+ktoré sú optimalizované evoluèným algoritmom. 
+Ide o rekurentný zápis nelineárnej funkcie, èo zvy¹uje potenciál úspe¹nej¹ej
+klasifikácie, a teda predikcie sekunárnej ¹truktúry proteínov.
+
+
+%%% OKRAJOVE PODMIENKY & INICIALIZACIA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Okrajové podmienky a inicializácia modelu}
+
+
+% vysledky Salandu
+Pri~modelovaní javov pomocou celulárneho automatu je dôle¾itá
+definícia okrajových pod\-mie\-nok popisujúcich
+situácie, kedy okolie aktuálnej bunky nie je kompletné~--~týka
+sa väè¹inou buniek na~okraji automatu.
+Podµa Chopra a~Bendera, na~základe expermentov, ktoré vykonali,
+je vhodné pou¾i» bunky okolia mimo automatu v~¹truktúre Coil \cite{chopra_2007}.
+Vojtìch ©alanda sa v rámci svojej bakalárskej práce takýmito bunkami zaoberal \cite{salanda_2012}, 
+experimentoval s~reálnymi aj fiktívnymi, reálne neexistujúcimi aminokyselinami, a~zistil, 
+¾e ako najvhodnej¹ia sa javí fiktívna aminokyselina s~oznaèením X300, 
+ktorej Chou-Fasmanove parametre sú 0-0-300, 
+tzn. tendencia bunky nachádza» sa v~¹truktúre Coil je nenulová, má hodnotu 300.
+
+
+Na inicializácii jedincov v rámci evoluèného algoritmu v podstate
+nezále¾í, no pre rýchlos» konvergencie je dôle¾ité sa zaobera» aj touto èas»ou systému.
+Je intuitívne jasné, ¾e vplyv reziduí v tesnom okolí predikovanej aminokyseliny
+bude vy¹¹í ne¾ vplyv reziduí vzdialenej¹ích.
+Platí to najmä pri motívoch $\alpha$-helixu, no motívy $\beta$-sheet èasto vznikajú
+globálnou interakciou, ktorú by sa mal, vzhµadom k charaktere modelu, 
+pokúsi» emulova» navrhnutá model celulárneho automatu.
+
+Pou¾itá je inicializácia hodnôt vplyvu jednotlivých  okolitých reziduí (váh) na základe
+normalizovanej Gaussovej funkcie pre strednú hodnotu $\mu = 0$ 
+a smerodatnú odchýlku $\sigma = 0.399$ (hodnota $f(0) \doteq 1$):
+
+\begin{eqnarray}
+\frac{1}{\sigma\sqrt{2\pi}} e^{\frac{-(x-\mu)^2}{2\sigma^2}}
+\end{eqnarray}
+
+
+% OPTIMALIZACIA VEKTORU PARAMETROV
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Optimalizácia vektoru parametrov\\ pomocou evoluènej stratégie}
+
+Motorom CA je jeho prechodová funkcia, ktorej expertné urèenie nie je jednoduché, 
+preto sa na jej urèenie vyu¾ívajú rôzne optimalizaèné techniky. 
+Keï¾e ide o optimalizáciu vektoru celých a reálnych èísel,
+je pou¾itý algoritmus evoluènej stratégie, ktorý je podmno¾inou väè¹ej triedy
+optimalizaèných techník, evoluèných algoritmov.
+Stavový priestor prechodových funkcií, ktoré sú parametrizované reálnymi èíslami
+je teoreticky nekoneèný, èo opodstatòuje pou¾itie optimalizaèných techník.
+% toto do experimentov ?
+%Keï¾e sú dostupné zdroje obmedzené (èasové, materiálne), má význam 
+%zaobera» sa aj inicializáciou hodnôt génov chromo¼ómov evoluèného algoritmu.
+% popis mutacie, krizenia, selekcia
+%-  mutaèný algoritmus je naslednovný: ku ka¾dému génu chromozómu sa pripoèíta 
+%  náhodná hodnota posµa normálneho rozlo¾enia pravdepdodobnosti
+%  so strednou hodnotou 
+%- krí¾enie je pou¾ité klasické, jednobodové
+%- selekcia je implementovaná pomocou rulety/kolesa ¹»astia
+%- fitness funkcia je ¹pecifikovaná metóda hodnotiaca podobnos» sekvencií,
+%  $Q_3$ alebo $SOV$
+Evolvovaný chromozóm základného resp. roz¹íreného pravidla, $C_z$ resp. $C_r$ má tvar:
+
+
+% simple & conform rule
+\begin{eqnarray*}
+C_z &=& [s, w_{-r}, w_{-r+1},\dots,w_{r-1},w_r]\\
+C_r &=& [s, \alpha, \beta, \gamma, w_{-r}, w_{-r+1},\dots,w_{r-1},w_r]
+\end{eqnarray*}
+
+
+kde $s$ vyjadruje poèet krokov CA, $\alpha$ vplyv
+predchádzajúcej predispozície na stav bunky (tým je zaistená nelinearita, viï rovnica \ref{eq:roz_prechod}),
+$\beta$ vplyv konformaèného koeficientu,
+ktorý vyjadruje schopnos» urèitej aminokyseliny zaèína» urèitý motív sekundárnej ¹truktúry,
+$\gamma$ vplyv konformaèného koeficientu,
+ktorý vyjadruje schopnos» urèitej aminokyseliny konèi» urèitý motív sekundárnej ¹truktúry,
 a $w_i$ pre $i\,\epsilon\, \{-r, \dots, r\}$ váhy
 jednotlivých buniek okolia.
 
-
-%
-%\noindent Ideje návrhu:
-%\begin{itemize}
-
-%    \item Chopra\cite{chopra_2007} odporúèa pár vylep¹ení:
-%    \begin{itemize}
-%        \item nelineárna update formula
-%        \item sofistikovanej¹ia aktivaèná funkcia (MAX)
-%        \item additional residue information
-%    \end{itemize}
-
-%    \item pou¾itie nelineárnej klasifikaènej metódy,
-%    napr. kvadratická logistická regresia, ?kernel regresia?
-
-%    \item výpoèet tzv. konformaènej triedy pre ka¾dú aminokyselinu
-%    (Zhang, Huang 2005 \cite{zhang_huang_cc_2005})
-%\end{itemize}
+% fitness funkcia
+\emph{Fitness funkciou} evoluèného algoritmu je jedna z dvoch funkcií porovnávajúcich podobnos» sekvencií
+(viï sekcia \ref{sec:hodnotiace_pristupy}), $Q_3$ alebo $SOV$.
+Prehµad spôsobu implementácie evoluèných operátorov ponúka tabuµka \ref{table:operatory}.
 
 
-
-% asi by bolo vhodne kratke pojednanie o zmenach oproti 2 referencnym clankom
-%\section{Zhrnutie inovácií}
-
-
+\begin{table}[h]
+\begin{center}
+ \begin{tabular}{|c|l|}\hline
+      {\bfseries Evoluèný operátor} & {\bfseries Spôsob implementácie} \\\hline\hline
+      Selekcia & Koleso ¹»astia\\\hline
+      Krí¾enie & 1-bodové \\\hline
+      Mutácia  & Gaussovo rozdelenie pravdepodobnosti\\\hline
+      Náhrada populácie & Èiastoèná (steady state)\\\hline
+ \end{tabular}
+ \caption{Navrhnuté spôsoby implementácie evoluèných operátorov.}
+ \label{table:operatory}
+ \end{center}
+\end{table}

@@ -1,0 +1,562 @@
+\chapter{Experimenty}\label{exps}
+% historicke datove sady na: http://bioinformatics.biol.uoa.gr/historical/
+
+% TODO:
+% - dat do porovnania vysledkov uspesnosti aj Salandove vysledky!
+% - obrazok casovej zlozitosti PSIPREDu - aproximovat body priamkou !!!
+% - slovo nehomolognu OK ??
+
+
+% popis datasetov, vlastnosti, predspracovanie etc.
+Primárnou snahou experimentovania s navrhnutým modelom bolo zlep¹i» úspe¹nos» 
+predikcie nástroja PSIPRED, ktorý sa radí do tretej generácie metód
+predikcie sekundárnej ¹truktúry proteínov (viï sekcia \ref{sec:klasif_pred}).
+Systém je v¹ak otestovaný aj ako samostatný prediktor a jeho
+úspe¹nos» porovnaná s ostatnými metódami.
+
+Pre dosiahnutie èo najlep¹ích výsledkov je dôle¾itá rozumná parametrizácia modelu.
+Pre~jej dosiahnutie bola najskôr vykonaná optimalizácia
+parametra veµkosti okolia, ktoré uva¾uje prechodová funkcia CA.
+Následne bol zistený optimálny maximálny poèet krokov CA, 
+ktoré mô¾u pri evolúcii pravidla CA jednotlivé rie¹enia nadobúda».
+Po správnom \uvoz{nastavení} týchto 2 parametrov
+boli vykonané experimenty predikujúce sekundárnu ¹truktúru proteínu 
+v spolupráci s nástrojom PSIPRED.
+Uva¾ované boli 2 varianty:
+\begin{enumerate}
+	\item Primárna predikcia pomocou navrhnutého systému CASSP
+a následná oprava nie príli¹ vierohodných predikcii pomocou 
+nástroja PSIPRED.
+	\item Primárna predikcia pomocou nástroja PSIPRED 
+	a následná oprava nie príli¹ vierohodných predikcií 
+	pomocou navrhnutého systému CASSP.
+\end{enumerate}
+
+
+V oboch prípadoch je dôle¾ité správne stanovi» prah opravy primárnej predikcie pomocou
+predikcie sekundárnej. Pre zistenie vhodného prahu bola vykonaná jeho optimalizácia pre dve varianty:
+
+\begin{enumerate}
+	\item Pou¾itie sekundárneho prediktora pre reziduá,
+	ktorých vierohodnos» predikcie je ni¾¹ia ne¾ zadaný prah.
+	\item Pou¾itie sekundárneho prediktora pre celú proteínovú sekvenciu,
+	ak priemerná vierohodnos» reziduí v rámci opravovanej sekvencie je ni¾¹ia
+	ne¾ zadaný prah.
+\end{enumerate}
+
+
+
+%%% DATA SETY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Trénovacie a testovacie dátové sady}\label{sec:datasets}
+
+%Pre porovnávanie výkonnosti modelu je nutné,
+%aby úspe¹nos» v¹tkých porovnávaných modelov bola vyhodnocovaná
+%na základe rovnakej dátovej sady. 
+%V oblasti predikcie sekundárnej ¹truktúry proteínov
+%sú najpou¾ívanej¹ími dátovými sadami RS126 a CB513, 
+%pou¾ívané ako na trénovanie, tak aj na testovanie.
+
+% slovo nehomolognu OK ??
+% RS 126
+Pri experimentoch boli pou¾ité 3 dátové sady~--~RS126, CB513 a~PDBselect.
+Dátová sada RS126 bola prvý krát pou¾itá v èlánku Burkharda Rosta 
+a Chrisa Sandera z roku 1993 \cite{rs_126}.
+Podµa ich slov ide o nehomológnu dátovú sadu. 
+Nehomológnos» definovali tak, ¾e ¾iadne 2 proteíny v dátovej sade nesmú ma» viac ne¾
+25 \%-nú zhodu v sekvenciách pri ich då¾ke presahujúcej 80 reziduí.
+Nevýhodou tohto súboru 126 sekvencií  (okrem malého poètu) je, 
+¾e obsahuje páry proteínových sekvencií, ktoré sú podobné pri provnávaní
+inými, sofistikovanej¹ími metódami ne¾ obyèajnou percentouálnou zhodou. 
+Výpoèet percentuálnej zhody je toti¾ závislý na då¾ke zarovnania
+a zlo¾ení sekvencií, tak¾e 2 sekvencie podobného, 
+ale nezvyèajného aminokyselinového zlo¾enia, mô¾u ma» vysokú percentuálnu zhodu, 
+aj keï nie sú evoluène príbuzné \cite{cb_513}.
+
+% CB 513
+Dátovú sadu CB513 vytvorili páni Geoffrey Barton a~James Cuff 
+v~rámci svojej ¹tú\-die z~roku 1999 \cite{cb_513}.
+Zhodu dvoch aminokyselinových sekvencií, oznaème ich $A$ a~$B$, neurèovali na základe percentuálnej zhody,
+ale pomocou metódy, ktorá najskôr zarovná sekvencie ¹tandardným
+algoritmom dynamického programovania (napríklad pomocou algoritmu Needleman-Wunsch \cite{needleman_wunsch})
+a~získa sa skóre zarovnania $V$.
+Poradie jednotlivých aminokyselín v~ka¾dej proteínovej sekvencii je náhodne zmenené
+a~následne je vykonané zarovnanie pomocou spomínaného algoritmu dynamického programovania. 
+Tento proces sa opakuje typicky aspoò 100 krát, následne sa vypoèíta 
+priemer $\bar{x}$ a~smerodatná odchýlka $\sigma$ jednotlivých skóre zarovnania.
+Výsledná hodnota \uvoz{podobnosti} sekvencií $A$ a $B$, $SD$,  
+je urèená nasledovne: $SD(A,B) = (V - \bar{x})/\sigma$.
+
+Z poèiatoènej dátovej sady sa odstránili multisegmentové domény,
+odstránené boli aj~sek\-vencie, ktorých ¹truktúry získané pomocou
+röntgenovej kry¹talografie nemali dostatoèné rozlí¹enie (aspoò 2,5 \AA).
+Ïalej neuva¾ované boli tie¾ sekvencie, ktorých podobnos» s nejakou sekvenciu
+z dátovej sady RS126 bola $SD >= 5$, a sekvencie, ktoré nemali úplnú DSSP definíciu.
+Táto precízne prefiltrovaná mno¾ina sekvencií bola spojená so 126
+sekvenciami dátovej sady RS126.
+Pou¾itá definícia podobnosti v¹ak podµa autorov nie je schopná zachyti» v¹etky homológne sekvencie,
+na ïal¹ie porovnávanie a filtrovanie sekvencií bol pou¾itý algoritmus SCOP \cite{scop}.
+Výsledkom bola dátová sada CP513.
+Pre potreby tejto práce, teda pre jednotné poèítanie
+v sekcii \ref{sec:stat_popis}  bli¾¹ie popísaných Chou-Fasmanovych a konformaèných koeficientov 
+boli nejednoznaèné aminokyseliny (B, Z, X) nahradené priemernými hodnotami:
+pre B je to priemer hodnôt asparagínu (N) a kyseliny asparagovej (D),
+pre Z priemer hodnôt glutamínu (Q) a kyseliny glutámovej (E)
+a pre J priemer hodnôt leucínu (L) a izoleucínu (I). 
+
+% PDB_VYBER
+Tre»ou pou¾itou dátovou sadou je rozsiahly súbor pribli¾ne 5\,300
+proteínových sekvencií z databázy PDB, ktorý bol získaný pomocou nástroja PDBselect \cite{pdb_vyber}. 
+Ide o zoznam reprezentatívnych proteínovych sekvencií
+s nízkou sekvenènou podobnos»ou (poèítanou pomocou HSSP funkcie \cite{hssp_function}), 
+ktorý bol vytvorený 
+pre potreby objektívneho ¹tatistického vyhodnodocania okrem iného aj predikcie ¹truktúry proteínov. 
+Na zarovnanie sekvencií bol vyu¾itý rýchly Huang-Miller algoritmus \cite{huang_miller}.
+Jednotlivé selekcie zo zoznamu boli získané pomocou webovej slu¾by MRS \cite{mrs_web_service}.
+Vzhµadom k rozsiahlosti dátovej sady bola v kontexte tejto práce vyu¾ívaná
+iba na testovanie.
+
+%\todo{co je o,u?}
+%V niektorých sekvenciach nahradene o, u za Coil.
+% vyhody nevyhody oproti RS a CB ??
+
+Keï¾e vývoj v oblasti bioinformatiky je veµmi rýchly a poèet záznamov
+v PDB rastie exponenciálne, mo¾no pova¾ova» databázy RS126 a CB513
+za zastaralé a pre reálne praktické pou¾itie by sa siahlo po nov¹ej,
+viac aktualizovanej databáze~--~napríklad spomínanej PDBselect. 
+No pre základnú charakteristiku navrhnutého modelu sú tieto 2 dátové sady
+dostaèujúce, navy¹e, takmer v¹etky nástroje predikcie sekundárnej ¹truktúry
+spomenuté v kapitole \ref{predikcia} pracujú práve s týmito dátovými sadami,
+tak¾e je mo¾né priame porovnanie úspe¹ností.
+
+
+
+
+%%% VYHODNOCOVANIE
+%%%%%%%%%%%%%%%%%%%%%%
+%\section{Metodika vyhodnocovania úspe¹nosti}
+% kratke pojednanie o sposobe vyhodnocovania vysledkov
+% nadpis je nutny ako sekciu??? - je to kratke pojdednanie, nemusi byt ako kapitola
+
+V rámci korektného popisu prediktora je veµmi dôle¾itý spôsob vyhodnocovania jeho úspe¹nosti.
+Azda najdôle¾itej¹ou podmienkou je, aby trénovacie a testovacie dáta nekorelovali,
+èo v reálnych podmienkach nie je jednoduché dosiahnú», kedy èasto nie je dostatok dát
+a ich rozlo¾enie je neznáme.
+Na mieste je teda otázka, ako ideálne rozdeli» dátovú sadu na~trénovaciu a testovaciu tak,
+aby sme získali èo mo¾no najdôveryhodnej¹iu hodnotu úspe¹nosti resp. chybovosti predikcie?
+Simone Borra a Agostino Di Ciaccio vo svojej práci \cite{borra_10kcv} do¹li k záveru, 
+¾e najvernej¹iu hodnotu chyby prediktoru pre reálne dátové sady vykazuje 10-stupòová cross-validácia
+pre viac ne¾ 100 vzorkov.
+Leave-One-Out (LOO) cross-validácia teoreticky vykazuje objektívnej¹í výsledok, no pri testovaní
+vzhµadom k tomu, ¾e testovacie dátové sady obsahujú iba 1 prvok, sa prejavuje veµká variabilita,
+èo robí problémy pri selekcii najlep¹ieho dielèieho modelu.
+Prístup 10-stupòovej cross-validácie bude teda pou¾itý (pokiaµ nebude povedané inak) pri vyhodnocovaní 
+úspe¹nosti jednotlivých experimentov. 
+Pri získanie lep¹ej vierohodnosti je cross-validácia spú¹»aná 3-krát
+a spriemerovaním je získaná výsledná úspe¹nos».
+Na vlastné vyhodnotenie podobnosti referenèných a predikovaných sekundárnych ¹trukúr
+proteínových sekvencií boli pou¾ité 2 miery - $Q_3$ a $SOV$, bli¾¹ie popísané
+v sekcii \ref{sec:hodnotiace_pristupy}.
+
+
+%%% OPTIMALIZACIA PARAMETROV MODELU
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Optimalizácia parametrov modelu}\label{sec:optim_model}
+
+Ako bolo uvedené v úvode tejto kapitoly, pre získanie lep¹ích výsledkov 
+sú optimalizované dva základné parametre navrhnutého modelu -- veµkos» okolia,
+s ktorým pracuje prechodová funkcia celulárneho automatu, 
+a maximálny poèet krokov CA (po ktorých sa získa predikovaná sekvencia), 
+ktorý je dosiahnuteµný v rámci evolúcie evoluèného algoritmu.
+
+
+Ako je mo¾né vidie» na obrázku \ref{obr:exp_neigh}, so zväè¹ujúcim sa okolím
+úspe¹nos» predikcie klesá, èo je èiastoène zrejme zapríèinené tým, ¾e
+nebol dostatoèný èas na trénovanie, predsalen stavový priestor pri väè¹ích
+hodnotách okolia znaène narastá. 
+Ale na druhej strane to sèasti potvrdzuje slová ¹túdie z roku 1999 \cite{min_residue_number}, 
+ktorá hovorí, ¾e na determináciu motívu centrálneho rezidua staèí okolie 14--17 
+a prídavná informácia mô¾e by» nadbytoènou a kontraproduktívnou.
+Ako optimálne sa v tomto prípade javí \emph{okolie o veµkosti 7}, ktoré bude pou¾ité 
+v~nasledujúcich experimentoch.
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.35}{\includegraphics{fig/exps/neigh/neigh.jpg}}
+  \caption{Klesajúca tendencia úspe¹nosti predikcie. Natrénované boli 
+  modely so základným aj roz¹íreným pravidlom CA, s dátovou sadou RS126 aj CB513.}
+  \label{obr:exp_neigh}
+\end{center}
+\end{figure}
+
+
+% optimalizacia poctu krokov CA - steps
+% salanda pocet stavov - 1-4 imho dost malo! 
+% chopra pocet stavov - okolie vzdy 11, pocet stavov nepisu
+
+Dôle¾itým parametrom navrhnutého modelu je poèet krokov,
+po ktorých celulárny automat urèuje motívy sekundárnej ¹truktúry
+aminokyselinovej sekvencie.
+Dá sa predpoklada», ¾e pri vy¹¹om poète krokov má celulárny automat ¹ancu
+zahrnú» do svojej predikcie potenciálne globálne interakcie jednotlivých buniek
+a tým pádom zlep¹i» úspe¹nos» predikcie modelu.
+No z výsledkov vizualizovaných na obrázku \ref{obr:exp_steps1} vyplýva, 
+¾e viac poèet krokov CA úspe¹nosti nepomáha.
+Navy¹e, obrázok \ref{obr:exp_steps2} ukazuje, ¾e potrebný poèet krokov CA
+je naozaj minimálny, a teda ¾e evoluèný algoritmus nikdy nedokonvergoval do stavu, 
+kedy by sa javil ako optimálny poèet krokov
+celulárneho automaty vy¹¹í ne¾ 5. Preto bude v ïal¹om skúmaní nastavený
+\emph{maximálny poèet krokov na 5}, tým sa zmen¹í mo¾ný stavový priestor evoluèného
+algoritmu a tým pádom mô¾eme potenciálne získa» lep¹ie rie¹enia v krat¹ej dobe.
+
+
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.6}{\includegraphics{fig/exps/steps/steps_exps.jpg}}
+  \caption{Poèet experimentov v závislosti na natrénovanom poète krokov.}
+  \label{obr:exp_steps1}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.35}{\includegraphics{fig/exps/steps/steps.jpg}}
+  \caption{Závislos» úspe¹nosti predikcie na nastavenom maximálnom poète krokov
+  CA v rámci evoluèného algoritmu.}
+  \label{obr:exp_steps2}
+\end{center}
+\end{figure}
+
+
+
+
+% SAMOSTATNY PREDIKTOR
+\section{Systém ako samostatný prediktor}
+
+% porovnanie vysledkov na zaklade tabulky co ma Salanda ???
+% ale v ramci RS alebo CB !!! pre PDBselect nema vyznam ???
+V rámci tejto èasti je otestovaná výkonnos» samostatného prediktoru CASSP.
+Trénovanie prebiehalo na dátových sadách RS126 a CB513 s optimalizovanými
+parametrami modelu z predchádzajúcej sekcie \ref{sec:optim_model}.
+V rámci cross-validácie vzniklo viacero predikèných modelov, ktorých
+úspe¹nos» predikcie bola spriemerovaná. Najlep¹ie predikèné modely
+boli otestované na dátovej sade získanej pomocou nástroja PDBselect, ktorá je omnoho väè¹ia
+a poskytuje vierohodnej¹í výsledok o úspe¹nosti predikcie.
+Táto dátovú sada bude v ïal¹om texte oznaèovaná ako \uvoz{PDBselect}.
+Ideálne by bolo na tejto dátovej sade vykona» cross-validáciu,
+z~èasových dôvodov to v¹ak nebolo reálne, no výsledky najlep¹ích 
+prechodových funkcií CA dávajú dobrú informáciu o limitoch navrhnutého systému.
+
+% podrobny popis vysledkov
+V tabuµke \ref{table:alone1} sú uvedené výsledky predikcie pre pou¾itú dátovú sadu RS126
+a CB513. Tabuµka \ref{table:alone2} uvádza úspe¹nos» predikcie najlep¹ích modelov v rámci cross-validácie 
+pri pou¾ití týchto sád. Grafická podoba porovnania jednotlivých úspe¹ností je
+zobrazená na obrázku \ref{obr:alone1}. Úspe¹nosti vyhodnocované mierou podobnosti $Q_3$ sa pohybujú
+na rovnakej úrovni, no úspe¹nos» predikcie vyhodnocovanej pomocou miery $SOV$ dáva
+pre dátovú sady PDBselect omnoho lep¹ie výsledky.
+
+
+\begin{table}[h]
+\begin{center}
+ \begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
+ 	  Dátová sada & \multicolumn{4}{|c|}{RS126} & \multicolumn{4}{|c|}{CB513}\\\hline
+ 	  Pravidlo & \multicolumn{2}{|c|}{základné} & \multicolumn{2}{|c|}{roz¹írené}
+ 	  & \multicolumn{2}{|c|}{základné} & \multicolumn{2}{|c|}{roz¹írené} \\\hline
+ 	  Podobnos» & Q3 & SOV & Q3 & SOV & Q3 & SOV & Q3 & SOV\\\hline\hline
+ 	Celkovo & $57,125$ & $42,688$ &  $57,414$ & $38,363$ & $57,976$ & $42,696$ & $56,938$ & $38,244$\\\hline
+ 	Coil & $63,044$ & $42,031$ &  $63,661$ & $36,670$ & $61,792$ & $40,860$ & $61,924$ & $38,040$ \\\hline
+ 	$\beta$-sheet & $46,669$ & $44,244$ & $47,363$ & $40,600$ & $47,247$ & $41,498$ & $47,334$ & $38,372$\\\hline
+ 	$\alpha$-helix & $56,254$ & $39,850$ & $55,251$ & $34,621$ & $59,606$ & $40,136$ & $57,442$ & $33,535$ \\\hline
+ \end{tabular}
+ \caption{Úspe¹nos» predikcie systému CASSP ako samostatného prediktora.}
+ \label{table:alone1}
+ \end{center}
+\end{table}
+
+
+\begin{table}[h]
+\begin{center}
+ \begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
+ 	  Dátová sada & \multicolumn{4}{|c|}{PDBselect (RS126)} & \multicolumn{4}{|c|}{PDBselect (CB513)}\\\hline
+ 	  Pravidlo & \multicolumn{2}{|c|}{základné} & \multicolumn{2}{|c|}{roz¹írené}
+ 	  & \multicolumn{2}{|c|}{základné} & \multicolumn{2}{|c|}{roz¹írené}\\\hline
+ 	  Podobnos» & Q3 & SOV & Q3 & SOV & Q3 & SOV & Q3 & SOV\\\hline\hline
+ 	Celkovo & $\mathbf{57,276}$ & $\mathbf{48,949}$ &  $57,163$ & $48,547$ & $57,208$ & $48,831$ & $57,142$ & $48,810$\\\hline
+ 	Coil & $61,660$ & $49,672$ &  $63,975$ & $50,517$ & $61,704$ & $49,346$ & $61,337$ & $50,214$ \\\hline
+ 	$\beta$-sheet & $45,563$ & $48,066$ & $47,898$ & $50,562$ & $49,098$ & $50,170$ & $49,170$ & $51,326$\\\hline
+ 	$\alpha$-helix & $60,201$ & $48,729$ & $55,153$ & $45,794$ & $57,579$ & $47,672$ & $57,778$ & $46,314$ \\\hline
+ \end{tabular}
+ \caption{Úspe¹nos» predikcie najlep¹ích modelov získaných cross-validáciou dátových sád RS126 a CB513.
+ Úspe¹nos» je v tomto prípade vyhodnocovaná na dátovej sade PDBselect.}
+ \label{table:alone2}
+ \end{center}
+\end{table}
+
+
+% vyrazne zlepsenie uspenosti SOV accuracy miery!!!
+% porovnat jednotlive pravidla v grafe ??
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.45}{\includegraphics{fig/exps/alone/alone_comp.jpg}}
+  \caption{Porovnanie úspe¹ností získaných cross-validáciou dátových sád RS126 a CB513
+  s úspe¹nos»ou najlep¹ích modelov v rámci cross-validácie na dátovej sade PDBselect.
+  Sú zobrazené celkové úspe¹nosti, ale aj úspe¹nosti jednotlivých motívov sekundárnej ¹truktúry, teda
+  motívu $\alpha$-helix (H), $\beta$-sheet (E) a Coil (C).}
+  \label{obr:alone1}
+  \end{center}
+\end{figure}
+
+
+V tabuµke \ref{table:alone_rules} sú pre najlep¹ie úspe¹nosti predikcie 
+pre mieru $Q_3$ a $SOV$ (zvýraznené v tabuµke \ref{table:alone2})
+uvedené prechodové funkcie. Obrázok \ref{obr:alone_prediction} ilustruje vlastnosti predikcie
+z pohµadu úspe¹nosti pre jednotlivé triedy vierohodnosti predikcie (\ref{obr:rel_alone_q3},
+\ref{obr:rel_alone_sov}) 
+a z pohµadu rozlo¾enia poètu sekvencií vzhµadom k ich úspe¹nosti (\ref{obr:acc_alone_q3},
+\ref{obr:acc_alone_sov}).
+V tabuµke \ref{table:porovnanie} je uvedené porovnanie s vybranými metódami predikcie sekundárnej ¹truktúry proteínov,
+úspe¹nos» je uvádzaná pre dátovú sadu RS126.
+
+
+% toto je naj pre Q3 - rs, simple
+\begin{table}[h]
+\begin{center}
+ \begin{tabular}{|c|c|c|c|c|c|c|c|}\hline
+ 	  \multicolumn{8}{|c|}{Najlep¹ie pravidlo pre mieru $Q_3$ ($Q_3=57,276$)}\\\hline\hline
+      Poèet krokov & $w_{-3}$ & $w_{-2}$ & $w_{-1}$ & 
+      $w_{0}$ & $w_{1}$ & $w_{2}$ & $w_{3}$\\\hline
+      $2$ & $0,059$ & $0,328$ & $0,758$ & $0,988$ & $0,726$ & $0,318$ & $0,104$\\\hline
+      \multicolumn{8}{|c|}{Najlep¹ie pravidlo pre mieru $SOV$ ($SOV=48,949$)}\\\hline\hline
+      Poèet krokov & $w_{-3}$ & $w_{-2}$ & $w_{-1}$ & 
+      $w_{0}$ & $w_{1}$ & $w_{2}$ & $w_{3}$\\\hline
+      $2$ & $0,056$ & $0,318$ & $0,777$ & $0,984$ & $0,767$ & $0,372$ & $0,082$\\\hline
+ \end{tabular}
+ \caption{Parametre najlep¹ích pravidiel pre úspe¹nostné miery $Q_3$ a $SOV$.}
+ \label{table:alone_rules}
+ \end{center}
+\end{table}
+
+
+\begin{figure}[h]
+  \centering
+  \subfloat[]{\label{obr:acc_alone_q3}\includegraphics[width=70mm]{fig/exps/alone/acc_alone_q3.png}} \hspace{1cm}
+  \subfloat[]{\label{obr:rel_alone_q3}\includegraphics[width=70mm]{fig/exps/alone/rel_alone_q3.png}}
+  \\
+  \subfloat[]{\label{obr:acc_alone_sov}\includegraphics[width=70mm]{fig/exps/alone/acc_alone_sov.png}} \hspace{1cm}
+  \subfloat[]{\label{obr:rel_alone_sov}\includegraphics[width=70mm]{fig/exps/alone/rel_alone_sov.png}}
+  \caption{(a) a (c) ilustruje vlastnosti predikcie z pohµadu rozlo¾enia poètu sekvencií vzhµadom 
+  k ich úspe¹nosti, (b) a (d) z pohµadu úspe¹nosti pre jednotlivé triedy vierohodnosti predikcie.
+  (a) a (b) reprezentujú najlep¹ie pravidlo pre mieru $Q_3$, (c) a (d) pre mieru $SOV$.} 
+  \label{obr:alone_prediction}
+\end{figure}
+
+% POROVNANIE S INYMI METODAMI
+
+
+\begin{table}[h]
+\begin{center}
+ \begin{tabular}{|c|c|c|c|}\hline
+ 	Metóda & $Q_3$ & $SOV$ & Princíp metódy\\\hline\hline
+ 	CASSP & $57,4$ & $42,7$ & Model celulárneho automatu\\\hline
+  	PREDATOR & $70,3$ & $69,9$ & Neurónové siete\\\hline
+  	PHD & $70,8$ & $73,5$ & Neurónové siete \\\hline
+  	DSC & $71.1$ & $71,6$ & ©tatistická metóda\\\hline
+  	NNSSP & $72,7$ & $70,6$ & Metóda najbli¾¹ích susedov\\\hline
+ \end{tabular}
+ \caption{Porovnanie úspe¹nosti vybraných metód predikcie sekundárnej ¹truktúry proteínov.}
+ \label{table:porovnanie}
+ \end{center}
+\end{table}
+
+
+
+
+
+
+
+% CASSP AKO PRIMARNY PREDIKTOR
+\section{Systém ako primárny prediktor}
+
+V tejto èasti je overovaná hypotéza, ¾e navrhnutý systém
+s optimalizovanými parametrami veµkosti okolia
+a maximálneho poètu krokov CA 
+je schopný v spolupráci s nástrojom PSIPRED zlep¹i» úspe¹nos»
+tohto nástroja samotného.
+
+Ako názov sekcie napovedá, primárnym prediktorom bude v tomto prípade
+systém CASSP a sekundárnym nástroj PSIPRED.
+Poèet vierohodnostných tried je mo¾né v implementovanom systéme meni»,
+ako vhodný bol urèený tento poèet na 1000.
+Nebola uva¾ovaná roz¹írená prechodová funkcia vzhµadom
+k jej nelinearite a tým pádom aj nepredvídateµnosti 
+maximálnej hodnoty vierohodnosti. 
+Na základe empirickej analýzy je výpoèet maximálnej vierohodnosti $MV$ pre základnú prechodovú funkciu nasledovný:
+
+\begin{eqnarray}
+MV = \frac{\max CF \cdot n}{3},
+\end{eqnarray}
+
+kde $\max{CF}$ je maximálna hodnota Chou-Fasmanových koeficientov a $n$ veµkos» okolia, ktoré uva¾uje
+prechodová funkcia CA.
+
+
+
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.4}{\includegraphics{fig/exps/c_p/c_p_cb.jpg}}
+  \caption{Porovnanie úspe¹ností systému CASSP (ako primárneho prediktora) 
+  získaných cross-validáciou dátovej sady CB513 so samostatným nástrojom
+  PSIPRED (celkovo).}
+  \label{obr:cassppsi_cb}
+  \end{center}
+\end{figure}
+
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.4}{\includegraphics{fig/exps/c_p/c_p_pdb.jpg}}
+  \caption{Úspe¹nos» predikcie najlep¹ích modelov (CASSP ako primárny prediktor) 
+  získaných cross-validáciou dátovej sady CB513.
+ Úspe¹nos» je v tomto prípade vyhodnocovaná na dátovej sade PDBselect.}
+  \label{obr:cassppsi_pdb}
+  \end{center}
+\end{figure}
+
+
+%Na základe rovnice ... bol ako optimálny rozptyl vierohodností systému CASSP
+%pre základné pravidlo ... uva¾ovaný rozsah 50-500 (po 50tich asik)
+
+
+%V tejto èasti je overovaná hypotéza, ¾e navrhnutý systém
+%s optimalizovanými prametrami veµkosti okolia
+%a maximálneho poètu krokov CA na základe
+%predchádzajúcich sekcií,
+%je schopný v spolupráci s nástrojom PSIPRED zlep¹i» úspe¹nos»
+%tohto nástroja samotného.
+
+%Testované sú 2 prípady spomínané na zaèiatku tejto kapitola - keï je primárnym
+%prediktorom PSIPRED a keï je primárnym prediktorom navrhnutý model.
+
+%Poèet vierohodnostných tried je mo¾né v implementovanom systéme meni»,
+%ako vhodný bol urèený tento poèet na 1000.
+%Na základe obrázku .. je pre dátovú sadu... optimálna hodnota prahu
+%xyz.
+% 
+
+
+
+% CASSP AKO SEKUNDARNY PREDIKTOR
+\section{Systém ako sekundárny prediktor}
+
+Druhým spôsobom ponímania spolupráce systémov CASSP a PSIPRED je urèi»
+ako primárny prediktor PSIPRED a ako sekundárny CASSP.
+PSIPRED udáva vierohodnos» svojej predikcie v ¹kále od 0 do 9.
+Úlohou je opä» vhodné nastavenie prahu tak, aby málo vierohodné
+predikcie dokázal systém CASSP èo mo¾no najsprávnej¹ie opravova».
+Opä» sú uva¾ované dva spôsoby opravy -- na základe priemernej vierohodnosti
+celej proteínovej sekvencie alebo na základe vierohodnosti ka¾dého
+rezidua zvlá¹».
+
+Obrázok \ref{obr:psicassp_prot_count} ukazuje, ¾e nie v¹etky intervaly hodnôt vierohodnosti
+proteínových sekvencií majú signifikantné zastúpenie, preto nemá zmysel
+sa nimi zaobera». No pre opravu jednotlivými reziduami má zmysel sa zaobera»
+v¹etkými úrovòami prahu vierohodnosti (viï obrázok \ref{obr:psicassp_res_count}). 
+Prediktor CASSP sa trénoval na dátovej sade CB513. 
+Úspe¹nos» v porovnaní s príslu¹nou úspe¹nos»ou nástroja PSIPRED zobrazuje
+obrázok \ref{obr:psicassp_cb}.
+Najlep¹ie modely boli opä» otestované na dátovej sade PDBselect (obrázok \ref{obr:psicassp_pdb}),
+no zlep¹enia sa v¹ak nepodarilo dosiahnú».
+%% BIG TODOOO
+Urèité zlep¹enie v¹ak je vidielné pri predikcii motívov sekundárnej ¹truktúry $\alpha$-helix
+pri pou¾ití miery $Q_3$ (viï obrázok \ref{obr:psicassp_helix}).
+
+
+
+
+\begin{figure}[h]
+  \centering
+  \subfloat[]{\label{obr:psicassp_prot_count}\includegraphics[width=70mm]{fig/exps/p_c/psicassp_prot_count.jpg}} \hspace{1cm}
+  \subfloat[]{\label{obr:psicassp_res_count}\includegraphics[width=70mm]{fig/exps/p_c/psicassp_res_count.jpg}}  
+  \caption{Poèet sekvencií (a) resp. poèet reziduí (b) v závislosti na prahu vierohodnosti.
+  Pre celé sekvencie je vierohodnos» poèítaná ako priemer vierohodností v¹etkých jej reziduí.}
+  \label{obr:psicassp_counts}
+\end{figure}
+
+% sem dat obrazok pre Q3, SOV pre CB513 a aj Q3, SOV pre SOV
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.5}{\includegraphics{fig/exps/p_c/psicassp_cb.jpg}}
+  \caption{Porovnanie úspe¹ností (CASSP ako sekundárny prediktor) získaných cross-validáciou dátovej sady CB513 so samostatným nástrojom
+  PSIPRED (celkovo).}
+  \label{obr:psicassp_cb}
+  \end{center}
+\end{figure}
+
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.5}{\includegraphics{fig/exps/p_c/psicassp_pdb.jpg}}
+  \caption{Úspe¹nos» predikcie najlep¹ích modelov (CASSP ako sekundárny prediktor) 
+  získaných cross-validáciou dátovej sady CB513.
+ Úspe¹nos» je v tomto prípade vyhodnocovaná na dátovej sade PDBselect.}
+  \label{obr:psicassp_pdb}
+  \end{center}
+\end{figure}
+
+
+\begin{figure}[h]
+\begin{center}
+  \scalebox{0.5}{\includegraphics{fig/exps/p_c/pdb_helix.jpg}}
+  \caption{Porovnanie úspe¹ností získaných cross-validáciou dátovej sady PDBselect so samostatným nástrojom
+  PSIPRED (len pre motívy $\alpha$-helix).}
+  \label{obr:psicassp_helix}
+  \end{center}
+\end{figure}
+
+
+
+
+% urcite zhrnutie !!!
+% predpocitanie predikcii PSIPRED pre trenovanie !
+
+
+%Pri trénovaní modelu, ktorý predikuje sekundárnu ¹truktúru proteínu
+%v spolupráci s nástrojom PSIPRED, a vzhµadom k pomerne vysokej èasovej zlo¾itosti
+%tohto nástroja (viï obrázok \ref{obr:psipred_time}), 
+%boli PSIPRED predikcie v¹etkách sekvencií dátových sád predpoèítané.
+
+
+
+%\begin{figure}[h]
+%\begin{center}
+%  \scalebox{0.8}{\includegraphics{fig/exps/psipred_time.jpg}}
+%  \caption{Èas predikcie nástroja PSIPRED v závislosti na då¾ke predikovanej sekvencie.}
+%  \label{obr:psipred_time}
+%  \end{center}
+%\end{figure}
+
+
+
+
+% tabulka pre najlepsie Q3 a SOV conform pravidla
+%\begin{table}[h]
+%\begin{center}
+% \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}\hline
+% 	  \multicolumn{11}{|c|}{Popis pravidla Q3, conform, CB}\\\hline\hline
+%      Poèet krokov & $\alpha$ & $\beta$ & $\gamma$ & $w_{-3}$ & $w_{-2}$ & $w_{-1}$ & 
+%      $w_{0}$ & $w_{1}$ & $w_{2}$ & $w_{3}$\\\hline
+%      $3$ & $0,667$ & $0,679$ & $0,868$ & $0,019$ & $0,164$ & $0,630$ & $0,050$ & 
+%      $0,626$ & $0,153$ & $0,066$ \\\hline
+%      \multicolumn{11}{|c|}{Popis pravidla SOV, conform, CB}\\\hline
+%      Poèet krokov & $\alpha$ & $\beta$ & $\gamma$ & $w_{-3}$ & $w_{-2}$ & $w_{-1}$ & 
+%      $w_{0}$ & $w_{1}$ & $w_{2}$ & $w_{3}$\\\hline
+%      $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$\\\hline
+% \end{tabular}
+% \caption{Navrhnuté spôsoby implementácie evoluèných operátorov.}
+% \label{table:alone_rules}
+% \end{center}
+%\end{table}

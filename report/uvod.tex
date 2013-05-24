@@ -10,7 +10,7 @@ boli nastavené o~tro¹ku inak, umo¾òujú vytvára» dlhé uhlíkové polyméry, molekuly
 s~uhlíkovou kostrou.
 Medzi tie, ktoré zabezpeèujú základné funkcie ¾ivota, patria nukleové kyseliny
 (prenos genetickej informácie), sacharidy a~lipidy (zásobárne energie), a~proteíny.
-Proteíny (viï kapitola \ref{proteiny}) sú biopolyméry, komplexné molekuly, ich funkcia závisí
+Proteíny sú biopolyméry, komplexné molekuly, ich funkcia závisí
 na~poradí aminokyselín, z~ktorých sa skladajú.
 Význam proteínov je enormný, zabezpeèujú vnútorné dýchanie, pohyb, èi~katalyzujú
 chemické reakcie.
@@ -22,9 +22,9 @@ génov v~DNA.
 %©túdium proteínov nám teda okrem iného pomáha rozlú¹ti» genetickú informáciu.
 Ich funkcia je definovaná priestorovým usporiadaním jednotlivých aminokyselín
 (terciárna ¹truktúra) a~naopak.
-Toto usporiadanie doká¾u naj\-pres\-nej¹ie (nie v¹ak na 100 \%) urèi» experimentálne metódy.
-Proteínov je v¹ak veµmi veµa (v~µudskom organizme sa ich poèet odhaduje 
-na rádovo milióny \cite{proteins_number}) 
+Toto usporiadanie doká¾u naj\-pres\-nej¹ie (nie v¹ak na 100\,\%) urèi» experimentálne metódy.
+Proteínov je v¹ak veµmi veµa 
+%(v~µudskom organizme sa ich poèet odhaduje na rádovo milióny \cite{proteins_number}) 
 a neefektívnos» èasovo a finanène nároèných experimentálnych metód podnietila
 vznik strojových predikèných metód ¹truktúry proteínov.
 Medzikrokom k~terciárnej ¹truktúre proteínu je sekundárna ¹truktúra,
@@ -41,24 +41,15 @@ Stav bunky sa mô¾e poèas behu CA meni».
 a~na~stavoch buniek v~okolí aktuálnej bunky.
 Prechodová funkcia definuje správanie CA.
 Tento jednoduchý výpoèetný model by mal zaisti» predov¹etkým rýchlos» predikcie.
-
 Najväè¹ím problémom CA je vhodné urèenie prechodovej funkcie.
 Nie je mo¾né \uvoz{od\-skú\-¹a»} v¹etky mo¾né a~urèi» najlep¹iu z nich,
-preto prichádzajú na~scénu optimalizaèné techniky, v~na¹om prípade genetický algoritmus,
+preto prichádzajú na~scénu optimalizaèné techniky, v~na¹om prípade evoluèný algoritmus,
 ktorý pri hµadaní suboptimálneho rie¹enia pou¾íva princípy evoluèného výberu a~genetiky
 (viac v~kapitole \ref{ea}).
 
-Vlastným návrhom predikèného systému, pou¾itím ¹tatistických
-a experimentálnych cha\-rak\-teris\-tík amino\-kyselín,
-celulárneho automatu a evoluène in¹pirovaných techník,
-sa zaoberá kapitola~\ref{navrh}.
-
-% info o implementacii, typoch experimentov
+Vlastným návrhom predikèného systému sa zaoberá kapitola~\ref{navrh}.
 V kapitole \ref{implem} sa nachádza popis implementácie konzolovej aj webovej verzie systému.
-Popis a spracovanie experimentov (optimálna veµkos» okolia, poèet krokov CA èi predikcia v spolupráci 
-s nástrojom PSIPRED) obsahuje kapitola \ref{exps}.
-Záver (kapitola \ref{zaver}) obsahuje krátke zhrnutie práce.
-
-%Návrhom predikèného systému vyu¾ívajúceho uvedenú metodiku sa zaoberá kapitola~\ref{navrh}
-%a~implementáciou navrhnutého systému kapitola~\ref{implementacia}.
-%Popis experimentov so~systémom, zhodnotenie a~porovnanie výsledkov s~vybranými metódami %predikcie sekundárnej ¹truktúty mo¾no nájs» v~kapitole~\ref{experimenty}.
+Implementovaný model je pou¾itý k predikcii sekundárnej ¹truktúry proteínov aj ako samostatný systém,
+aj v spolupráci s nástrojom PSIPRED. Tomuto pou¾itiu predchádza optimalizácia niektorých parametrov vytvoreného modelu.
+Popis experimentov, ich vyhodnotenie a porovnanie výsledkov s inými metódami ponúka kapitola \ref{exps}.
+Záver (kapitola \ref{zaver}) obsahuje zhrnutie práce a výhµad do bu\-dúc\-na.
