@@ -54,6 +54,12 @@ public class Main {
         if (config.getCVFolds() > 1){
             try{
                 simulator.crossValidate(config.getCVFolds());
+                simulator.createEvolutionImage("evolution");
+                simulator.createAccClassesImage("accuracy_train");
+                simulator.createReliabImage("reliability_train");
+                System.out.println("H accuracy: " + simulator.getAccuracyH());
+                System.out.println("E accuracy: " + simulator.getAccuracyE());
+                System.out.println("C accuracy: " + simulator.getAccuracyC());
             }catch (CASSPException e){
                 logger.error(e.getMessage());
             }
@@ -67,6 +73,9 @@ public class Main {
                 simulator.createEvolutionImage("evolution");
                 simulator.createAccClassesImage("accuracy_train");
                 simulator.createReliabImage("reliability_train");
+                System.out.println("H accuracy: " + simulator.getAccuracyH());
+                System.out.println("E accuracy: " + simulator.getAccuracyE());
+                System.out.println("C accuracy: " + simulator.getAccuracyC());
             } catch (CASSPException e){
                 logger.error(e.getMessage());
             }
@@ -81,6 +90,9 @@ public class Main {
                 logger.info("Test accuracy: " + acc);
                 simulator.createAccClassesImage("accuracy_test");
                 simulator.createReliabImage("reliability_test");
+                System.out.println("H accuracy: " + simulator.getAccuracyH());
+                System.out.println("E accuracy: " + simulator.getAccuracyE());
+                System.out.println("C accuracy: " + simulator.getAccuracyC());
             } catch(CASSPException e){
                 logger.error(e.getMessage());
             }
@@ -89,7 +101,7 @@ public class Main {
         String toPredict = config.getToPredict();
 
         // possible PREDICTION
-        if (toPredict != null){
+        if (toPredict != null && config.getPredictMode() != SimConfig.NO_PREDICTION){
             simulator.loadRule();
             String predicted = null;
 

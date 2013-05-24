@@ -187,6 +187,10 @@ public class DataItem {
         this.meanReliabIndex = index;
     }
 
+    public int getMeanReliabIndex(){
+        return this.meanReliabIndex;
+    }
+
     /**
     * Computes reliability index mean.
     */

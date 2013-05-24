@@ -157,7 +157,6 @@ public class CASSP {
 
         this.data.setAminoAcids(this.rule.getAminoAcids());
         this.testRule(this.data);
-
         return this.computeAccuracy(this.data);
     }
 
@@ -343,6 +342,8 @@ public class CASSP {
                 // Repairing by CASSP prediction.
                 CellularAutomaton ca = new CellularAutomaton(di, this.config);
                 ca.run(this.rule);
+
+                di.computeMeanReliabIndex();
 
                 di.repairPrediction(
                     ca.getPredSeq(),
@@ -608,5 +609,20 @@ public class CASSP {
 
     public EAStats getEAStats(){
         return this.eaStats;
+    }
+
+    public double getAccuracyH(){
+        // divide by normalization constant?
+        return this.accStats.getAccuracyH();
+
+
+    }
+
+    public double getAccuracyE(){
+        return this.accStats.getAccuracyE();
+    }
+
+    public double getAccuracyC(){
+        return this.accStats.getAccuracyC();
     }
 }

@@ -1,7 +1,6 @@
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
@@ -18,6 +17,10 @@ data/pdb_vyber/files/
 CASSP/frontend/
 CASSP/doc/
 CASSP/reports/
+report/opravy/
+report/parts/
+experiments/metacentrum/
+experiments/*.png
 CASSP/cobertura.ser
 
 # generated gnuplot scripts
