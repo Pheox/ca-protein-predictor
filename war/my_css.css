@@ -1,0 +1,179 @@
+
+
+body
+{
+background-color:white;
+font-family:sans-serif;
+}
+
+body a
+{
+color:black;
+}
+
+/* HEAD */
+
+
+
+
+#head
+{
+height: 12em;
+}
+
+
+#head h1 a
+{
+background: url('pics/nadpis.jpg') no-repeat center;
+display:block; 
+height: 6em;
+/*vertical-align: middle;*/
+margin-left: 0.5em;
+padding-top:6em;
+text-decoration:none;
+color:black;
+}
+
+
+#head h1 a span
+{
+display:none;
+margin: 0 0 0 5.5em;
+
+}
+
+
+
+#menu
+{
+float:left;
+margin: 2em 0 0 2em;
+padding: 15px 0 0 0;
+background-color:#dddddd;
+width:14em;
+overflow: hidden;
+}
+
+#menu ul
+{
+    padding-bottom:2em;
+    border-bottom:solid 1px black;
+
+}
+
+#menu p
+{
+    text-align: center;
+    font-weight: bold;
+}
+
+#menu #stats
+{
+    padding:0 1em;
+}
+
+#menu #plusminus
+{
+    
+}
+
+
+#local_menu li
+{
+width:auto;
+margin:0 auto;
+display:inline;
+padding:0 1.5em;
+border-left: 2px solid black;
+}
+
+#local_menu li:first-child
+{
+border-left:none;
+}
+
+
+
+#content
+{
+padding: 1em 1em 1em 1em;
+background:#eeeeee;
+margin:1em 12em 0 17em;
+border:1px double black;
+}
+
+
+#content img
+{
+    text-align: center;
+}
+
+#content table{
+    border-collapse: collapse;
+    margin:auto;
+}
+
+#content table td
+{
+    padding: 0 1em;
+    border:1px black solid;
+    text-align: center;
+}
+
+#content table th
+{
+    padding: 0 1em;
+    border:1px black solid;
+    text-align: center;
+}
+
+
+#footer{
+	text-align:center;
+	/*margin:20% 0 0 0;*/
+        clear: both;
+        padding-top:1em;
+}
+
+
+#footer p
+{
+display:inline;
+color:black;
+vertical-align: center;
+font-style: italic;
+}
+
+
+#footer p:before
+{
+content: " :: ";
+}
+
+#footer p:first-child:before
+{
+content:none;
+}
+
+#footer a
+{
+color:black;
+padding: 0 0 0 0.5em;
+}
+
+
+#moreinfo
+{
+    background: url('pics/blue_arrow_down.png') left no-repeat;
+    display:block;
+    padding: 0 0 0 2em;
+    font-weight: bold;
+}
+
+#lessinfo
+{
+    background: url('pics/blue_arrow_up.png') left no-repeat;
+    display:block;
+    padding: 0 0 0 2em;
+    font-weight: bold;
+}

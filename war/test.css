@@ -1,0 +1,15 @@
+
+
+#cassp_gwt{
+	position: relative;
+}
+
+.gwt-RadioButton{
+	position: relative;
+}
+
+#footnote{
+	position: absolute;
+    bottom: -100;
+    left: 500; 
+}

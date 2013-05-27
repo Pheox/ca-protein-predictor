@@ -21,6 +21,7 @@ report/opravy/
 report/parts/
 experiments/metacentrum/
 experiments/*.png
+war/casspserver/
 CASSP/cobertura.ser
 
 # generated gnuplot scripts
