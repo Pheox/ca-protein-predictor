@@ -54,3 +54,9 @@ Tests
  pdb_vyber  79.905  69.165
  ========== ======  ======
 
+TODO
+====
+* add more functional elements to `web interface <1.casspserver.appspot.com>`_
+* rename this repo to "CASSP" because of name consistency
+* upload final results to this README page
+* complete program documentation (update class diagram etc.)

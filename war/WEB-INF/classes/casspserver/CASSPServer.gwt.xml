@@ -7,7 +7,9 @@
   "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
 
 
+
 <module rename-to='casspserver'>
+   <servlet class="casspserver.server.PredictCASSPServiceImpl" path="/predictCASSPService"/>
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
 	<set-configuration-property name="document.compatMode" value="BackCompat"/>
