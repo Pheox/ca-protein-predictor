@@ -56,8 +56,11 @@ Tests
 
 TODO
 ====
+* TOMCAT (or similar) hosting
 * add more functional elements to `web interface <1.casspserver.appspot.com>`_
 * rename this repo to "CASSP" because of name consistency
 * upload final results to this README page
 * complete program documentation (update class diagram etc.)
-* ...
+* edit index.html css rules
+* accessible thesis without VUT credentials
+* FileWriter class not supported in Google App Engine (EAStats.java, Psipred.java)
