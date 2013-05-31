@@ -1,0 +1,84 @@
+
+
+#cassp_gwt{
+	position: relative;
+}
+
+.gwt-RadioButton{
+	position: relative;
+}
+
+#labelUC{
+	font-size: 20em;
+	size: 20em;
+}
+
+
+.labelUC{
+    size: 20em;
+}
+
+
+#labelUC2{
+	font-size: 3em;
+}
+
+#labelUC{
+	font-size: 3em;
+}
+
+
+#footnote{
+	position: absolute;
+    bottom: -100;
+    left: 500; 
+}
+
+.tabPanel{
+	margin-top: 20em;
+}
+
+
+.gwt-TabPanel {
+  //position:relative;
+  //background: #b7b793;
+  border: none;
+  background: white;
+  padding-top: 6px;
+}
+
+.gwt-TabPanelBottom{
+	border: white !important;
+	background: white;
+}
+
+.gwt-AbsolutePanel{
+	border: none;
+	background-color:black;
+}
+
+.gwt-TabBar {
+  background: white;
+  padding-top: 0px;
+}
+
+.gwt-TabBarItem{
+    background: #999966 !important;
+}
+
+
+.gwt-TabBarItem-selected{
+    background: black !important;
+}
+
+
+.gwt-TabBarItem .gwt-Label{
+	color: white;
+	font-size: 18px;
+}
+
+#labelPredictionMethod{
+	font-size: 17px;
+}
+
+

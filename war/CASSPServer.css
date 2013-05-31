@@ -20,6 +20,7 @@ h1 {
   width: 400px;
 }
 
+
 .dialogVPanel {
   margin: 5px;
 }
@@ -32,3 +33,22 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+
+.gwt-Label{
+    font-size:2em;
+}
+
+
+.gwt-TabPanel {
+  
+  background: #b7b793;
+  padding-top: 6px;
+}
+
+
+#labelUC2{
+	font-size: 10em;
+}
+
+

@@ -1,35 +1,33 @@
 package casspserver.client.entrypoint;
 
+import casspserver.client.InputValidator;
 import casspserver.client.services.PredictCASSPService;
 import casspserver.client.services.PredictCASSPServiceAsync;
-import casspserver.shared.FieldVerifier;
+import casspserver.client.widgets.ComputationDialog;
+import casspserver.client.widgets.InfoPopup;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.event.logical.shared.AttachEvent.Handler;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.ToggleButton;
+import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.cellview.client.CellTable;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -53,62 +51,57 @@ public class CASSPServer implements EntryPoint {
 		// Use RootPanel.get() to get the entire body element
 		//RootPanel rootPanel = RootPanel.get("nameFieldContainer");
 		
-		RootPanel rootPanel = RootPanel.get("cassp_gwt");
+		final RootPanel rootPanel = RootPanel.get("cassp_gwt");
 		rootPanel.getElement().getStyle().setPosition(Position.RELATIVE);
 		
 		TabPanel tabPanel = new TabPanel();
 		rootPanel.add(tabPanel, 0, 0);
-		tabPanel.setSize("549px", "492px");
+		tabPanel.setSize("794px", "722px");
 		
 		AbsolutePanel absolutePanel = new AbsolutePanel();
 		tabPanel.add(absolutePanel, "Predict", false);
 		tabPanel.getTabBar().selectTab(0);
 		tabPanel.getTabBar().getSelectedTab();
-		absolutePanel.setSize("540px", "459px");
+		absolutePanel.setSize("782px", "676px");
 		
-		RadioButton radioButtonPC = new RadioButton("new name", "New radio button");
-		absolutePanel.add(radioButtonPC, 377, 75);
+		final RadioButton radioButtonPC = new RadioButton("new name", "New radio button");
+		radioButtonPC.setEnabled(false);
+		absolutePanel.add(radioButtonPC, 170, 62);
 		radioButtonPC.setHTML("PSIPRED+CASSP");
 		
-		Label lblLoadFileWith = new Label("Load file with sequences:");
-		absolutePanel.add(lblLoadFileWith, 26, 178);
-		lblLoadFileWith.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		lblLoadFileWith.setSize("147px", "18px");
-		
 		final TextArea textAreaToPredict = new TextArea();
-		absolutePanel.add(textAreaToPredict, 32, 227);
-		textAreaToPredict.setSize("486px", "80px");
-		
-		FileUpload fileUpload = new FileUpload();
-		absolutePanel.add(fileUpload, 182, 170);
+		absolutePanel.add(textAreaToPredict, 21, 126);
+		textAreaToPredict.setSize("564px", "118px");
 		
 		final RadioButton radioButtonCP = new RadioButton("new name", "New radio button");
+		radioButtonCP.setEnabled(false);
 		radioButtonCP.setHTML("CASSP+PSIPRED");
-		absolutePanel.add(radioButtonCP, 228, 75);
-		radioButtonCP.setSize("131px", "20px");
+		absolutePanel.add(radioButtonCP, 170, 43);
+		radioButtonCP.setSize("145px", "20px");
 		
 		final RadioButton radioButtonC = new RadioButton("new name", "New radio button");
 		radioButtonC.setValue(true);
 		radioButtonC.setHTML("CASSP");
-		absolutePanel.add(radioButtonC, 131, 75);
+		absolutePanel.add(radioButtonC, 171, 23);
 		radioButtonC.setSize("91px", "26px");
 		
 		Label label = new Label("Prediction method:");
-		absolutePanel.add(label, 10, 75);
-		label.setSize("131px", "26px");
+		DOM.setElementAttribute(label.getElement(), "id", "labelPredictionMethod");
 		
-		RadioButton radioButton_2 = new RadioButton("new name", "New radio button");
-		tabPanel.add(radioButton_2, "Train & Test", false);
-		radioButton_2.setHTML("CASSP+PSIPRED");
-		radioButton_2.setSize("5cm", "3cm");
+		
+		absolutePanel.add(label, 21, 23);
+		label.setSize("143px", "26px");
+		
+		final ComputationDialog cd = new ComputationDialog("300", "100");
+		final InfoPopup infoPopup= new InfoPopup("pp");
 		
 		
 				final TextArea textAreaPredicted = new TextArea();
-				absolutePanel.add(textAreaPredicted, 35, 358);
-				textAreaPredicted.setSize("489px", "85px");
+				absolutePanel.add(textAreaPredicted, 21, 292);
+				textAreaPredicted.setSize("564px", "118px");
 				
 				Button button_predict = new Button("Predict");
-				absolutePanel.add(button_predict, 31, 319);
+				absolutePanel.add(button_predict, 382, 250);
 				button_predict.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						System.out.println("predict!!");
@@ -120,24 +113,58 @@ public class CASSPServer implements EntryPoint {
 							// try to run my CASSP service !!!
 							// co su parametre - sekvencia z textArrayToPredict
 							
+							
 							PredictCASSPServiceAsync predictService = (PredictCASSPServiceAsync) GWT
 									.create(PredictCASSPService.class);
+							
+							// OK??
+							ServiceDefTarget serviceDef = (ServiceDefTarget) predictService;
+						    serviceDef.setServiceEntryPoint(GWT.getModuleBaseURL() + "predictCASSPService");
+						    // ####
 
+							//cd.show();
+						    
 							AsyncCallback callback = new AsyncCallback() {
 
 								public void onFailure(Throwable caught) {
+									// komunikacia s dialog oknom
+									
 									// do some UI stuff to show failure
 									System.out.println(caught.getMessage());
 								}
 
 								@Override
 								public void onSuccess(Object result) {
+									// komunikacia s dialog oknom
+									
 									// TODO Auto-generated method stub
 									System.out.println("success");
 									textAreaPredicted.setText((String) result);
+									cd.setText("Completed!");
 								}
 							};
-							predictService.predict(textAreaToPredict.getText(), callback);
+							
+							
+							
+							// validate input text in textAreaToPredict.getText()
+							
+							
+							String str = InputValidator.validateAASequence(textAreaToPredict.getText());
+							if (str == null){
+								// error dialog
+								infoPopup.setText("Bad input sequence.");
+								infoPopup.center();
+							}
+							else if (str.length() == 0){
+								infoPopup.setText("Please insert amino acid sequence.");
+								infoPopup.center();
+							}
+							else{
+								// dialog okno
+								cd.center();
+								
+								predictService.predict(str, callback);
+							}
 							
 							
 							//textAreaToPredict.getText()
@@ -150,10 +177,46 @@ public class CASSPServer implements EntryPoint {
 						
 					}
 				});
-				button_predict.setSize("73px", "26px");
+				button_predict.setSize("119px", "36px");
 				
+				Label lblAminoAcidSequence = new Label("Amino acid sequence (FASTA or pure sequence):");
+				absolutePanel.add(lblAminoAcidSequence, 21, 109);
+				lblAminoAcidSequence.setSize("313px", "18px");
 				
-		fileUpload.getElement().getStyle().setPosition(Position.RELATIVE);
+				Label lblSecondaryStructureSequence = new Label("Secondary structure sequence:");
+				absolutePanel.add(lblSecondaryStructureSequence, 21, 274);
+				
+				Label label_1 = new Label("");
+				absolutePanel.add(label_1, 273, 387);
+				
+				Button btnNewButton = new Button("New button");
+				btnNewButton.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						textAreaPredicted.setText("");
+						textAreaToPredict.setText("");
+					}
+				});
+				btnNewButton.setText("clear");
+				absolutePanel.add(btnNewButton, 507, 250);
+				btnNewButton.setSize("49px", "36px");
+				
+				AbsolutePanel absolutePanel_1 = new AbsolutePanel();
+				tabPanel.add(absolutePanel_1, "Train & test", false);
+				absolutePanel_1.setSize("539px", "455px");
+				
+				Label labelUC2 = new Label("Under construction");
+				DOM.setElementAttribute(labelUC2.getElement(), "id", "labelUC2");
+				
+				absolutePanel_1.add(labelUC2, 228, 46);
+				
+				AbsolutePanel absolutePanel_2 = new AbsolutePanel();
+				tabPanel.add(absolutePanel_2, "Settings", false);
+				absolutePanel_2.setSize("538px", "448px");
+				
+				Label labelUC = new Label("Under construction");
+				DOM.setElementAttribute(labelUC.getElement(), "id", "labelUC");
+				absolutePanel_2.add(labelUC, 228, 46);
+				labelUC.setSize("123px", "24px");
 		
 	
 		// Create the popup dialog box

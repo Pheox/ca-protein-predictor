@@ -16,6 +16,9 @@ public class PredictCASSPServiceImpl extends RemoteServiceServlet
 	implements PredictCASSPService{
 	
 	public String predict(String ssSeq){
+		if (ssSeq.length() == 0)
+			return "";
+		
 		
 		SimConfig config = new SimConfig();
 		config.setBestRulePath(new File("best_q3.rule").getAbsolutePath());
@@ -32,6 +35,8 @@ public class PredictCASSPServiceImpl extends RemoteServiceServlet
 			
 			prediction = predictor.predict(ssSeq);
 			System.out.println("prediction: " + prediction);
+			//
+			
 		} catch (CASSPException e) {
 			// handle bad input !!
 			e.printStackTrace();
