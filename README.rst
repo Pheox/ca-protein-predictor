@@ -56,6 +56,7 @@ Tests
 
 TODO
 ====
+* build.xml - split compiling of "cassp" and "casspserver"
 * deploy: VPS
 * instructions to install PSIPRED
 * upload final results to this README page

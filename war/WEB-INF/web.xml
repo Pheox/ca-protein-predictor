@@ -8,18 +8,18 @@
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
-  
+
   <!-- Servlets -->
   <servlet>
     <servlet-name>predictCASSPServlet</servlet-name>
     <servlet-class>casspserver.server.PredictCASSPServiceImpl</servlet-class>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>predictCASSPServlet</servlet-name>
     <url-pattern>/casspserver/predictCASSPService</url-pattern>
   </servlet-mapping>
 
-</web-app> 
+</web-app>
 
 

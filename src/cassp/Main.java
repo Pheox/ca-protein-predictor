@@ -8,14 +8,13 @@
 package cassp;
 
 
+import cassp.config.SimConfig;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
 
-import java.io.*;
-
-import cassp.config.*;
+import java.io.File;
 
 
 

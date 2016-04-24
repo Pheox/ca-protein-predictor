@@ -73,9 +73,12 @@ public class ComputationDialog extends DialogBox{
 	public void setText(String text) {
 		Label lbHeader = new Label();
 		lbHeader.setText(text);
-		DOM.setStyleAttribute(lbHeader.getElement(), "fontFamily", "arial");
-		DOM.setStyleAttribute(lbHeader.getElement(), "fontSize", "20px");
-		DOM.setStyleAttribute(lbHeader.getElement(), "color", "#FFFFFF");
+		lbHeader.getElement().setAttribute("fontFamily", "arial");
+		lbHeader.getElement().setAttribute("fontSize", "20px");
+		lbHeader.getElement().setAttribute("color", "#FFFFFF");
+//		DOM.setStyleAttribute(lbHeader.getElement(), "fontFamily", "arial");
+//		DOM.setStyleAttribute(lbHeader.getElement(), "fontSize", "20px");
+//		DOM.setStyleAttribute(lbHeader.getElement(), "color", "#FFFFFF");
 		impl.setText(lbHeader.getText());
 		lblSecondaryStructureComputation.setText("Secondary structure computation is COMPLETED!");
 		buttonCancel.setText("OK");
@@ -97,7 +100,8 @@ public class ComputationDialog extends DialogBox{
 			empty.add(lbTitle);
 			//hp.setCellWidth(empty, "100%");
 			hp.setSpacing(10);
-			DOM.setStyleAttribute(hp.getElement(), "background", "#999966");
+			hp.getElement().setAttribute("background", "#999966");
+//			DOM.setStyleAttribute(hp.getElement(), "background", "#999966");
 			hp.setStylePrimaryName("backgroundchildgrid");
 			//DOM.setStyleAttribute(lbTitle.getElement(), "color", "#999966");
 			initWidget(hp);

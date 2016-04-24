@@ -5,29 +5,14 @@ import casspserver.client.services.PredictCASSPService;
 import casspserver.client.services.PredictCASSPServiceAsync;
 import casspserver.client.widgets.ComputationDialog;
 import casspserver.client.widgets.InfoPopup;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.RichTextArea;
-import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.client.ui.*;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -86,9 +71,9 @@ public class CASSPServer implements EntryPoint {
 		radioButtonC.setSize("91px", "26px");
 		
 		Label label = new Label("Prediction method:");
-		DOM.setElementAttribute(label.getElement(), "id", "labelPredictionMethod");
-		
-		
+		label.getElement().setId("labelPredictionMethod");
+//		DOM.setElementAttribute(label.getElement(), "id", "labelPredictionMethod");
+
 		absolutePanel.add(label, 21, 23);
 		label.setSize("143px", "26px");
 		
@@ -103,80 +88,90 @@ public class CASSPServer implements EntryPoint {
 				Button button_predict = new Button("Predict");
 				absolutePanel.add(button_predict, 382, 250);
 				button_predict.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						System.out.println("predict!!");
-						
-						System.out.println(textAreaToPredict.getText());
+                    public void onClick(ClickEvent event) {
+                        System.out.println("predict!!");
 
-						if (radioButtonC.getValue()){
-							System.out.println("cassp id checked");
-							// try to run my CASSP service !!!
-							// co su parametre - sekvencia z textArrayToPredict
-							
-							
-							PredictCASSPServiceAsync predictService = (PredictCASSPServiceAsync) GWT
-									.create(PredictCASSPService.class);
-							
-							// OK??
-							ServiceDefTarget serviceDef = (ServiceDefTarget) predictService;
-						    serviceDef.setServiceEntryPoint(GWT.getModuleBaseURL() + "predictCASSPService");
-						    // ####
+                        System.out.println(textAreaToPredict.getText());
 
-							//cd.show();
-						    
-							AsyncCallback callback = new AsyncCallback() {
+                        if (radioButtonC.getValue()) {
+                            System.out.println("cassp id checked");
+                            // try to run my CASSP service !!!
+                            // co su parametre - sekvencia z textArrayToPredict
 
-								public void onFailure(Throwable caught) {
-									// komunikacia s dialog oknom
-									
-									// do some UI stuff to show failure
-									System.out.println(caught.getMessage());
-								}
 
-								@Override
-								public void onSuccess(Object result) {
-									// komunikacia s dialog oknom
-									
-									// TODO Auto-generated method stub
-									System.out.println("success");
-									textAreaPredicted.setText((String) result);
-									cd.setText("Completed!");
-								}
-							};
-							
-							
-							
-							// validate input text in textAreaToPredict.getText()
-							
-							
-							String str = InputValidator.validateAASequence(textAreaToPredict.getText());
-							if (str == null){
-								// error dialog
-								infoPopup.setText("Bad input sequence.");
-								infoPopup.center();
-							}
-							else if (str.length() == 0){
-								infoPopup.setText("Please insert amino acid sequence.");
-								infoPopup.center();
-							}
-							else{
-								// dialog okno
-								cd.center();
-								
-								predictService.predict(str, callback);
-							}
-							
-							
-							//textAreaToPredict.getText()
-						}
-						else if (radioButtonCP.getValue())
-							System.out.println("cp is checked");
-						
-						
-						
-						
-					}
-				});
+                            PredictCASSPServiceAsync predictService = (PredictCASSPServiceAsync) GWT
+                                    .create(PredictCASSPService.class);
+
+                            // OK??
+                            ServiceDefTarget serviceDef = (ServiceDefTarget) predictService;
+                            serviceDef.setServiceEntryPoint(GWT.getModuleBaseURL() + "predictCASSPService");
+                            // ####
+
+                            //cd.show();
+
+//							AsyncCallback callback = new AsyncCallback () {
+
+//                                public void onFailure(Throwable caught) {
+//                                // komunikacia s dialog oknom
+//
+//                                // do some UI stuff to show failure
+//                                System.out.println(caught.getMessage());
+//                            }
+//
+//                                @Override
+//                                public void onSuccess(Object result) {
+//                                // komunikacia s dialog oknom
+//
+//                                // TODO Auto-generated method stub
+//                                System.out.println("success");
+//                                textAreaPredicted.setText((String) result);
+//                                cd.setText("Completed!");
+//                            }
+//                            };
+                            AsyncCallback<String> callback = new AsyncCallback<String>() {
+                                @Override
+                                public void onFailure(Throwable throwable) {
+                                    System.out.println(throwable.getMessage());
+                                }
+
+                                @Override
+                                public void onSuccess(String s) {
+//                                // komunikacia s dialog oknom
+//
+//                                // TODO Auto-generated method stub
+                                    System.out.println("success");
+                                    textAreaPredicted.setText(s);
+                                    cd.setText("Completed!");
+                                }
+                            };
+
+
+                            // validate input text in textAreaToPredict.getText()
+
+
+                            String str = InputValidator.validateAASequence(textAreaToPredict.getText());
+                            if (str == null) {
+                                // error dialog
+                                infoPopup.setText("Bad input sequence.");
+                                infoPopup.center();
+                            } else if (str.length() == 0) {
+                                infoPopup.setText("Please insert amino acid sequence.");
+                                infoPopup.center();
+                            } else {
+                                // dialog okno
+                                cd.center();
+
+                                predictService.predict(str, callback);
+                            }
+
+
+                            //textAreaToPredict.getText()
+                        } else if (radioButtonCP.getValue())
+                            System.out.println("cp is checked");
+
+
+                    }
+                });
 				button_predict.setSize("119px", "36px");
 				
 				Label lblAminoAcidSequence = new Label("Amino acid sequence (FASTA or pure sequence):");
@@ -191,11 +186,11 @@ public class CASSPServer implements EntryPoint {
 				
 				Button btnNewButton = new Button("New button");
 				btnNewButton.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						textAreaPredicted.setText("");
-						textAreaToPredict.setText("");
-					}
-				});
+                    public void onClick(ClickEvent event) {
+                        textAreaPredicted.setText("");
+                        textAreaToPredict.setText("");
+                    }
+                });
 				btnNewButton.setText("clear");
 				absolutePanel.add(btnNewButton, 507, 250);
 				btnNewButton.setSize("49px", "36px");
@@ -205,7 +200,7 @@ public class CASSPServer implements EntryPoint {
 				absolutePanel_1.setSize("539px", "455px");
 				
 				Label labelUC2 = new Label("Under construction");
-				DOM.setElementAttribute(labelUC2.getElement(), "id", "labelUC2");
+                labelUC2.getElement().setId("labelUC2");
 				
 				absolutePanel_1.add(labelUC2, 228, 46);
 				
@@ -214,7 +209,7 @@ public class CASSPServer implements EntryPoint {
 				absolutePanel_2.setSize("538px", "448px");
 				
 				Label labelUC = new Label("Under construction");
-				DOM.setElementAttribute(labelUC.getElement(), "id", "labelUC");
+                labelUC.getElement().setId("labelUC");
 				absolutePanel_2.add(labelUC, 228, 46);
 				labelUC.setSize("123px", "24px");
 		
